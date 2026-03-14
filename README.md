@@ -221,3 +221,4 @@ wx.cloud.init({
 ## 📄 License
 
 MIT License
+# car-review-miniapp
