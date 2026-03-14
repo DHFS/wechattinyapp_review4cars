@@ -1,0 +1,11 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "车评侦探",
+  "navigationStyle": "default",
+  "navigationBarBackgroundColor": "#121212",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#121212",
+  "backgroundTextStyle": "light",
+  "disableScroll": false
+}

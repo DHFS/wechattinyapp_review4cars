@@ -1,0 +1,39 @@
+{
+  
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/addCar/addCar",
+    "pages/myReviews/myReviews"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#121212",
+    "navigationBarTitleText": "车评侦探",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#121212",
+    "backgroundColorTop": "#121212",
+    "backgroundColorBottom": "#121212"
+  },
+
+  "tabBar": {
+    "custom": true,
+    "color": "#666666",
+    "selectedColor": "#FF6B35",
+    "backgroundColor": "#1A1A1A",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "排行榜"
+      },
+      {
+        "pagePath": "pages/myReviews/myReviews",
+        "text": "我的评价"
+      }
+    ]
+  },
+  "darkmode": true,
+  "themeLocation": "theme.json",
+  "sitemapLocation": "sitemap.json"
+}

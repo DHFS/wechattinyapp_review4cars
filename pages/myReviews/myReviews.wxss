@@ -1,0 +1,294 @@
+/* 我的评价页面 - 深色风格 */
+page {
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 0 16px 40px;
+}
+
+/* 头部统计 */
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 0;
+  gap: 40px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 36px;
+  font-weight: 800;
+  color: #FF6B35;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #888888;
+  margin-top: 6px;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: #333333;
+}
+
+/* 加载状态 */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #333333;
+  border-top-color: #FF6B35;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #666666;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.empty-desc {
+  font-size: 13px;
+  color: #666666;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.empty-btn {
+  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 24px;
+}
+
+/* 列表标题 */
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 16px 0;
+}
+
+/* 评价列表 */
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 评价卡片 */
+.review-card {
+  background: #1A1A1A;
+  border-radius: 16px;
+  padding: 16px;
+  border-left: 3px solid #FF6B35;
+}
+
+.review-card:active {
+  opacity: 0.8;
+}
+
+/* 车型信息行 */
+.car-info-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.car-info {
+  flex: 1;
+}
+
+.car-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.car-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #FFFFFF;
+}
+
+.year {
+  font-size: 12px;
+  color: #666666;
+}
+
+/* 我的评分 */
+.my-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 12px;
+}
+
+.score-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFD700;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 10px;
+  color: #666666;
+  margin-top: 2px;
+}
+
+/* 五维分数行 */
+.dimensions-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: #252525;
+  border-radius: 10px;
+  padding: 12px 10px;
+  margin-bottom: 12px;
+}
+
+.dim-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.dim-name {
+  font-size: 10px;
+  color: #888888;
+  margin-bottom: 4px;
+}
+
+.dim-score {
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* 评论内容 */
+.comment-row {
+  background: #252525;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.comment-text {
+  font-size: 13px;
+  color: #CCCCCC;
+  line-height: 1.6;
+}
+
+/* 底部行 */
+.bottom-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-time {
+  font-size: 11px;
+  color: #555555;
+}
+
+.action-btns {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.action-btn.edit {
+  color: #FF6B35;
+}
+
+.action-btn.delete {
+  color: #FF5252;
+}
+
+.action-divider {
+  font-size: 10px;
+  color: #444444;
+}
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 20px;
+  color: #666666;
+  font-size: 13px;
+}
+
+.load-more.no-more {
+  color: #444444;
+}

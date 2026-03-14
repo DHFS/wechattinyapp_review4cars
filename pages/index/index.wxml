@@ -1,0 +1,80 @@
+<view class="page">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-title">热门车型排行榜</view>
+    <view class="header-subtitle">基于真实用户评价</view>
+  </view>
+
+  <!-- 加载中状态 -->
+  <view wx:if="{{loading && carList.length === 0}}" class="loading-state">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{!loading && carList.length === 0}}" class="empty-state">
+    <text class="empty-icon">🚗</text>
+    <text class="empty-title">暂无车型数据</text>
+    <text class="empty-desc">成为第一个添加车型的人吧！</text>
+    <view class="empty-btn" bindtap="goAddCar">
+      <text>添加新车型</text>
+    </view>
+  </view>
+
+  <!-- 列表 -->
+  <view wx:else class="list">
+    <view 
+      wx:for="{{carList}}" 
+      wx:key="id"
+      class="card {{index < 3 ? 'top-three rank-' + index : ''}}"
+      data-id="{{item.id}}"
+      bindtap="goDetail"
+    >
+      <!-- 左侧：名次 -->
+      <view class="rank-col">
+        <text class="rank-num {{index < 3 ? 'rank-' + index : ''}}">{{index + 1}}</text>
+      </view>
+
+      <!-- 中间：车辆信息 -->
+      <view class="info-col">
+        <text class="car-name">{{item.brand}} {{item.model}}</text>
+        <view class="tag-row">
+          <text class="tag {{item.tagClass}}">{{item.powerType}}</text>
+        </view>
+        <text class="car-meta">{{item.year}} | {{item.price}}</text>
+      </view>
+
+      <!-- 右侧：评分 -->
+      <view class="score-col">
+        <text class="score {{index < 3 ? 'score-rank-' + index : ''}}">{{item.score}}分</text>
+        <view class="reviewer-avatars">
+          <view class="avatar-stack">
+            <image 
+              wx:for="{{item.reviewerAvatars}}" 
+              wx:key="index"
+              wx:for-item="avatar"
+              class="avatar-img"
+              style="z-index: {{10 - index}};"
+              src="{{avatar || '/images/default-avatar.png'}}"
+              mode="aspectFill"
+            />
+          </view>
+          <text class="review-count-text">{{item.reviewCount}}人已点评</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 加载更多 -->
+    <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
+      <text>{{loading ? '加载中...' : '点击加载更多'}}</text>
+    </view>
+    <view wx:else-if="{{carList.length > 0}}" class="load-more no-more">
+      <text>已经到底啦 ~</text>
+    </view>
+  </view>
+
+  <!-- 悬浮按钮 - 添加车型 -->
+  <view class="fab-add {{showFab ? 'show' : 'hide'}}" bindtap="goAddCar">
+    <text class="fab-icon">+</text>
+  </view>
+</view>

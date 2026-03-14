@@ -1,0 +1,9 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "车型详情",
+  "navigationStyle": "default",
+  "navigationBarBackgroundColor": "#121212",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#121212",
+  "enablePullDownRefresh": true
+}

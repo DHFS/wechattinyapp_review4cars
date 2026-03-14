@@ -1,0 +1,269 @@
+<view class="page">
+  <!-- 页面加载中 -->
+  <view wx:if="{{pageLoading}}" class="page-loading">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 页面内容 -->
+  <block wx:else>
+  <!-- 车型头部信息 -->
+  <view class="header">
+    <view class="car-basic">
+      <text class="car-name">{{carInfo.brand}} {{carInfo.model}}</text>
+      <view class="car-tags">
+        <text class="tag" style="background: {{carInfo.tagColor}};">{{carInfo.powerType}}</text>
+        <text class="tag-gray">{{carInfo.year}}</text>
+      </view>
+      <text class="car-price">{{carInfo.price}}</text>
+    </view>
+    <view class="total-score">
+      <text class="score-value">{{carInfo.avgScore}}</text>
+      <text class="score-label">综合得分</text>
+    </view>
+  </view>
+
+  <!-- 五维雷达图 - 带分数标签 -->
+  <view class="section">
+    <view class="section-title">五维雷达图</view>
+    <view class="radar-container">
+      <canvas 
+        type="2d" 
+        id="radarCanvas" 
+        class="radar-canvas"
+        bindtouchstart="onRadarTouch"
+      ></canvas>
+    </view>
+    <view class="radar-legend">
+      <view class="legend-item">
+        <view class="legend-dot" style="background: #FF6B35;"></view>
+        <text class="legend-text">全网平均分</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 五维评分 - 标签式紧凑布局 -->
+  <view class="section">
+    <view class="section-title">五维评分</view>
+    <view class="dimension-list">
+      <view class="dimension-tag" wx:for="{{dimensions}}" wx:key="name">
+        <view class="tag-content">
+          <text class="tag-name">{{item.name}}</text>
+          <text class="tag-score" style="color: {{item.color}};">{{item.score}}</text>
+        </view>
+        <view class="tag-weight-bar" style="width: {{item.weight}}; background: {{item.color}};"></view>
+        <text class="tag-weight-text">{{item.weight}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已评价提示 -->
+  <view class="section" wx:if="{{hasReviewed && !editingReview}}">
+    <view class="section-title">我的评价</view>
+    <view class="reviewed-tip">
+      <text class="tip-icon">✓</text>
+      <text class="tip-text">您已评价过该车型</text>
+    </view>
+    <button class="edit-review-btn" bindtap="startEditFromMyReview">
+      修改我的评价
+    </button>
+  </view>
+
+  <!-- 我要评分 - 默认0分，必须全部评分 -->
+  <view class="section" wx:if="{{!hasReviewed && !editingReview}}">
+    <view class="section-title">我要评分</view>
+    
+    <!-- 五个评分维度 - 实时显示分数 -->
+    <view class="rating-list">
+      <view class="rating-item" wx:for="{{ratingItems}}" wx:key="key">
+        <view class="rating-header">
+          <text class="rating-name">{{item.name}}</text>
+          <view class="rating-value-box">
+            <text class="rating-value {{item.value === 0 ? 'unrated' : ''}}">{{item.value === 0 ? '未评分' : item.value + '分'}}</text>
+          </view>
+        </view>
+        <slider 
+          class="rating-slider" 
+          min="0" 
+          max="100" 
+          value="{{item.value}}" 
+          activeColor="#888888"
+          backgroundColor="#333333"
+          block-color="#FFFFFF"
+          block-size="20"
+          show-value="{{false}}"
+          bindchanging="onSliderChange"
+          bindchange="onSliderChange"
+          data-key="{{item.key}}"
+        />
+        <text class="rating-desc">{{item.desc}}</text>
+      </view>
+    </view>
+
+    <!-- 综合得分显示 -->
+    <view class="calculated-score {{calculatedScore === '-' ? 'unrated' : ''}}">
+      <text class="calc-label">综合得分</text>
+      <text class="calc-value">{{calculatedScore}}</text>
+    </view>
+
+    <!-- 文字评价 -->
+    <textarea 
+      class="comment-input" 
+      placeholder="分享您的用车体验...（最多1000字）" 
+      maxlength="1000"
+      value="{{comment}}"
+      bindinput="onInputComment"
+    />
+    <text class="char-count">{{comment.length}}/1000</text>
+
+    <!-- 提交按钮 - 点击后获取用户信息 -->
+    <button class="submit-btn" bindtap="submitReview" loading="{{submitting}}">
+      {{submitting ? '提交中...' : '提交评价'}}
+    </button>
+    
+    <text class="submit-tips">点击提交后请完善您的头像和昵称</text>
+  </view>
+
+  <!-- 编辑评价区域 -->
+  <view class="section" wx:if="{{editingReview}}">
+    <view class="section-header">
+      <text class="section-title">编辑评价</text>
+      <text class="cancel-edit" bindtap="cancelEdit">取消</text>
+    </view>
+    
+    <view class="rating-list">
+      <view class="rating-item" wx:for="{{editingRatingItems}}" wx:key="key">
+        <view class="rating-header">
+          <text class="rating-name">{{item.name}}</text>
+          <view class="rating-value-box">
+            <text class="rating-value {{item.value === 0 ? 'unrated' : ''}}">{{item.value === 0 ? '未评分' : item.value + '分'}}</text>
+          </view>
+        </view>
+        <slider 
+          class="rating-slider" 
+          min="0" 
+          max="100" 
+          value="{{item.value}}" 
+          activeColor="#888888"
+          backgroundColor="#333333"
+          block-color="#FFFFFF"
+          block-size="20"
+          show-value="{{false}}"
+          bindchanging="onEditSliderChange"
+          bindchange="onEditSliderChange"
+          data-key="{{item.key}}"
+        />
+      </view>
+    </view>
+
+    <view class="calculated-score {{editingCalculatedScore === '-' ? 'unrated' : ''}}">
+      <text class="calc-label">综合得分</text>
+      <text class="calc-value">{{editingCalculatedScore}}</text>
+    </view>
+
+    <textarea 
+      class="comment-input" 
+      placeholder="修改您的评价..." 
+      maxlength="1000"
+      value="{{editingComment}}"
+      bindinput="onEditInputComment"
+    />
+    <text class="char-count">{{editingComment.length}}/1000</text>
+
+    <button class="submit-btn" bindtap="updateReview" loading="{{submitting}}">
+      {{submitting ? '保存中...' : '保存修改'}}
+    </button>
+  </view>
+
+  <!-- 用户评价列表 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">用户评价</text>
+      <text class="review-count">{{reviews.length}}条</text>
+    </view>
+    
+    <view class="review-list">
+      <view class="review-item" wx:for="{{reviews}}" wx:key="_id">
+        <view class="review-header">
+          <image class="review-avatar" src="{{item.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+          <view class="review-user">
+            <text class="review-name">{{item.userNickname || '匿名用户'}}</text>
+            <text class="review-time">{{item.time}}</text>
+          </view>
+          <view class="review-score">
+            <text class="review-score-value">{{item.totalScore}}</text>
+            <text class="review-score-unit">分</text>
+          </view>
+        </view>
+        
+        <text class="review-text">{{item.comment}}</text>
+        
+        <view class="review-dimensions">
+          <view class="review-dim" wx:for="{{item.dimensions}}" wx:key="name" wx:for-item="dim" style="color: {{dim.color}}; border-color: {{dim.color}};">
+            <text class="dim-name">{{dim.name}}</text>
+            <text class="dim-score">{{dim.score}}</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮（仅当前用户显示） -->
+        <view class="review-actions" wx:if="{{item.isOwner}}">
+          <text class="action-btn edit" bindtap="startEdit" data-id="{{item._id}}">编辑</text>
+          <text class="action-divider">|</text>
+          <text class="action-btn delete" bindtap="deleteReview" data-id="{{item._id}}">删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  </block>
+
+  <!-- 完善资料弹窗 -->
+  <view class="profile-modal {{showProfileModal ? 'show' : ''}}" wx:if="{{showProfileModal}}">
+    <view class="modal-mask" bindtap="closeProfileModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">完善资料</text>
+        <text class="modal-close" bindtap="closeProfileModal">×</text>
+      </view>
+      
+      <view class="modal-body">
+        <text class="modal-desc">请设置您的头像和昵称，用于展示在评价中</text>
+        
+        <!-- 头像选择 -->
+        <view class="profile-item">
+          <text class="item-label">头像</text>
+          <button 
+            class="avatar-btn" 
+            open-type="chooseAvatar" 
+            bind:chooseavatar="onChooseAvatar"
+          >
+            <image 
+              class="avatar-preview" 
+              src="{{tempAvatarUrl || '/images/default-avatar.png'}}" 
+              mode="aspectFill"
+            />
+            <text class="avatar-hint" wx:if="{{!tempAvatarUrl}}">点击选择</text>
+          </button>
+        </view>
+        
+        <!-- 昵称输入 -->
+        <view class="profile-item">
+          <text class="item-label">昵称</text>
+          <input 
+            class="nickname-input" 
+            type="nickname"
+            placeholder="请输入昵称"
+            value="{{tempNickname}}"
+            bind:input="onNicknameInput"
+            bind:blur="onNicknameChange"
+          />
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="confirm-btn {{!tempAvatarUrl || !tempNickname ? 'disabled' : ''}}" bindtap="confirmProfile">
+          确认并提交
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

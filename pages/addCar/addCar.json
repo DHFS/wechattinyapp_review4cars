@@ -1,0 +1,9 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "添加新车型",
+  "navigationStyle": "default",
+  "navigationBarBackgroundColor": "#121212",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#121212",
+  "backgroundTextStyle": "light"
+}

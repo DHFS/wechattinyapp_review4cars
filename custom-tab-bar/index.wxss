@@ -1,0 +1,62 @@
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(100rpx + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #1A1A1A;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+
+.tab-bar-item {
+  flex: 1;
+  height: 100rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.tab-bar-text {
+  font-size: 32rpx;
+  line-height: 1.4;
+  color: #666666;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tab-bar-item.active .tab-bar-text {
+  color: #FF6B35;
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+/* 适配 iPhone X 及以上机型的底部安全区 */
+@supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
+  .tab-bar {
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* 小屏幕适配 */
+@media screen and (max-width: 375px) {
+  .tab-bar-text {
+    font-size: 28rpx;
+  }
+}
+
+/* 大屏幕适配 */
+@media screen and (min-width: 414px) {
+  .tab-bar-text {
+    font-size: 34rpx;
+  }
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "brand": "特斯拉",
+    "model_name": "Model 3",
+    "model_year": "2024款",
+    "power_type": "纯电",
+    "price_range": "23.19-33.19万",
+    "avg_score": 89.5,
+    "review_count": 2341
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "汉EV",
+    "model_year": "2024款",
+    "power_type": "纯电",
+    "price_range": "17.98-24.98万",
+    "avg_score": 87.2,
+    "review_count": 1856
+  },
+  {
+    "brand": "理想",
+    "model_name": "L7",
+    "model_year": "2024款",
+    "power_type": "增程",
+    "price_range": "31.98-37.98万",
+    "avg_score": 91.3,
+    "review_count": 1523
+  },
+  {
+    "brand": "小米",
+    "model_name": "SU7",
+    "model_year": "2024款",
+    "power_type": "纯电",
+    "price_range": "21.59-29.99万",
+    "avg_score": 88.7,
+    "review_count": 3201
+  },
+  {
+    "brand": "问界",
+    "model_name": "M7",
+    "model_year": "2024款",
+    "power_type": "增程",
+    "price_range": "24.98-32.98万",
+    "avg_score": 86.4,
+    "review_count": 987
+  }
+]

@@ -1,0 +1,219 @@
+{
+  "_comment": "车评侦探 - 微信云开发数据库集合结构设计",
+  "collections": {
+    "cars": {
+      "description": "车辆信息主表 - 存储所有可评价的车型数据",
+      "fields": {
+        "_id": {
+          "type": "string",
+          "description": "系统自动生成的唯一标识",
+          "required": true
+        },
+        "brand": {
+          "type": "string",
+          "description": "车辆厂家/品牌名称，如：特斯拉、比亚迪、蔚来",
+          "example": "特斯拉",
+          "required": true
+        },
+        "model_name": {
+          "type": "string",
+          "description": "车型名称，如：Model 3、汉EV、ES6",
+          "example": "Model 3",
+          "required": true
+        },
+        "model_year": {
+          "type": "string",
+          "description": "年款信息，如：2024款、2025款",
+          "example": "2024款",
+          "required": true
+        },
+        "power_type": {
+          "type": "string",
+          "description": "动力形式",
+          "enum": ["纯电", "增程", "插混", "燃油"],
+          "example": "纯电",
+          "required": true
+        },
+        "price_range": {
+          "type": "string",
+          "description": "售价区间，格式：XX.XX-XX.XX万",
+          "example": "23.19-33.19万",
+          "required": true
+        },
+        "image_url": {
+          "type": "string",
+          "description": "车辆封面图片URL，存储在云存储中",
+          "example": "cloud://env-name/image/model3.jpg",
+          "required": false
+        },
+        "avg_score": {
+          "type": "number",
+          "description": "五维综合得分，系统自动计算，范围0-100",
+          "example": 87.5,
+          "default": 0,
+          "required": true
+        },
+        "review_count": {
+          "type": "number",
+          "description": "参与评价的用户总数",
+          "example": 1280,
+          "default": 0,
+          "required": true
+        },
+        "created_at": {
+          "type": "date",
+          "description": "记录创建时间",
+          "required": true
+        },
+        "updated_at": {
+          "type": "date",
+          "description": "记录最后更新时间",
+          "required": true
+        }
+      },
+      "indexes": [
+        { "fields": ["avg_score"], "type": "desc" },
+        { "fields": ["brand"], "type": "asc" },
+        { "fields": ["power_type"], "type": "asc" }
+      ]
+    },
+
+    "reviews": {
+      "description": "用户评价表 - 存储用户对车辆的五维打分和评价",
+      "fields": {
+        "_id": {
+          "type": "string",
+          "description": "系统自动生成的唯一标识",
+          "required": true
+        },
+        "car_id": {
+          "type": "string",
+          "description": "关联的车辆ID，对应 cars 集合的 _id",
+          "example": "abc123def456",
+          "required": true
+        },
+        "_openid": {
+          "type": "string",
+          "description": "微信用户的唯一标识openid，系统自动获取",
+          "required": true
+        },
+        "user_avatar": {
+          "type": "string",
+          "description": "用户微信头像URL",
+          "example": "https://thirdwx.qlogo.cn/mmopen/vi_32/...",
+          "required": false
+        },
+        "user_nickname": {
+          "type": "string",
+          "description": "用户微信昵称",
+          "example": "车评达人",
+          "required": false
+        },
+        "score_power": {
+          "type": "number",
+          "description": "动力三电评分 - 电池、电机、电控性能（0-100分）",
+          "example": 88,
+          "min": 0,
+          "max": 100,
+          "required": true
+        },
+        "score_handling": {
+          "type": "number",
+          "description": "操控底盘评分 - 悬挂、转向、驾驶感受（0-100分）",
+          "example": 85,
+          "min": 0,
+          "max": 100,
+          "required": true
+        },
+        "score_space": {
+          "type": "number",
+          "description": "空间内饰评分 - 乘坐空间、内饰质感（0-100分）",
+          "example": 82,
+          "min": 0,
+          "max": 100,
+          "required": true
+        },
+        "score_adas": {
+          "type": "number",
+          "description": "辅驾安全评分 - 辅助驾驶、安全配置（0-100分）",
+          "example": 90,
+          "min": 0,
+          "max": 100,
+          "required": true
+        },
+        "score_other": {
+          "type": "number",
+          "description": "其他体验评分 - 智能座舱、售后服务等（0-100分）",
+          "example": 78,
+          "min": 0,
+          "max": 100,
+          "required": true
+        },
+        "total_score": {
+          "type": "number",
+          "description": "五维加权总分，计算公式：动力30% + 操控20% + 空间20% + 辅驾20% + 其他10%",
+          "example": 85.6,
+          "required": true
+        },
+        "comment": {
+          "type": "string",
+          "description": "用户文字评价内容",
+          "example": "续航很扎实，辅助驾驶在高速上很好用，推荐购买！",
+          "maxLength": 500,
+          "required": false
+        },
+        "created_at": {
+          "type": "date",
+          "description": "评价提交时间",
+          "required": true
+        }
+      },
+      "indexes": [
+        { "fields": ["car_id"], "type": "asc" },
+        { "fields": ["_openid"], "type": "asc" },
+        { "fields": ["created_at"], "type": "desc" },
+        { "fields": ["total_score"], "type": "desc" }
+      ]
+    },
+
+    "users": {
+      "description": "用户信息表 - 可选，用于存储用户扩展信息",
+      "fields": {
+        "_openid": {
+          "type": "string",
+          "description": "微信用户唯一标识，作为主键",
+          "required": true
+        },
+        "nickname": {
+          "type": "string",
+          "description": "用户昵称",
+          "required": false
+        },
+        "avatar_url": {
+          "type": "string",
+          "description": "头像URL",
+          "required": false
+        },
+        "review_count": {
+          "type": "number",
+          "description": "该用户发布的评价数量",
+          "default": 0,
+          "required": false
+        },
+        "created_at": {
+          "type": "date",
+          "description": "首次登录时间",
+          "required": true
+        },
+        "last_login": {
+          "type": "date",
+          "description": "最后登录时间",
+          "required": false
+        }
+      },
+      "indexes": [
+        { "fields": ["_openid"], "type": "asc", "unique": true }
+      ]
+    }
+  }
+}

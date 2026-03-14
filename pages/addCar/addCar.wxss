@@ -1,0 +1,196 @@
+/* 添加车型页面 - 深色风格 */
+page {
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.page {
+  padding: 16px;
+  padding-bottom: 40px;
+}
+
+/* 头部 */
+.header {
+  margin-bottom: 24px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #666666;
+}
+
+/* 表单区域 */
+.form-section {
+  background: #1A1A1A;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-item {
+  margin-bottom: 20px;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  color: #AAAAAA;
+  margin-bottom: 10px;
+}
+
+.required {
+  color: #FF6B35;
+}
+
+.form-input {
+  width: 100%;
+  height: 48px;
+  background: #252525;
+  border-radius: 10px;
+  padding: 0 16px;
+  font-size: 15px;
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #555555;
+}
+
+/* 动力形式选择 */
+.power-type-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.power-type-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  background: #252525;
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.power-type-item.active {
+  border-color: #FF6B35;
+  background: rgba(255, 107, 53, 0.1);
+}
+
+.power-color {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.power-name {
+  font-size: 13px;
+  color: #CCCCCC;
+}
+
+.power-type-item.active .power-name {
+  color: #FFFFFF;
+}
+
+/* TODO: 图片上传样式（预留接口，未来升级） */
+/*
+.image-upload {
+  width: 100%;
+  height: 180px;
+  background: #252525;
+  border-radius: 12px;
+  border: 2px dashed #444444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-icon {
+  font-size: 40px;
+  color: #555555;
+  line-height: 1;
+}
+
+.upload-text {
+  font-size: 13px;
+  color: #666666;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+*/
+
+/* 提交按钮 */
+.submit-btn {
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-bottom: 20px;
+}
+
+.submit-btn::after {
+  border: none;
+}
+
+.submit-btn[disabled] {
+  opacity: 0.6;
+}
+
+/* 提示信息 */
+.tips-section {
+  background: rgba(255, 107, 53, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.tips-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FF6B35;
+  margin-bottom: 10px;
+}
+
+.tips-item {
+  display: block;
+  font-size: 12px;
+  color: #888888;
+  line-height: 1.8;
+}
