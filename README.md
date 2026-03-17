@@ -1,6 +1,12 @@
 # 🚗 车评侦探 - 微信小程序
 
+[![GitHub](https://img.shields.io/badge/GitHub-DHFS/car--review--miniapp-blue?logo=github)](https://github.com/DHFS/car-review-miniapp)
+
 一款基于微信原生开发的车型评价小程序，让用户可以对不同车型进行五维度评分，查看排行榜，管理个人评价。
+
+## 🌐 项目地址
+
+- **GitHub**: https://github.com/DHFS/car-review-miniapp
 
 ## ✨ 功能特性
 
@@ -33,6 +39,7 @@
 - **后端**: 微信云开发 (CloudBase)
 - **数据库**: MongoDB (云数据库)
 - **存储**: 微信云存储（用户头像）
+- **版本控制**: Git + GitHub
 
 ## 📁 项目结构
 
@@ -43,9 +50,13 @@ wechattinyapp_review4cars/
 ├── app.wxss                  # 全局样式
 ├── sitemap.json              # 站点地图
 ├── theme.json                # 主题配置（暗黑模式）
+├── README.md                 # 项目说明文档
 │
 ├── cloudfunctions/           # 云函数
 │   └── getOpenid/            # 获取用户 OpenID
+│       ├── index.js
+│       ├── config.json
+│       └── package.json
 │
 ├── custom-tab-bar/           # 自定义底部导航栏
 │   ├── index.js
@@ -115,18 +126,24 @@ wechattinyapp_review4cars/
 
 ## 🚀 如何运行
 
-### 1. 导入项目
+### 1. 克隆项目
+```bash
+git clone https://github.com/DHFS/car-review-miniapp.git
+cd car-review-miniapp
+```
+
+### 2. 导入项目
 1. 打开微信开发者工具
 2. 选择「导入项目」
 3. 选择本项目目录
 4. 填写自己的 AppID（需要开通云开发）
 
-### 2. 开通云开发
+### 3. 开通云开发
 1. 点击开发者工具「云开发」按钮
 2. 按指引开通云开发环境
 3. 记录环境 ID
 
-### 3. 配置云环境
+### 4. 配置云环境
 在 `app.js` 中配置你的云环境 ID：
 ```javascript
 wx.cloud.init({
@@ -135,21 +152,21 @@ wx.cloud.init({
 })
 ```
 
-### 4. 创建数据库集合
+### 5. 创建数据库集合
 在云开发控制台 - 数据库中创建两个集合：
 - `cars` - 车型表
 - `reviews` - 评价表
 
-### 5. 导入车型数据
+### 6. 导入车型数据
 使用 `cars-batch-import.json` 或 `cars-simple.json` 导入初始车型数据。
 
-### 6. 部署云函数（可选）
+### 7. 部署云函数（可选）
 如需要获取用户 OpenID，可部署云函数：
 1. 在微信开发者工具云开发控制台中，新建云函数 `getOpenid`
 2. 复制 `cloudfunctions/getOpenid/index.js` 内容
 3. 点击部署
 
-### 7. 配置存储权限
+### 8. 配置存储权限
 云开发控制台 - 存储 - 权限设置：
 - 所有用户可读
 - 仅创建者可写
@@ -192,6 +209,10 @@ wx.cloud.init({
 - 卡片背景：#1A1A1A
 - 主色调：#FF6B35（橙色）
 
+## 📸 界面预览
+
+> 截图待补充
+
 ## ⚠️ 注意事项
 
 1. **微信隐私规范**：获取用户信息必须使用官方提供的头像昵称填写能力，已按要求实现
@@ -200,14 +221,19 @@ wx.cloud.init({
 4. **基础库版本**：建议使用 2.10.4 及以上版本
 5. **自定义 TabBar**：如遇到显示问题，请检查基础库版本是否支持
 
+## 🤝 参与贡献
+
+欢迎提交 Issue 和 Pull Request！
+
 ## 📝 更新日志
 
-### v1.1.0
+### v1.1.0 (2024-03)
 - ✅ 自定义 TabBar，弹性适配不同屏幕
 - ✅ 删除评价功能（自动更新车型数据）
 - ✅ 时间格式增加时分（24小时制）
 - ✅ 点击修改自动进入编辑模式
 - ✅ 页面刷新机制优化
+- ✅ 项目开源至 GitHub
 
 ### v1.0.0
 - ✅ 车型排行榜展示
@@ -221,5 +247,7 @@ wx.cloud.init({
 ## 📄 License
 
 MIT License
-# car-review-miniapp
-# car-review-miniapp
+
+---
+
+**如果觉得项目有用，请给个 ⭐ Star 支持一下！**
