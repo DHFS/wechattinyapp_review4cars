@@ -1,0 +1,9 @@
+{
+  "name": "updateCarScore",
+  "version": "1.0.0",
+  "description": "更新车型平均分",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

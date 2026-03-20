@@ -1,10 +1,30 @@
 <view class="tab-bar">
-  <view class="tab-bar-item {{selected === index ? 'active' : ''}}" 
-        wx:for="{{list}}" 
-        wx:key="index"
-        data-path="{{item.pagePath}}"
-        data-index="{{index}}"
+  <!-- 左侧：榜单 -->
+  <view class="tab-bar-item {{selected === 0 ? 'active' : ''}}" 
+        data-path="/pages/index/index"
+        data-index="0"
         bindtap="switchTab">
-    <text class="tab-bar-text">{{item.text}}</text>
+    <view class="tab-icon">
+      <view class="icon-chart {{selected === 0 ? 'active' : ''}}"></view>
+    </view>
+    <text class="tab-bar-text">榜单</text>
+  </view>
+  
+  <!-- 中间：添加按钮（凸起） -->
+  <view class="tab-bar-center">
+    <view class="add-btn" bindtap="goAddCar">
+      <text class="add-icon">+</text>
+    </view>
+  </view>
+  
+  <!-- 右侧：我的 -->
+  <view class="tab-bar-item {{selected === 1 ? 'active' : ''}}" 
+        data-path="/pages/myReviews/myReviews"
+        data-index="1"
+        bindtap="switchTab">
+    <view class="tab-icon">
+      <view class="icon-user {{selected === 1 ? 'active' : ''}}"></view>
+    </view>
+    <text class="tab-bar-text">我的</text>
   </view>
 </view>

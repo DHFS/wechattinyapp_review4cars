@@ -1,0 +1,92 @@
+<view class="page">
+  <!-- 头部统计 -->
+  <view class="header">
+    <view class="stat-card">
+      <text class="stat-num">{{reviewCount}}</text>
+      <text class="stat-label">已评价车型</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-card">
+      <text class="stat-num">{{avgScore}}</text>
+      <text class="stat-label">平均打分</text>
+    </view>
+  </view>
+
+  <!-- 评价列表 -->
+  <view class="content">
+    <!-- 加载中 -->
+    <view wx:if="{{loading && allReviews.length === 0}}" class="loading-state">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{!loading && allReviews.length === 0}}" class="empty-state">
+      <text class="empty-icon">📝</text>
+      <text class="empty-text">暂无评价记录</text>
+      <text class="empty-hint">快去首页发现心仪车型吧</text>
+    </view>
+
+    <!-- 全部评价列表 -->
+    <view wx:else class="review-list">
+      <view 
+        wx:for="{{allReviews}}" 
+        wx:key="_id"
+        class="review-card"
+        data-carid="{{item.carId}}"
+        bindtap="goCarDetail"
+      >
+        <!-- 车型信息 -->
+        <view class="car-info">
+          <view class="car-header">
+            <text class="car-name">{{item.brand}} {{item.modelName}}</text>
+            <view class="car-tag" style="background-color: {{item.tagColor}}20; color: {{item.tagColor}};">
+              {{item.powerType}}
+            </view>
+          </view>
+          <text class="car-year" wx:if="{{item.modelYear}}">{{item.modelYear}}款</text>
+        </view>
+
+        <!-- 评分信息 -->
+        <view class="score-section">
+          <view class="total-score">
+            <text class="score-num">{{item.myScore}}</text>
+            <text class="score-label">分</text>
+          </view>
+          <view class="score-time">{{item.time}}</view>
+        </view>
+
+        <!-- 五维得分 -->
+        <view class="dimensions-row">
+          <view class="dimension-item" wx:for="{{item.dimensions}}" wx:for-item="dim" wx:key="name">
+            <text class="dim-name">{{dim.name}}</text>
+            <text class="dim-score">{{dim.score}}</text>
+          </view>
+        </view>
+
+        <!-- 评价内容 -->
+        <view class="comment-section" wx:if="{{item.comment}}">
+          <text class="comment-text">{{item.comment}}</text>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="action-btns" catchtap="preventBubble">
+          <view class="btn-edit" data-carid="{{item.carId}}" catchtap="goCarDetail">
+            <text>修改</text>
+          </view>
+          <view class="btn-delete" data-reviewid="{{item._id}}" data-carid="{{item.carId}}" catchtap="deleteReview">
+            <text>删除</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
+        <text>{{loading ? '加载中...' : '加载更多'}}</text>
+      </view>
+      <view wx:elif="{{allReviews.length > 0}}" class="load-more no-more">
+        <text>已经到底啦 ~</text>
+      </view>
+    </view>
+  </view>
+</view>

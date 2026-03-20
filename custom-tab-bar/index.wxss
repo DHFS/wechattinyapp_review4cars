@@ -3,31 +3,131 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: calc(100rpx + env(safe-area-inset-bottom));
+  height: calc(120rpx + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
   background: #1A1A1A;
   border-top: 1rpx solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-left: 80rpx;
+  padding-right: 80rpx;
+  padding-top: 10rpx;
   box-sizing: border-box;
   z-index: 9999;
 }
 
+/* 左右两侧的 Tab 项 */
 .tab-bar-item {
-  flex: 1;
+  width: 120rpx;
   height: 100rpx;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
+  padding-top: 10rpx;
 }
 
+/* 图标容器 */
+.tab-icon {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6rpx;
+}
+
+/* 榜单图标 - 柱状图 */
+.icon-chart {
+  width: 36rpx;
+  height: 36rpx;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 4rpx 2rpx;
+  box-sizing: border-box;
+}
+
+.icon-chart::before,
+.icon-chart::after {
+  content: '';
+  background: #666666;
+  border-radius: 2rpx;
+  transition: background 0.2s ease;
+}
+
+.icon-chart::before {
+  width: 8rpx;
+  height: 16rpx;
+}
+
+.icon-chart::after {
+  width: 8rpx;
+  height: 24rpx;
+}
+
+.icon-chart.active::before,
+.icon-chart.active::after {
+  background: #FF6B35;
+}
+
+/* 中间额外的柱子 */
+.icon-chart {
+  background: linear-gradient(to top, #666666 40%, transparent 40%);
+  background-size: 8rpx 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.icon-chart.active {
+  background: linear-gradient(to top, #FF6B35 40%, transparent 40%);
+  background-size: 8rpx 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* 用户图标 */
+.icon-user {
+  width: 36rpx;
+  height: 36rpx;
+  border: 3rpx solid #666666;
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.icon-user::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  width: 12rpx;
+  height: 12rpx;
+  border: 3rpx solid #666666;
+  border-radius: 50%;
+  background: transparent;
+  transition: border-color 0.2s ease;
+}
+
+.icon-user.active {
+  border-color: #FF6B35;
+}
+
+.icon-user.active::before {
+  border-color: #FF6B35;
+}
+
+/* 文字样式 */
 .tab-bar-text {
-  font-size: 32rpx;
-  line-height: 1.4;
+  font-size: 24rpx;
+  line-height: 1.2;
   color: #666666;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -36,7 +136,58 @@
 .tab-bar-item.active .tab-bar-text {
   color: #FF6B35;
   font-weight: 600;
-  transform: scale(1.05);
+}
+
+/* 中间凸起按钮容器 */
+.tab-bar-center {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: -50rpx;
+}
+
+/* 添加按钮 - 橙色渐变圆形凸起 */
+.add-btn {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 53, 0.4);
+  position: relative;
+  z-index: 10000;
+  transition: all 0.2s ease;
+}
+
+.add-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 53, 0.3);
+}
+
+/* 按钮外圈光环 */
+.add-btn::before {
+  content: '';
+  position: absolute;
+  top: -8rpx;
+  left: -8rpx;
+  right: -8rpx;
+  bottom: -8rpx;
+  border-radius: 50%;
+  background: rgba(255, 107, 53, 0.15);
+  z-index: -1;
+}
+
+.add-icon {
+  font-size: 56rpx;
+  color: #FFFFFF;
+  font-weight: 300;
+  line-height: 1;
+  margin-top: -4rpx;
 }
 
 /* 适配 iPhone X 及以上机型的底部安全区 */
@@ -49,14 +200,30 @@
 
 /* 小屏幕适配 */
 @media screen and (max-width: 375px) {
+  .tab-bar {
+    padding-left: 60rpx;
+    padding-right: 60rpx;
+  }
   .tab-bar-text {
-    font-size: 28rpx;
+    font-size: 22rpx;
+  }
+  .add-btn {
+    width: 90rpx;
+    height: 90rpx;
+  }
+  .add-icon {
+    font-size: 48rpx;
+  }
+  .tab-bar-center {
+    width: 110rpx;
+    height: 110rpx;
+    margin-top: -40rpx;
   }
 }
 
 /* 大屏幕适配 */
 @media screen and (min-width: 414px) {
   .tab-bar-text {
-    font-size: 34rpx;
+    font-size: 26rpx;
   }
 }

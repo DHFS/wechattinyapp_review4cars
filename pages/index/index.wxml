@@ -55,7 +55,7 @@
               wx:for-item="avatar"
               class="avatar-img"
               style="z-index: {{10 - index}};"
-              src="{{avatar || '/images/default-avatar.png'}}"
+              src="{{avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
               mode="aspectFill"
             />
           </view>
@@ -73,8 +73,5 @@
     </view>
   </view>
 
-  <!-- 悬浮按钮 - 添加车型 -->
-  <view class="fab-add {{showFab ? 'show' : 'hide'}}" bindtap="goAddCar">
-    <text class="fab-icon">+</text>
-  </view>
+  <!-- 添加车型按钮已移至底部导航栏 -->
 </view>

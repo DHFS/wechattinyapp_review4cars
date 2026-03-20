@@ -1,0 +1,9 @@
+{
+  "name": "getCarReviews",
+  "version": "1.0.0",
+  "description": "获取指定车型的所有评价",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

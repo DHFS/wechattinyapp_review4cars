@@ -9,15 +9,8 @@ Page({
     // 当前页码
     page: 0,
     // 每页数量
-    pageSize: 20,
-    // 悬浮按钮显示状态
-    showFab: true,
-    // 上次滚动位置
-    lastScrollTop: 0
+    pageSize: 20
   },
-
-  // 隐藏悬浮按钮的定时器
-  hideFabTimer: null,
 
   onLoad() {
     // 页面加载时从数据库获取数据
@@ -94,7 +87,7 @@ Page({
         
         // 获取该车型最新的3条评价的用户头像和总评价数
         let reviewerAvatars = []
-        let reviewCount = car.review_count || 0
+        let reviewCount = 0
         try {
           const reviewRes = await db.collection('reviews')
             .where({ car_id: car._id })
@@ -102,7 +95,48 @@ Page({
             .limit(3)
             .get()
           
-          reviewerAvatars = reviewRes.data.map(r => r.user_avatar || '')
+          // 实时统计评价数量（先获取总数）
+          const countRes = await db.collection('reviews')
+            .where({ car_id: car._id })
+            .count()
+          reviewCount = countRes.total || 0
+          
+          // 获取最新的3条评价的头像（按时间顺序，最新的在前），保持顺序不做去重
+          const avatarList = reviewRes.data
+            .map(r => r.user_avatar)
+            .filter(avatar => avatar && avatar.trim() !== '')
+          
+          // 分离云存储fileID和普通URL
+          const cloudFileIDs = avatarList.filter(url => url.startsWith('cloud://'))
+          const normalUrls = avatarList.filter(url => !url.startsWith('cloud://'))
+          
+          // 将云存储 fileID 转换为 HTTPS 临时链接
+          let urlMap = {}
+          if (cloudFileIDs.length > 0) {
+            const tempRes = await wx.cloud.getTempFileURL({
+              fileList: cloudFileIDs
+            })
+            tempRes.fileList.forEach(item => {
+              if (item.fileID && item.tempFileURL) {
+                urlMap[item.fileID] = item.tempFileURL
+              }
+            })
+          }
+          
+          // 按原始顺序组装头像URL（最新的在前，即数组索引0在最上层）
+          reviewerAvatars = avatarList.map(url => {
+            if (url.startsWith('cloud://')) {
+              return urlMap[url] || ''
+            }
+            return url
+          }).filter(url => url !== '')
+          
+          console.log('车型', car.model_name, '获取到', reviewerAvatars.length, '个头像:', reviewerAvatars)
+          console.log('原始评价数据:', reviewRes.data.map(r => ({ 
+            avatar: r.user_avatar, 
+            nickname: r.user_nickname,
+            time: r.created_at 
+          })))
         } catch (e) {
           console.log('获取评价头像失败:', e)
         }
@@ -153,40 +187,6 @@ Page({
     })
   },
 
-  // 监听页面滚动
-  onPageScroll(e) {
-    const { scrollTop } = e
-    const { lastScrollTop, showFab } = this.data
-    
-    // 清除之前的定时器
-    if (this.hideFabTimer) {
-      clearTimeout(this.hideFabTimer)
-    }
-    
-    // 判断滚动方向
-    if (scrollTop > lastScrollTop && scrollTop > 100) {
-      // 向下滚动，隐藏按钮
-      if (showFab) {
-        this.setData({ showFab: false })
-      }
-    } else if (scrollTop < lastScrollTop) {
-      // 向上滚动，显示按钮
-      if (!showFab) {
-        this.setData({ showFab: true })
-      }
-    }
-    
-    // 更新上次滚动位置
-    this.setData({ lastScrollTop: scrollTop })
-    
-    // 1.5秒后显示按钮
-    this.hideFabTimer = setTimeout(() => {
-      if (!this.data.showFab) {
-        this.setData({ showFab: true })
-      }
-    }, 1500)
-  },
-
   // 格式化数字（超过1000显示为1k）
   formatNumber(num) {
     if (num >= 10000) {
@@ -204,75 +204,6 @@ Page({
     
     wx.navigateTo({
       url: `/pages/detail/detail?id=${id}`
-    })
-  },
-
-  // 跳转到添加车型页面
-  goAddCar() {
-    wx.navigateTo({
-      url: '/pages/addCar/addCar'
-    })
-  },
-
-  // 跳转到我的评价页面
-  goMyReviews() {
-    wx.navigateTo({
-      url: '/pages/myReviews/myReviews'
-    })
-  },
-
-  // 点击悬浮按钮 - 检查登录状态
-  async goMyReviewsCheckLogin() {
-    wx.showLoading({ title: '检查中...' })
-    
-    try {
-      // 尝试获取用户openid
-      const { result } = await wx.cloud.callFunction({
-        name: 'getOpenid'
-      })
-      
-      wx.hideLoading()
-      
-      if (result.openid) {
-        // 已登录，直接跳转
-        wx.navigateTo({
-          url: '/pages/myReviews/myReviews'
-        })
-      }
-    } catch (err) {
-      wx.hideLoading()
-      
-      // 未登录，提示用户授权
-      wx.showModal({
-        title: '需要登录',
-        content: '查看我的评价需要获取您的微信信息，是否授权登录？',
-        confirmText: '授权登录',
-        cancelText: '取消',
-        success: (res) => {
-          if (res.confirm) {
-            this.doLogin()
-          }
-        }
-      })
-    }
-  },
-
-  // 执行登录
-  doLogin() {
-    wx.getUserProfile({
-      desc: '用于展示用户头像昵称',
-      success: () => {
-        // 授权成功，跳转到我的评价页
-        wx.navigateTo({
-          url: '/pages/myReviews/myReviews'
-        })
-      },
-      fail: () => {
-        wx.showToast({
-          title: '需要授权才能查看',
-          icon: 'none'
-        })
-      }
     })
   },
 

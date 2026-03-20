@@ -12,82 +12,146 @@
     </view>
   </view>
 
-  <!-- 加载中 -->
-  <view wx:if="{{loading && reviews.length === 0}}" class="loading-state">
-    <view class="loading-spinner"></view>
-    <text class="loading-text">加载中...</text>
-  </view>
-
-  <!-- 空状态 -->
-  <view wx:elif="{{!loading && reviews.length === 0}}" class="empty-state">
-    <text class="empty-icon">📝</text>
-    <text class="empty-title">暂无评价记录</text>
-    <text class="empty-desc">快去首页发现心仪车型，留下你的评价吧！</text>
-    <view class="empty-btn" bindtap="goHome">
-      <text>去发现车型</text>
-    </view>
-  </view>
-
-  <!-- 评价列表 -->
-  <view wx:else class="review-list">
-    <view class="section-title">历史评价</view>
+  <!-- 主体内容区 -->
+  <scroll-view class="content-scroll" scroll-y="true">
     
-    <view 
-      wx:for="{{reviews}}" 
-      wx:key="_id"
-      class="review-card"
-      data-carid="{{item.carId}}"
-      bindtap="goCarDetail"
-    >
-      <!-- 车型信息 -->
-      <view class="car-info-row">
-        <view class="car-info">
-          <text class="car-name">{{item.brand}} {{item.modelName}}</text>
-          <view class="car-meta">
-            <text class="tag" style="background: {{item.tagColor}};">{{item.powerType}}</text>
-            <text class="year">{{item.modelYear}}</text>
+    <!-- 我的评价板块 -->
+    <view class="section-block">
+      <view class="section-header">
+        <view class="section-icon icon-review"></view>
+        <text class="section-title">我的评价</text>
+      </view>
+      
+      <!-- 加载中 -->
+      <view wx:if="{{loading && reviews.length === 0}}" class="loading-state">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">加载中...</text>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:elif="{{!loading && reviews.length === 0}}" class="empty-state-small">
+        <text class="empty-icon-small">📝</text>
+        <text class="empty-text">暂无评价记录</text>
+        <text class="empty-hint">快去首页发现心仪车型吧</text>
+      </view>
+
+      <!-- 评价列表 -->
+      <view wx:else class="review-list-compact">
+        <view 
+          wx:for="{{reviews}}" 
+          wx:key="_id"
+          class="review-card-compact"
+          data-carid="{{item.carId}}"
+          bindtap="goCarDetail"
+        >
+          <view class="compact-left">
+            <text class="compact-car">{{item.brand}} {{item.modelName}}</text>
+            <text class="compact-score">{{item.myScore}}分 · {{item.time}}</text>
+          </view>
+          <view class="compact-actions" catchtap="preventBubble">
+            <text class="compact-btn" data-carid="{{item.carId}}" catchtap="goCarDetail">修改</text>
+            <text class="compact-btn delete" data-reviewid="{{item._id}}" data-carid="{{item.carId}}" catchtap="deleteReview">删除</text>
           </view>
         </view>
-        <view class="my-score">
-          <text class="score-value">{{item.myScore}}</text>
-          <text class="score-label">我的评分</text>
+
+        <!-- 查看更多（当评价超过3条时显示） -->
+        <view wx:if="{{allReviews.length > 3 && !showAllReviews}}" class="view-all-btn" bindtap="viewAllReviews">
+          <text>查看全部 {{allReviews.length}} 条评价</text>
+          <text class="arrow">›</text>
+        </view>
+        
+        <!-- 加载更多 -->
+        <view wx:if="{{hasMore && showAllReviews}}" class="load-more-small" bindtap="loadMore">
+          <text>{{loading ? '加载中...' : '加载更多'}}</text>
+        </view>
+        <view wx:elif="{{reviews.length > 0 && showAllReviews}}" class="load-more-small no-more">
+          <text>已经到底啦 ~</text>
         </view>
       </view>
+    </view>
 
-      <!-- 五维分数 -->
-      <view class="dimensions-row">
-        <view class="dim-item" wx:for="{{item.dimensions}}" wx:key="name" wx:for-item="dim">
-          <text class="dim-name">{{dim.name}}</text>
-          <text class="dim-score">{{dim.score}}</text>
-        </view>
+    <!-- 帮助 -->
+    <view class="section-block">
+      <view class="section-header">
+        <view class="section-icon icon-help"></view>
+        <text class="section-title">使用帮助</text>
       </view>
-
-      <!-- 评论内容 -->
-      <view wx:if="{{item.comment}}" class="comment-row">
-        <text class="comment-text">{{item.comment}}</text>
-      </view>
-
-      <!-- 底部信息 -->
-      <view class="bottom-row">
-        <text class="review-time">{{item.time}}</text>
-        <view class="action-btns">
-          <view class="action-btn edit" data-carid="{{item.carId}}" catchtap="goCarDetail">
-            <text>修改</text>
+      <view class="help-content">
+        <view class="help-item">
+          <view class="help-step">1</view>
+          <view class="help-info">
+            <text class="help-title">浏览榜单</text>
+            <text class="help-desc">在首页查看车型排行榜，了解各车型综合评分和用户口碑</text>
           </view>
-          <view class="action-divider">|</view>
-          <view class="action-btn delete" data-reviewid="{{item._id}}" data-carid="{{item.carId}}" catchtap="deleteReview">
-            <text>删除</text>
+        </view>
+        <view class="help-item">
+          <view class="help-step">2</view>
+          <view class="help-info">
+            <text class="help-title">查看详情</text>
+            <text class="help-desc">点击车型进入详情页，查看五维雷达图和详细用户评价</text>
+          </view>
+        </view>
+        <view class="help-item">
+          <view class="help-step">3</view>
+          <view class="help-info">
+            <text class="help-title">提交评价</text>
+            <text class="help-desc">为车型打分并撰写评价，分享您的真实用车体验</text>
+          </view>
+        </view>
+        <view class="help-item">
+          <view class="help-step">4</view>
+          <view class="help-info">
+            <text class="help-title">管理评价</text>
+            <text class="help-desc">在"我的"页面查看、修改或删除您的历史评价</text>
           </view>
         </view>
       </view>
     </view>
 
-    <!-- 加载更多 -->
-    <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
-      <text>{{loading ? '加载中...' : '加载更多'}}</text>
+    <!-- 联系我们（暂时隐藏） -->
+    <view class="section-block" hidden="{{true}}">
+      <view class="section-header">
+        <view class="section-icon icon-contact"></view>
+        <text class="section-title">联系我们</text>
+      </view>
+      <view class="contact-content">
+        <text class="contact-desc">如有问题或建议，欢迎通过微信联系我们</text>
+        <view class="contact-item" bindtap="copyWechat">
+          <view class="contact-label">微信号</view>
+          <view class="contact-value">
+            <text>340250808</text>
+            <text class="copy-hint">点击复制</text>
+          </view>
+        </view>
+      </view>
     </view>
-    <view wx:elif="{{reviews.length > 0}}" class="load-more no-more">
-      <text>已经到底啦 ~</text>
+
+    <!-- 关于车评侦探 -->
+    <view class="section-block">
+      <view class="section-header">
+        <view class="section-icon icon-about"></view>
+        <text class="section-title">关于车评侦探</text>
+      </view>
+      <view class="about-content">
+        <text class="about-text">车评侦探是一款基于真实用户评价的微信小程序，致力于为车友提供客观、全面的车型评分参考。</text>
+        <view class="about-features">
+          <view class="feature-item">
+            <text class="feature-dot">•</text>
+            <text class="feature-text">五维评分系统：动力、操控、空间、辅驾、其他</text>
+          </view>
+          <view class="feature-item">
+            <text class="feature-dot">•</text>
+            <text class="feature-text">实时排行榜：按综合评分排序展示热门车型</text>
+          </view>
+          <view class="feature-item">
+            <text class="feature-dot">•</text>
+            <text class="feature-text">真实评价：基于车主真实用车体验的口碑分享</text>
+          </view>
+        </view>
+      </view>
     </view>
-  </view>
+
+    <!-- 底部留白（为TabBar留出空间） -->
+    <view class="bottom-space"></view>
+  </scroll-view>
 </view>

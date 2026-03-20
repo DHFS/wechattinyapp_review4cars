@@ -292,3 +292,409 @@ page {
 .load-more.no-more {
   color: #444444;
 }
+
+/* 新增样式 - 多板块布局 */
+
+/* 可滚动内容区 */
+.content-scroll {
+  flex: 1;
+  height: calc(100vh - 100px);
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+}
+
+/* 板块区块 */
+.section-block {
+  background: #1A1A1A;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+/* 板块头部 */
+.section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  position: relative;
+}
+
+/* 评价图标 */
+.icon-review::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+  width: 6px;
+  height: 10px;
+  background: #FF6B35;
+  border-radius: 1px;
+}
+
+.icon-review::after {
+  content: '';
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 6px;
+  height: 14px;
+  background: #FF6B35;
+  border-radius: 1px;
+}
+
+/* 关于图标 */
+.icon-about {
+  border: 2px solid #FF6B35;
+  border-radius: 50%;
+}
+
+.icon-about::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  background: #FF6B35;
+  border-radius: 50%;
+}
+
+.icon-about::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 6px;
+  background: #FF6B35;
+}
+
+/* 帮助图标 */
+.icon-help {
+  border: 2px solid #FF6B35;
+  border-radius: 50%;
+}
+
+.icon-help::before {
+  content: '?';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: #FF6B35;
+  font-weight: bold;
+}
+
+/* 联系图标 */
+.icon-contact {
+  border: 2px solid #FF6B35;
+  border-radius: 50%;
+}
+
+.icon-contact::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border: 1.5px solid #FF6B35;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.icon-contact::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 5px;
+  border: 1.5px solid #FF6B35;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* 小空状态 */
+.empty-state-small {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.empty-icon-small {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.empty-text {
+  font-size: 15px;
+  color: #888888;
+  margin-bottom: 4px;
+}
+
+.empty-hint {
+  font-size: 12px;
+  color: #666666;
+}
+
+/* 紧凑评价列表 */
+.review-list-compact {
+  padding: 0 16px;
+}
+
+.review-card-compact {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.review-card-compact:last-child {
+  border-bottom: none;
+}
+
+.compact-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.compact-car {
+  font-size: 15px;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.compact-score {
+  font-size: 12px;
+  color: #888888;
+}
+
+.compact-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.compact-btn {
+  font-size: 13px;
+  color: #FF6B35;
+  padding: 4px 8px;
+}
+
+.compact-btn.delete {
+  color: #FF5252;
+}
+
+/* 加载更多小 */
+.load-more-small {
+  text-align: center;
+  padding: 16px;
+  color: #666666;
+  font-size: 13px;
+}
+
+/* 查看全部按钮 */
+.view-all-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  margin-top: 8px;
+  background: rgba(255, 107, 53, 0.1);
+  border-radius: 8px;
+  border: 1rpx solid rgba(255, 107, 53, 0.3);
+}
+
+.view-all-btn text:first-child {
+  font-size: 14px;
+  color: #FF6B35;
+  font-weight: 500;
+}
+
+.view-all-btn .arrow {
+  font-size: 20px;
+  color: #FF6B35;
+  margin-left: 8px;
+  line-height: 1;
+}
+
+/* 关于内容 */
+.about-content {
+  padding: 16px;
+}
+
+.about-text {
+  font-size: 14px;
+  color: #CCCCCC;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.about-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.feature-dot {
+  font-size: 14px;
+  color: #FF6B35;
+  line-height: 1.4;
+}
+
+.feature-text {
+  font-size: 13px;
+  color: #AAAAAA;
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* 帮助内容 */
+.help-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.help-item {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.help-step {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  color: #FFFFFF;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.help-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.help-title {
+  font-size: 14px;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.help-desc {
+  font-size: 12px;
+  color: #888888;
+  line-height: 1.5;
+}
+
+/* 联系内容 */
+.contact-content {
+  padding: 16px;
+}
+
+.contact-desc {
+  font-size: 13px;
+  color: #888888;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.contact-label {
+  font-size: 14px;
+  color: #888888;
+  margin-right: 16px;
+}
+
+.contact-value {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contact-value text:first-child {
+  font-size: 16px;
+  color: #FFFFFF;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.copy-hint {
+  font-size: 11px;
+  color: #FF6B35;
+  background: rgba(255, 107, 53, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* 底部留白 - 为TabBar留出足够空间 */
+.bottom-space {
+  height: calc(140rpx + env(safe-area-inset-bottom));
+  min-height: 180rpx;
+}
+
+/* 页面整体padding调整 */
+.page {
+  padding: 0 16px calc(140rpx + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 头部统计调整 */
+.header {
+  padding: 24px 0;
+  flex-shrink: 0;
+}

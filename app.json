@@ -4,7 +4,8 @@
     "pages/index/index",
     "pages/detail/detail",
     "pages/addCar/addCar",
-    "pages/myReviews/myReviews"
+    "pages/myReviews/myReviews",
+    "pages/allReviews/allReviews"
   ],
   "window": {
     "backgroundTextStyle": "light",

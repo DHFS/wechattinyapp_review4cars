@@ -40,19 +40,13 @@ Page({
     // 计算后的综合得分 - 未评分时显示"-"
     calculatedScore: '-',
 
-    // 用户信息（提交时获取）
-    userInfo: {
-      avatarUrl: '',
-      nickName: ''
-    },
-
     // 文字评价
     comment: '',
 
     // 提交状态
     submitting: false,
 
-    // 当前用户openid
+    // 当前用户openid（从全局获取）
     currentOpenid: '',
 
     // 编辑状态
@@ -93,20 +87,57 @@ Page({
     
     console.log('详情页加载，车型ID:', carId, '自动进入编辑:', autoEdit)
     
-    // 获取当前用户openid并检查是否已评价
-    this.getCurrentUserOpenid().then(() => {
-      // 加载车型详情
-      this.loadCarDetail(carId)
-      
-      // 加载评价列表并检查用户是否已评价
-      this.loadReviews(carId).then(() => {
-        // 如果是从"我的评价"页面跳转过来且已评价，自动进入编辑模式
-        if (autoEdit && this.data.hasReviewed) {
-          console.log('自动进入编辑模式')
-          this.startEditFromMyReview()
-        }
-      })
+    // 从全局获取用户信息
+    this.loadUserInfoFromApp()
+    
+    // 加载车型详情
+    this.loadCarDetail(carId)
+    
+    // 加载评价列表并检查用户是否已评价
+    this.loadReviews(carId).then(() => {
+      // 如果是从"我的评价"页面跳转过来且已评价，自动进入编辑模式
+      if (autoEdit && this.data.hasReviewed) {
+        console.log('自动进入编辑模式')
+        this.startEditFromMyReview()
+      }
     })
+  },
+
+  // 从全局 App 获取用户信息
+  loadUserInfoFromApp() {
+    console.log('尝试从全局获取用户信息, app:', app)
+    
+    // 防御性检查
+    if (!app) {
+      console.error('app 实例未获取到')
+      return
+    }
+    
+    if (typeof app.getUserInfo !== 'function') {
+      console.error('app.getUserInfo 不是函数, app:', app)
+      return
+    }
+    
+    const userInfo = app.getUserInfo()
+    console.log('从全局获取的用户信息:', userInfo)
+    
+    if (userInfo && userInfo.openid) {
+      console.log('从全局获取到 openid:', userInfo.openid)
+      this.setData({ currentOpenid: userInfo.openid })
+    } else {
+      console.log('全局用户信息未准备好，等待登录回调')
+      // 注册登录成功回调
+      if (typeof app.onLoginSuccess === 'function') {
+        app.onLoginSuccess((info) => {
+          console.log('登录成功回调:', info.openid)
+          this.setData({ currentOpenid: info.openid })
+          // 重新加载评价列表以更新"是否已评价"状态
+          if (this.data.carInfo.id) {
+            this.loadReviews(this.data.carInfo.id)
+          }
+        })
+      }
+    }
   },
 
   onReady() {
@@ -251,38 +282,14 @@ Page({
   // 用户相关
   // ============================================
   
-  async getCurrentUserOpenid() {
-    try {
-      const { result } = await wx.cloud.callFunction({
-        name: 'getOpenid'
-      })
-      this.setData({ currentOpenid: result.openid })
-      return result.openid
-    } catch (err) {
-      console.log('获取openid失败')
-      return ''
-    }
+  // 获取当前用户信息（从全局App）
+  getCurrentUserInfo() {
+    return app.getUserInfo()
   },
 
-  getUserProfile() {
-    return new Promise((resolve, reject) => {
-      wx.getUserProfile({
-        desc: '用于展示您的头像和昵称在评价中',
-        success: (res) => {
-          this.setData({
-            userInfo: {
-              avatarUrl: res.userInfo.avatarUrl,
-              nickName: res.userInfo.nickName
-            }
-          })
-          resolve(res.userInfo)
-        },
-        fail: (err) => {
-          console.error('获取用户信息失败:', err)
-          reject(err)
-        }
-      })
-    })
+  // 检查用户是否已完善资料
+  checkUserProfile() {
+    return app.hasCompleteProfile()
   },
 
   // ============================================
@@ -366,24 +373,85 @@ Page({
     const { currentOpenid } = this.data
     
     try {
+      // 直接查询该车型的所有评价（需要数据库权限设置为所有人可读）
       const res = await db.collection('reviews')
         .where({ car_id: carId })
         .orderBy('created_at', 'desc')
         .limit(50)
         .get()
       
-      console.log('从数据库加载的原始评价数据:', res.data)
+      console.log('加载评价数据:', res.data.length, '条')
+      console.log('第一条评价数据:', res.data[0] ? {
+        id: res.data[0]._id,
+        avatar: res.data[0].user_avatar,
+        nickname: res.data[0].user_nickname
+      } : '无数据')
+      
+      const reviewData = res.data
       
       // 检查当前用户是否已评价
-      const userReview = res.data.find(item => item._openid === currentOpenid)
+      const userReview = reviewData.find(item => item._openid === currentOpenid)
       const hasReviewed = !!userReview
       
-      const reviews = res.data.map(item => {
-        console.log('处理单条评价:', item._id, '头像:', item.user_avatar, '昵称:', item.user_nickname)
+      // 收集所有需要转换的头像 fileID（去重）- 和首页榜单逻辑一致
+      const avatarList = reviewData
+        .map(item => item.user_avatar)
+        .filter(avatar => avatar && avatar.trim() !== '')
+      
+      const cloudFileIDs = avatarList.filter(url => url.startsWith('cloud://'))
+      const normalUrls = avatarList.filter(url => !url.startsWith('cloud://'))
+      
+      // 去重
+      const avatarFileIDs = [...new Set(cloudFileIDs)]
+      
+      console.log('详情页 - 头像列表:', avatarList)
+      console.log('详情页 - 需要转换的cloud://头像:', avatarFileIDs)
+      console.log('详情页 - 普通URL头像:', normalUrls)
+      
+      // 批量获取临时链接 - 和首页榜单逻辑一致，一次性转换
+      let avatarUrlMap = {}
+      if (avatarFileIDs.length > 0) {
+        try {
+          const tempRes = await wx.cloud.getTempFileURL({
+            fileList: avatarFileIDs
+          })
+          tempRes.fileList.forEach(item => {
+            if (item.fileID && item.tempFileURL) {
+              avatarUrlMap[item.fileID] = item.tempFileURL
+            } else {
+              console.log('头像转换失败:', item.fileID, item.errMsg)
+            }
+          })
+          console.log('头像URL映射:', avatarUrlMap)
+        } catch (e) {
+          console.log('获取头像临时链接失败:', e)
+        }
+      } else {
+        console.log('没有需要转换的cloud://头像')
+      }
+      
+      const defaultAvatar = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+      
+      const reviews = reviewData.map(item => {
+        // 处理头像链接 - 和首页榜单逻辑一致
+        let userAvatar = item.user_avatar
+        
+        if (userAvatar && userAvatar.startsWith('cloud://')) {
+          // cloud:// 链接，尝试转换
+          const converted = avatarUrlMap[userAvatar]
+          userAvatar = converted || defaultAvatar
+        } else if (userAvatar && userAvatar.startsWith('http')) {
+          // 已经是 HTTPS 链接，直接使用
+          // 保持原样
+        } else {
+          // 无效格式，使用默认头像
+          userAvatar = defaultAvatar
+        }
+        
         return {
           _id: item._id,
           _openid: item._openid,
-          userAvatar: item.user_avatar,
+          userAvatar: userAvatar,
           userNickname: item.user_nickname,
           time: this.formatTime(item.created_at),
           totalScore: item.total_score ? Math.round(item.total_score).toString() : '0',
@@ -399,6 +467,12 @@ Page({
         }
       })
       
+      // 输出调试信息
+      console.log('第一个评价的头像:', reviews[0]?.userAvatar)
+      console.log('第一个评价的昵称:', reviews[0]?.userNickname)
+      console.log('第一个评价的原始头像:', reviewData[0]?.user_avatar)
+      console.log('所有评价的头像:', reviews.map(r => ({avatar: r.userAvatar, nickname: r.userNickname})))
+      
       this.setData({ 
         reviews,
         hasReviewed,
@@ -407,6 +481,7 @@ Page({
       })
       
       console.log('用户是否已评价:', hasReviewed)
+      console.log('评价数据已设置到页面, 共', reviews.length, '条')
     } catch (err) {
       console.error('加载评价列表失败:', err)
     }
@@ -493,7 +568,7 @@ Page({
 
   // 提交评价入口
   submitReview() {
-    const { hasReviewed, userInfo, submitting } = this.data
+    const { hasReviewed, submitting } = this.data
     
     // 防止重复提交
     if (submitting) {
@@ -522,17 +597,26 @@ Page({
       return
     }
     
-    // 如果已有用户信息，直接提交
-    if (userInfo.avatarUrl && userInfo.nickName) {
-      this.doSubmitReview(userInfo)
+    // 获取全局用户信息
+    let userInfo = null
+    if (app && typeof app.getUserInfo === 'function') {
+      userInfo = app.getUserInfo()
+    }
+    
+    // 如果用户已完善资料（头像+昵称），直接提交
+    if (userInfo && userInfo.avatarUrl && userInfo.nickName) {
+      this.doSubmitReview({
+        avatarUrl: userInfo.avatarUrl,
+        nickName: userInfo.nickName
+      })
       return
     }
     
-    // 显示完善资料弹窗
+    // 未完善资料，显示完善资料弹窗
     this.setData({
       showProfileModal: true,
-      tempAvatarUrl: '',
-      tempNickname: '',
+      tempAvatarUrl: userInfo?.avatarUrl || '',
+      tempNickname: userInfo?.nickName || '',
       tempAvatarFile: null,
       isEditingReview: false
     })
@@ -607,13 +691,16 @@ Page({
       // 上传头像到云存储
       const avatarUrl = await this.uploadAvatar(tempAvatarUrl)
       
-      // 保存用户信息
+      // 保存用户信息到全局 App
       const userInfo = {
         avatarUrl: avatarUrl,
         nickName: tempNickname.trim()
       }
+      if (app && typeof app.saveUserProfile === 'function') {
+        app.saveUserProfile(userInfo)
+      }
+      
       this.setData({ 
-        userInfo,
         showProfileModal: false,
         isEditingReview: false
       })
@@ -682,66 +769,37 @@ Page({
     }
   },
 
-  // 更新车型平均分
+  // 更新车型平均分 - 使用云函数（管理员权限）
   async updateCarAverageScore(carId) {
-    const db = wx.cloud.database()
-    const _ = db.command
-    
+    console.log('开始更新车型平均分, carId:', carId)
     try {
-      // 获取该车所有评价
-      const res = await db.collection('reviews')
-        .where({ car_id: carId })
-        .get()
+      const res = await wx.cloud.callFunction({
+        name: 'updateCarScore',
+        data: { carId }
+      })
       
-      const reviews = res.data
-      const count = reviews.length
+      console.log('updateCarScore 云函数返回:', JSON.stringify(res, null, 2))
       
-      if (count === 0) {
-        // 如果没有评价了，清空车型数据
-        await db.collection('cars').doc(carId).update({
-          data: {
-            avg_score: 0,
-            review_count: 0,
-            score_power: 0,
-            score_handling: 0,
-            score_space: 0,
-            score_adas: 0,
-            score_other: 0,
-            updated_at: db.serverDate()
-          }
-        })
-        console.log('车型评价已清空')
+      if (!res.result) {
+        console.error('云函数返回结果为空, res:', res)
         return
       }
       
-      // 计算各维度平均分
-      const avgPower = reviews.reduce((sum, r) => sum + r.score_power, 0) / count
-      const avgHandling = reviews.reduce((sum, r) => sum + r.score_handling, 0) / count
-      const avgSpace = reviews.reduce((sum, r) => sum + r.score_space, 0) / count
-      const avgAdas = reviews.reduce((sum, r) => sum + r.score_adas, 0) / count
-      const avgOther = reviews.reduce((sum, r) => sum + r.score_other, 0) / count
+      // 检查返回结构
+      console.log('res.result 类型:', typeof res.result)
+      console.log('res.result 内容:', res.result)
+      console.log('res.result.success:', res.result?.success)
+      console.log('res.result.message:', res.result?.message)
       
-      // 计算综合平均分
-      const avgTotal = reviews.reduce((sum, r) => sum + r.total_score, 0) / count
-      
-      // 更新车型数据
-      await db.collection('cars').doc(carId).update({
-        data: {
-          avg_score: avgTotal,
-          review_count: count,
-          score_power: avgPower,
-          score_handling: avgHandling,
-          score_space: avgSpace,
-          score_adas: avgAdas,
-          score_other: avgOther,
-          updated_at: db.serverDate()
-        }
-      })
-      
-      console.log('车型平均分已更新:', avgTotal.toFixed(1))
-      
+      if (res.result && res.result.success === true) {
+        console.log('车型平均分已更新:', res.result.avg_score, '评价数:', res.result.review_count)
+      } else {
+        console.error('更新车型平均分失败:', res.result?.message || '未知错误')
+        wx.showToast({ title: '更新分数失败', icon: 'none' })
+      }
     } catch (err) {
-      console.error('更新车型平均分失败:', err)
+      console.error('调用更新车型平均分云函数失败:', err)
+      wx.showToast({ title: '更新分数失败', icon: 'none' })
     }
   },
 
@@ -765,10 +823,19 @@ Page({
   },
 
   async doDeleteReview(reviewId) {
-    const db = wx.cloud.database()
-    
     try {
-      await db.collection('reviews').doc(reviewId).remove()
+      const res = await wx.cloud.callFunction({
+        name: 'deleteReview',
+        data: { reviewId }
+      })
+      
+      console.log('deleteReview 云函数返回:', res)
+      
+      if (!res.result || !res.result.success) {
+        console.error('删除失败:', res.result?.message)
+        wx.showToast({ title: res.result?.message || '删除失败', icon: 'none' })
+        return
+      }
       
       // 更新车型平均分
       await this.updateCarAverageScore(this.data.carInfo.id)
@@ -783,7 +850,7 @@ Page({
       
     } catch (err) {
       console.error('删除评价失败:', err)
-      wx.showToast({ title: '删除失败', icon: 'none' })
+      wx.showToast({ title: '删除失败：' + (err.message || '无权限'), icon: 'none' })
     }
   },
 
@@ -792,10 +859,19 @@ Page({
   // ============================================
   
   // 从用户自己的评价数据进入编辑模式
+  // 点击"修改我的评价"按钮进入编辑模式
+  startEditFromButton() {
+    console.log('用户点击修改评价按钮')
+    this.startEditFromMyReview()
+  },
+
   startEditFromMyReview() {
     const { userReviewData, userReviewId } = this.data
     
-    if (!userReviewData) return
+    if (!userReviewData) {
+      wx.showToast({ title: '无法获取评价数据', icon: 'none' })
+      return
+    }
     
     const editingRatingItems = [
       { key: 'power', name: '动力三电', value: userReviewData.score_power, color: '#FFFFFF' },
@@ -820,6 +896,12 @@ Page({
       editingRatingItems,
       editingCalculatedScore,
       editingComment: userReviewData.comment
+    })
+    
+    // 滚动到编辑区域
+    wx.pageScrollTo({
+      selector: '.section',
+      duration: 300
     })
   },
   
@@ -890,7 +972,7 @@ Page({
 
   // 编辑评价入口
   updateReview() {
-    const { editingRatingItems, editingComment, userInfo, submitting } = this.data
+    const { editingRatingItems, editingComment, submitting } = this.data
     
     // 防止重复提交
     if (submitting) {
@@ -909,31 +991,38 @@ Page({
       return
     }
     
-    // 如果已有用户信息，直接更新
-    if (userInfo.avatarUrl && userInfo.nickName) {
-      this.doUpdateReview(userInfo)
+    // 获取全局用户信息
+    let userInfo = null
+    if (app && typeof app.getUserInfo === 'function') {
+      userInfo = app.getUserInfo()
+    }
+    
+    // 如果用户已完善资料，直接更新
+    if (userInfo && userInfo.avatarUrl && userInfo.nickName) {
+      this.doUpdateReview({
+        avatarUrl: userInfo.avatarUrl,
+        nickName: userInfo.nickName
+      })
       return
     }
     
-    // 显示完善资料弹窗
+    // 未完善资料，显示完善资料弹窗
     this.setData({
       showProfileModal: true,
-      tempAvatarUrl: '',
-      tempNickname: '',
+      tempAvatarUrl: userInfo?.avatarUrl || '',
+      tempNickname: userInfo?.nickName || '',
       tempAvatarFile: null,
       isEditingReview: true
     })
   },
   
-  // 真正的更新逻辑
+  // 真正的更新逻辑 - 使用云函数
   async doUpdateReview(userInfo) {
     const { editingReviewId, editingRatingItems, editingCalculatedScore, editingComment } = this.data
     
     this.setData({ submitting: true })
     
     try {
-      const db = wx.cloud.database()
-      
       const updateData = {
         score_power: editingRatingItems[0].value,
         score_handling: editingRatingItems[1].value,
@@ -941,8 +1030,7 @@ Page({
         score_adas: editingRatingItems[3].value,
         score_other: editingRatingItems[4].value,
         total_score: parseFloat(editingCalculatedScore),
-        comment: editingComment.trim(),
-        updated_at: db.serverDate()
+        comment: editingComment.trim()
       }
       
       // 如果获取到了用户信息，更新用户信息
@@ -952,9 +1040,34 @@ Page({
         console.log('更新评价时同步更新用户信息:', updateData.user_avatar, updateData.user_nickname)
       }
       
-      await db.collection('reviews').doc(editingReviewId).update({ data: updateData })
+      // 使用云函数更新（管理员权限）
+      const res = await wx.cloud.callFunction({
+        name: 'updateReview',
+        data: {
+          reviewId: editingReviewId,
+          updateData
+        }
+      })
       
+      console.log('updateReview 云函数返回:', res)
+      
+      if (!res.result) {
+        console.error('云函数返回结果为空')
+        wx.showToast({ title: '修改失败：服务器返回空', icon: 'none' })
+        return
+      }
+      
+      if (!res.result.success) {
+        console.error('云函数返回错误:', res.result.message)
+        wx.showToast({ title: res.result.message || '修改失败', icon: 'none' })
+        return
+      }
+      
+      // 先更新平均分，等待完成
       await this.updateCarAverageScore(this.data.carInfo.id)
+      
+      // 延迟一下确保数据库更新完成
+      await new Promise(resolve => setTimeout(resolve, 500))
       
       wx.showToast({ title: '修改成功', icon: 'success' })
       
@@ -964,10 +1077,9 @@ Page({
         editingComment: ''
       })
       
-      await Promise.all([
-        this.loadCarDetail(this.data.carInfo.id),
-        this.loadReviews(this.data.carInfo.id)
-      ])
+      // 重新加载车型详情和评价列表
+      await this.loadCarDetail(this.data.carInfo.id)
+      await this.loadReviews(this.data.carInfo.id)
     } catch (err) {
       console.error('修改评价失败:', err)
       wx.showToast({ title: '修改失败', icon: 'none' })

@@ -1,0 +1,9 @@
+{
+  "name": "updateReview",
+  "version": "1.0.0",
+  "description": "更新评价",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

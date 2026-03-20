@@ -1,0 +1,254 @@
+/* 页面背景 */
+.page {
+  min-height: 100vh;
+  background-color: #121212;
+  padding-bottom: 40rpx;
+}
+
+/* 头部统计 */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60rpx 40rpx;
+  background: linear-gradient(180deg, #1A1A1A 0%, #121212 100%);
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 60rpx;
+}
+
+.stat-num {
+  font-size: 72rpx;
+  font-weight: 700;
+  color: #FF6B35;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 26rpx;
+  color: #888888;
+  margin-top: 16rpx;
+}
+
+.stat-divider {
+  width: 2rpx;
+  height: 80rpx;
+  background-color: #333333;
+}
+
+/* 内容区域 */
+.content {
+  padding: 0 30rpx;
+}
+
+/* 加载中 */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #333333;
+  border-top-color: #FF6B35;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #888888;
+  margin-top: 20rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #FFFFFF;
+  margin-bottom: 16rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+/* 评价列表 */
+.review-list {
+  padding-top: 20rpx;
+}
+
+.review-card {
+  background-color: #1A1A1A;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 24rpx;
+}
+
+/* 车型信息 */
+.car-info {
+  margin-bottom: 24rpx;
+  border-bottom: 1rpx solid #2A2A2A;
+  padding-bottom: 20rpx;
+}
+
+.car-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.car-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-right: 16rpx;
+}
+
+.car-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+}
+
+.car-year {
+  font-size: 24rpx;
+  color: #888888;
+}
+
+/* 评分区域 */
+.score-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.total-score {
+  display: flex;
+  align-items: baseline;
+}
+
+.score-num {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #FF6B35;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 28rpx;
+  color: #FF6B35;
+  margin-left: 8rpx;
+}
+
+.score-time {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+/* 五维得分 */
+.dimensions-row {
+  display: flex;
+  justify-content: space-between;
+  background-color: #252525;
+  border-radius: 12rpx;
+  padding: 24rpx 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.dimension-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.dim-name {
+  font-size: 22rpx;
+  color: #888888;
+  margin-bottom: 8rpx;
+}
+
+.dim-score {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* 评价内容 */
+.comment-section {
+  background-color: #252525;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.comment-text {
+  font-size: 28rpx;
+  color: #CCCCCC;
+  line-height: 1.6;
+}
+
+/* 操作按钮 */
+.action-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 16rpx 40rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+}
+
+.btn-edit {
+  background-color: #FF6B35;
+  color: #FFFFFF;
+}
+
+.btn-delete {
+  background-color: #2A2A2A;
+  color: #FF5252;
+}
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 40rpx 0;
+  font-size: 26rpx;
+  color: #888888;
+}
+
+.load-more.no-more {
+  color: #555555;
+}

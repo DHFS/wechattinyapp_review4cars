@@ -1,18 +1,9 @@
 Component({
   data: {
-    selected: 0,
-    list: [
-      {
-        pagePath: "/pages/index/index",
-        text: "排行榜"
-      },
-      {
-        pagePath: "/pages/myReviews/myReviews",
-        text: "我的评价"
-      }
-    ]
+    selected: 0
   },
   methods: {
+    // 切换 Tab
     switchTab(e) {
       const data = e.currentTarget.dataset
       const url = data.path
@@ -23,6 +14,13 @@ Component({
       
       this.setData({
         selected: data.index
+      })
+    },
+    
+    // 跳转到添加车型页
+    goAddCar() {
+      wx.navigateTo({
+        url: '/pages/addCar/addCar'
       })
     }
   }

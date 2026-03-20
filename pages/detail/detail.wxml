@@ -57,14 +57,16 @@
     </view>
   </view>
 
-  <!-- 已评价提示 -->
-  <view class="section" wx:if="{{hasReviewed && !editingReview}}">
-    <view class="section-title">我的评价</view>
-    <view class="reviewed-tip">
-      <text class="tip-icon">✓</text>
-      <text class="tip-text">您已评价过该车型</text>
+  <!-- 已评价提示 - 用户已评价过此车型 -->
+  <view class="section has-reviewed-section" wx:if="{{hasReviewed && !editingReview}}">
+    <view class="has-reviewed-box">
+      <text class="has-reviewed-icon">✓</text>
+      <view class="has-reviewed-content">
+        <text class="has-reviewed-title">您已评价过此车型</text>
+        <text class="has-reviewed-desc">您可以修改自己的评价，每位用户只能评价一次</text>
+      </view>
     </view>
-    <button class="edit-review-btn" bindtap="startEditFromMyReview">
+    <button class="submit-btn edit-btn" bindtap="startEditFromButton">
       修改我的评价
     </button>
   </view>
@@ -185,7 +187,7 @@
     <view class="review-list">
       <view class="review-item" wx:for="{{reviews}}" wx:key="_id">
         <view class="review-header">
-          <image class="review-avatar" src="{{item.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+          <image class="review-avatar" src="{{item.userAvatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"/>
           <view class="review-user">
             <text class="review-name">{{item.userNickname || '匿名用户'}}</text>
             <text class="review-time">{{item.time}}</text>
@@ -238,7 +240,7 @@
           >
             <image 
               class="avatar-preview" 
-              src="{{tempAvatarUrl || '/images/default-avatar.png'}}" 
+              src="{{tempAvatarUrl || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" 
               mode="aspectFill"
             />
             <text class="avatar-hint" wx:if="{{!tempAvatarUrl}}">点击选择</text>
