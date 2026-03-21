@@ -1,0 +1,192 @@
+{
+  "brands": {
+    "特斯拉": ["Tesla", "tesla", "特斯啦", "特斯拉汽车"],
+    "比亚迪": ["BYD", "byd", "比亚的"],
+    "理想": ["LI Auto", "li auto", "理想汽车"],
+    "问界": ["AITO", "aito", "问界汽车"],
+    "小米": ["xiaomi", "Xiaomi", "小米汽车"],
+    "蔚来": ["NIO", "nio", "蔚来汽车"],
+    "小鹏": ["XPENG", "xpeng", "小鹏汽车"],
+    "零跑": ["Leapmotor", "leapmotor", "零跑汽车"],
+    "极氪": ["ZEEKR", "zeekr", "极氪汽车"],
+    "阿维塔": ["AVATR", "avatr", "阿维塔科技"],
+    "岚图": ["VOYAH", "voyah", "岚图汽车"],
+    "极狐": ["ARCFOX", "arcfox", "极狐汽车"],
+    "深蓝": ["DEEPAL", "deepal", "深蓝汽车"],
+    "腾势": ["DENZA", "denza", "腾势汽车"],
+    "智界": ["LUXEED", "luxeed"],
+    "享界": ["STELATO", "stelato"],
+    "宝马": ["BMW", "bmw", "宝马汽车"],
+    "奔驰": ["Mercedes-Benz", "mercedes", "benz", "梅赛德斯奔驰"],
+    "奥迪": ["Audi", "audi"],
+    "大众": ["Volkswagen", "VW", "vw"],
+    "丰田": ["Toyota", "toyota"],
+    "本田": ["Honda", "honda"],
+    "日产": ["Nissan", "nissan"],
+    "别克": ["Buick", "buick"],
+    "福特": ["Ford", "ford"],
+    "吉利": ["Geely", "geely", "吉利汽车"],
+    "长安": ["Changan", "changan", "长安汽车"],
+    "奇瑞": ["Chery", "chery", "奇瑞汽车"],
+    "红旗": ["Hongqi", "hongqi"],
+    "领克": ["LYNK&CO", "lynkco", "领克汽车"]
+  },
+  "models": {
+    "特斯拉": {
+      "Model 3": ["model3", "Model3", "m3"],
+      "Model Y": ["modely", "ModelY", "my"],
+      "Model S": ["models", "ModelS"],
+      "Model X": ["modelx", "ModelX"]
+    },
+    "比亚迪": {
+      "汉EV": ["汉ev", "hanev"],
+      "海豹": ["海豹ev", "haibao"],
+      "海豚": ["haitun"],
+      "宋Pro DM-i": ["宋pro", "songpro", "song prodmi"],
+      "唐DM-i": ["唐dmi", "tangdmi"],
+      "秦PLUS DM-i": ["秦plus", "qinplus", "qin plus dmi"]
+    },
+    "理想": {
+      "L6": ["l6"],
+      "L7": ["l7"],
+      "L8": ["l8"],
+      "L9": ["l9"]
+    },
+    "问界": {
+      "M5": ["m5"],
+      "M7": ["m7"],
+      "M9": ["m9"]
+    },
+    "小米": {
+      "SU7": ["su7", "su 7"],
+      "SU7 Pro": ["su7pro", "su 7 pro"],
+      "SU7 Max": ["su7max", "su 7 max"]
+    },
+    "蔚来": {
+      "ET5": ["et5"],
+      "ET5T": ["et5t"],
+      "ES6": ["es6"],
+      "EC6": ["ec6"]
+    },
+    "小鹏": {
+      "MONA M03": ["m03", "mona m03"],
+      "P7+": ["p7+", "p7plus"],
+      "G6": ["g6"],
+      "X9": ["x9"]
+    },
+    "零跑": {
+      "C10": ["c10"],
+      "C11": ["c11"],
+      "C16": ["c16"]
+    },
+    "极氪": {
+      "001": ["001", "极氪001", "zeekr001"],
+      "007": ["007", "极氪007", "zeekr007"],
+      "7X": ["7x", "极氪7x", "zeekr7x"]
+    },
+    "阿维塔": {
+      "11": ["11", "阿维塔11", "avatr11"],
+      "12": ["12", "阿维塔12", "avatr12"],
+      "07": ["07", "阿维塔07", "avatr07"]
+    },
+    "岚图": {
+      "FREE": ["free", "岚图free"],
+      "梦想家": ["梦想家", "dreamer"],
+      "追光": ["追光", "zhuiguang"]
+    },
+    "极狐": {
+      "阿尔法T5": ["阿尔法t5", "alpha t5", "alphat5"],
+      "阿尔法S5": ["阿尔法s5", "alpha s5", "alphas5"],
+      "考拉": ["考拉", "koala"]
+    },
+    "深蓝": {
+      "S07": ["s07"],
+      "SL03": ["sl03"],
+      "G318": ["g318"]
+    },
+    "腾势": {
+      "D9": ["d9"],
+      "N7": ["n7"],
+      "Z9 GT": ["z9gt", "z9 gt"]
+    },
+    "智界": {
+      "R7": ["r7"],
+      "S7": ["s7"]
+    },
+    "享界": {
+      "S9": ["s9"]
+    },
+    "宝马": {
+      "3系": ["3系", "3 series", "3series"],
+      "5系": ["5系", "5 series", "5series"],
+      "i3": ["i3"],
+      "iX3": ["ix3", "i x3"]
+    },
+    "奔驰": {
+      "C级": ["c级", "c class", "cclass"],
+      "E级": ["e级", "e class", "eclass"],
+      "EQE SUV": ["eqe suv", "eqesuv"]
+    },
+    "奥迪": {
+      "A4L": ["a4l"],
+      "Q5L": ["q5l"],
+      "Q4 e-tron": ["q4etron", "q4 e tron"]
+    },
+    "大众": {
+      "迈腾": ["迈腾", "magotan"],
+      "帕萨特": ["帕萨特", "passat"],
+      "ID.3": ["id3", "id.3"],
+      "ID.4 X": ["id4x", "id.4x", "id4 x"]
+    },
+    "丰田": {
+      "凯美瑞": ["凯美瑞", "camry"],
+      "汉兰达": ["汉兰达", "highlander"],
+      "RAV4荣放": ["rav4", "荣放", "rav4rongfang"]
+    },
+    "本田": {
+      "雅阁": ["雅阁", "accord"],
+      "CR-V": ["crv", "cr-v"],
+      "思域": ["思域", "civic"]
+    },
+    "日产": {
+      "轩逸": ["轩逸", "sylphy"],
+      "天籁": ["天籁", "teana", "altima"],
+      "ARIYA 艾睿雅": ["ariya", "艾睿雅"]
+    },
+    "别克": {
+      "GL8": ["gl8"],
+      "君越": ["君越", "lacrosse"],
+      "E5": ["e5"]
+    },
+    "福特": {
+      "蒙迪欧": ["蒙迪欧", "mondeo"],
+      "锐界L": ["锐界l", "edge l", "edgel"],
+      "烈马": ["烈马", "bronco"]
+    },
+    "吉利": {
+      "星越L": ["星越l", "xingyuel"],
+      "银河E8": ["银河e8", "yinhee8", "e8"],
+      "银河L7": ["银河l7", "yinhel7", "l7"]
+    },
+    "长安": {
+      "UNI-V": ["univ", "uni-v"],
+      "启源A07": ["启源a07", "qiyuan a07", "a07"],
+      "CS75 PLUS": ["cs75plus", "cs75 plus"]
+    },
+    "奇瑞": {
+      "瑞虎8": ["瑞虎8", "tiggo8", "tiggo 8"],
+      "星纪元 ES": ["星纪元es", "xingjiyuan es", "es"],
+      "风云A8": ["风云a8", "fengyun a8", "a8"]
+    },
+    "红旗": {
+      "H5": ["h5"],
+      "E-QM5": ["eqm5", "e-qm5"],
+      "HS5": ["hs5"]
+    },
+    "领克": {
+      "03": ["03", "领克03"],
+      "08 EM-P": ["08", "08emp", "08 em-p"],
+      "01": ["01", "领克01"]
+    }
+  }
+}

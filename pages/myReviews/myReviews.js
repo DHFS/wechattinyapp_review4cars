@@ -25,7 +25,11 @@ Page({
     // 当前用户openid
     currentOpenid: '',
     // 是否显示全部评价
-    showAllReviews: false
+    showAllReviews: false,
+    // 使用帮助展开状态
+    helpExpanded: false,
+    // 关于车评侦探展开状态
+    aboutExpanded: false
   },
 
   onLoad() {
@@ -612,5 +616,15 @@ Page({
   // 阻止冒泡
   preventBubble() {
     // 什么都不做，只是阻止冒泡
+  },
+
+  // 切换板块展开/收起
+  toggleSection(e) {
+    const { section } = e.currentTarget.dataset
+    if (section === 'help') {
+      this.setData({ helpExpanded: !this.data.helpExpanded })
+    } else if (section === 'about') {
+      this.setData({ aboutExpanded: !this.data.aboutExpanded })
+    }
   }
 })

@@ -1,4 +1,3 @@
-/* 添加车型页面 - 深色风格 */
 page {
   background: #121212;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
@@ -9,9 +8,8 @@ page {
   padding-bottom: 40px;
 }
 
-/* 头部 */
 .header {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .header-title {
@@ -24,10 +22,9 @@ page {
 
 .header-subtitle {
   font-size: 13px;
-  color: #666666;
+  color: #777777;
 }
 
-/* 表单区域 */
 .form-section {
   background: #1A1A1A;
   border-radius: 16px;
@@ -37,6 +34,7 @@ page {
 
 .form-item {
   margin-bottom: 20px;
+  position: relative;
 }
 
 .form-item:last-child {
@@ -69,7 +67,52 @@ page {
   color: #555555;
 }
 
-/* 动力形式选择 */
+.suggestion-list {
+  margin-top: 8px;
+  background: #202020;
+  border: 1px solid #2F2F2F;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.suggestion-item {
+  padding: 12px 14px;
+  border-bottom: 1px solid #2A2A2A;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.suggestion-title {
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.suggestion-subtitle {
+  display: block;
+  color: #8D8D8D;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.suggestion-tag {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #FFB38E;
+  background: rgba(255, 107, 53, 0.14);
+  border-radius: 10px;
+  padding: 4px 8px;
+}
+
 .power-type-list {
   display: flex;
   flex-direction: row;
@@ -109,46 +152,6 @@ page {
   color: #FFFFFF;
 }
 
-/* TODO: 图片上传样式（预留接口，未来升级） */
-/*
-.image-upload {
-  width: 100%;
-  height: 180px;
-  background: #252525;
-  border-radius: 12px;
-  border: 2px dashed #444444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.upload-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.upload-icon {
-  font-size: 40px;
-  color: #555555;
-  line-height: 1;
-}
-
-.upload-text {
-  font-size: 13px;
-  color: #666666;
-}
-
-.uploaded-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-*/
-
-/* 提交按钮 */
 .submit-btn {
   width: 100%;
   height: 52px;
@@ -172,7 +175,6 @@ page {
   opacity: 0.6;
 }
 
-/* 提示信息 */
 .tips-section {
   background: rgba(255, 107, 53, 0.05);
   border-radius: 12px;

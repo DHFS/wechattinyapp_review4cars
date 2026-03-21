@@ -149,6 +149,11 @@ Page({
               car = carRes.data
             }
 
+            // 处理评论折叠
+            const comment = review.comment || ''
+            const maxLength = 120
+            const isLongComment = comment.length > maxLength
+            
             return {
               _id: review._id,
               carId: review.car_id,
@@ -158,7 +163,10 @@ Page({
               modelYear: car?.model_year || '',
               tagColor: this.getTagColor(car?.power_type || '纯电'),
               myScore: review.total_score ? Math.round(review.total_score).toString() : '0',
-              comment: review.comment,
+              comment: comment,
+              isLongComment: isLongComment,
+              isExpanded: false,
+              displayComment: isLongComment ? comment.slice(0, maxLength) + '...' : comment,
               time: this.formatTime(review.created_at),
               dimensions: [
                 { name: '动力', score: review.score_power || 0 },
@@ -169,6 +177,10 @@ Page({
               ]
             }
           } catch (e) {
+            const comment = review.comment || ''
+            const maxLength = 120
+            const isLongComment = comment.length > maxLength
+            
             return {
               _id: review._id,
               carId: review.car_id,
@@ -178,7 +190,10 @@ Page({
               modelYear: '',
               tagColor: '#666666',
               myScore: review.total_score ? Math.round(review.total_score).toString() : '0',
-              comment: review.comment,
+              comment: comment,
+              isLongComment: isLongComment,
+              isExpanded: false,
+              displayComment: isLongComment ? comment.slice(0, maxLength) + '...' : comment,
               time: this.formatTime(review.created_at),
               dimensions: [
                 { name: '动力', score: review.score_power || 0 },
@@ -278,6 +293,12 @@ Page({
               const carRes = await db.collection('cars').doc(review.car_id).get()
               car = carRes.data
             }
+            
+            // 处理评论折叠
+            const comment = review.comment || ''
+            const maxLength = 120
+            const isLongComment = comment.length > maxLength
+            
             return {
               _id: review._id,
               carId: review.car_id,
@@ -286,7 +307,10 @@ Page({
               powerType: car?.power_type || '纯电',
               tagColor: this.getTagColor(car?.power_type || '纯电'),
               myScore: review.total_score ? Math.round(review.total_score).toString() : '0',
-              comment: review.comment,
+              comment: comment,
+              isLongComment: isLongComment,
+              isExpanded: false,
+              displayComment: isLongComment ? comment.slice(0, maxLength) + '...' : comment,
               time: this.formatTime(review.created_at),
               dimensions: [
                 { name: '动力', score: review.score_power || 0 },
@@ -297,6 +321,10 @@ Page({
               ]
             }
           } catch (e) {
+            const comment = review.comment || ''
+            const maxLength = 120
+            const isLongComment = comment.length > maxLength
+            
             return {
               _id: review._id,
               carId: review.car_id,
@@ -305,7 +333,10 @@ Page({
               powerType: '纯电',
               tagColor: '#666666',
               myScore: review.total_score ? Math.round(review.total_score).toString() : '0',
-              comment: review.comment,
+              comment: comment,
+              isLongComment: isLongComment,
+              isExpanded: false,
+              displayComment: isLongComment ? comment.slice(0, maxLength) + '...' : comment,
               time: this.formatTime(review.created_at),
               dimensions: [
                 { name: '动力', score: review.score_power || 0 },
@@ -493,5 +524,31 @@ Page({
   },
 
   // 阻止冒泡
-  preventBubble() {}
+  preventBubble() {},
+
+  // 切换评论展开/收起
+  toggleComment(e) {
+    const { index } = e.currentTarget.dataset
+    const { allReviews } = this.data
+    const review = allReviews[index]
+    
+    if (!review || !review.isLongComment) return
+    
+    const newExpanded = !review.isExpanded
+    const maxLength = 120
+    
+    // 更新该条评价的展开状态和显示内容
+    const newAllReviews = allReviews.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          isExpanded: newExpanded,
+          displayComment: newExpanded ? item.comment : item.comment.slice(0, maxLength) + '...'
+        }
+      }
+      return item
+    })
+    
+    this.setData({ allReviews: newAllReviews })
+  }
 })

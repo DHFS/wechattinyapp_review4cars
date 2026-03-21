@@ -1,0 +1,9 @@
+{
+  "name": "suggestCarModels",
+  "version": "1.0.0",
+  "description": "品牌车型联想与纠错建议",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

@@ -319,6 +319,24 @@ page {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* 可折叠头部 */
+.section-header.expandable {
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.section-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.expand-icon {
+  font-size: 14px;
+  color: #888888;
+  padding: 4px;
+}
+
 .section-icon {
   width: 20px;
   height: 20px;

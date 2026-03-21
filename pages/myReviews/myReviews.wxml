@@ -72,11 +72,16 @@
 
     <!-- 帮助 -->
     <view class="section-block">
-      <view class="section-header">
-        <view class="section-icon icon-help"></view>
-        <text class="section-title">使用帮助</text>
+      <view class="section-header expandable" bindtap="toggleSection" data-section="help">
+        <view class="section-left">
+          <view class="section-icon icon-help"></view>
+          <text class="section-title">使用帮助</text>
+        </view>
+        <view class="expand-icon">
+          <text>{{helpExpanded ? '↑' : '↓'}}</text>
+        </view>
       </view>
-      <view class="help-content">
+      <view class="help-content" wx:if="{{helpExpanded}}">
         <view class="help-item">
           <view class="help-step">1</view>
           <view class="help-info">
@@ -128,11 +133,16 @@
 
     <!-- 关于车评侦探 -->
     <view class="section-block">
-      <view class="section-header">
-        <view class="section-icon icon-about"></view>
-        <text class="section-title">关于车评侦探</text>
+      <view class="section-header expandable" bindtap="toggleSection" data-section="about">
+        <view class="section-left">
+          <view class="section-icon icon-about"></view>
+          <text class="section-title">关于车评侦探</text>
+        </view>
+        <view class="expand-icon">
+          <text>{{aboutExpanded ? '↑' : '↓'}}</text>
+        </view>
       </view>
-      <view class="about-content">
+      <view class="about-content" wx:if="{{aboutExpanded}}">
         <text class="about-text">车评侦探是一款基于真实用户评价的微信小程序，致力于为车友提供客观、全面的车型评分参考。</text>
         <view class="about-features">
           <view class="feature-item">

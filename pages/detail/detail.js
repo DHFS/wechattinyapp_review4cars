@@ -90,17 +90,32 @@ Page({
     // 从全局获取用户信息
     this.loadUserInfoFromApp()
     
+    // 加载车型详情和评价列表
+    this.loadPageData(carId, autoEdit)
+  },
+
+  onShow() {
+    // 从撰写评价页面返回时刷新数据
+    const carId = this.data.carInfo.id
+    if (carId) {
+      console.log('详情页显示，刷新数据')
+      this.loadPageData(carId, false)
+    }
+  },
+
+  // 加载页面数据
+  async loadPageData(carId, autoEdit) {
     // 加载车型详情
-    this.loadCarDetail(carId)
+    await this.loadCarDetail(carId)
     
     // 加载评价列表并检查用户是否已评价
-    this.loadReviews(carId).then(() => {
-      // 如果是从"我的评价"页面跳转过来且已评价，自动进入编辑模式
-      if (autoEdit && this.data.hasReviewed) {
-        console.log('自动进入编辑模式')
-        this.startEditFromMyReview()
-      }
-    })
+    await this.loadReviews(carId)
+    
+    // 如果是从"我的评价"页面跳转过来且已评价，自动进入编辑模式
+    if (autoEdit && this.data.hasReviewed) {
+      console.log('自动进入编辑模式')
+      this.startEditFromMyReview()
+    }
   },
 
   // 从全局 App 获取用户信息
@@ -448,6 +463,11 @@ Page({
           userAvatar = defaultAvatar
         }
         
+        // 处理评论折叠
+        const comment = item.comment || ''
+        const maxLength = 120
+        const isLongComment = comment.length > maxLength
+        
         return {
           _id: item._id,
           _openid: item._openid,
@@ -455,7 +475,10 @@ Page({
           userNickname: item.user_nickname,
           time: this.formatTime(item.created_at),
           totalScore: item.total_score ? Math.round(item.total_score).toString() : '0',
-          comment: item.comment,
+          comment: comment,
+          isLongComment: isLongComment,
+          isExpanded: false,
+          displayComment: isLongComment ? comment.slice(0, maxLength) + '...' : comment,
           dimensions: [
             { name: '动力', score: Math.round(item.score_power), color: this.getScoreColor(item.score_power) },
             { name: '操控', score: Math.round(item.score_handling), color: this.getScoreColor(item.score_handling) },
@@ -566,15 +589,9 @@ Page({
     return true
   },
 
-  // 提交评价入口
+  // 提交评价入口 - 跳转到全屏编辑页
   submitReview() {
-    const { hasReviewed, submitting } = this.data
-    
-    // 防止重复提交
-    if (submitting) {
-      console.log('正在提交中，请勿重复点击')
-      return
-    }
+    const { hasReviewed, carInfo } = this.data
     
     // 检查是否已评价过
     if (hasReviewed) {
@@ -592,33 +609,9 @@ Page({
       return
     }
     
-    // 先验证表单
-    if (!this.validateForm()) {
-      return
-    }
-    
-    // 获取全局用户信息
-    let userInfo = null
-    if (app && typeof app.getUserInfo === 'function') {
-      userInfo = app.getUserInfo()
-    }
-    
-    // 如果用户已完善资料（头像+昵称），直接提交
-    if (userInfo && userInfo.avatarUrl && userInfo.nickName) {
-      this.doSubmitReview({
-        avatarUrl: userInfo.avatarUrl,
-        nickName: userInfo.nickName
-      })
-      return
-    }
-    
-    // 未完善资料，显示完善资料弹窗
-    this.setData({
-      showProfileModal: true,
-      tempAvatarUrl: userInfo?.avatarUrl || '',
-      tempNickname: userInfo?.nickName || '',
-      tempAvatarFile: null,
-      isEditingReview: false
+    // 跳转到全屏编辑页
+    wx.navigateTo({
+      url: `/pages/writeReview/writeReview?carId=${carInfo.id}&carName=${encodeURIComponent(carInfo.brand + ' ' + carInfo.model)}`
     })
   },
 
@@ -866,74 +859,29 @@ Page({
   },
 
   startEditFromMyReview() {
-    const { userReviewData, userReviewId } = this.data
+    const { userReviewData, userReviewId, carInfo } = this.data
     
     if (!userReviewData) {
       wx.showToast({ title: '无法获取评价数据', icon: 'none' })
       return
     }
     
-    const editingRatingItems = [
-      { key: 'power', name: '动力三电', value: userReviewData.score_power, color: '#FFFFFF' },
-      { key: 'handling', name: '操控底盘', value: userReviewData.score_handling, color: '#FFFFFF' },
-      { key: 'space', name: '空间内饰', value: userReviewData.score_space, color: '#FFFFFF' },
-      { key: 'adas', name: '辅驾安全', value: userReviewData.score_adas, color: '#FFFFFF' },
-      { key: 'other', name: '其他体验', value: userReviewData.score_other, color: '#FFFFFF' }
-    ]
-    
-    const hasUnrated = editingRatingItems.some(item => item.value === 0)
-    const editingCalculatedScore = hasUnrated ? '-' : (
-      editingRatingItems[0].value * 0.3 +
-      editingRatingItems[1].value * 0.2 +
-      editingRatingItems[2].value * 0.2 +
-      editingRatingItems[3].value * 0.2 +
-      editingRatingItems[4].value * 0.1
-    ).toFixed(0)
-    
-    this.setData({
-      editingReview: true,
-      editingReviewId: userReviewId,
-      editingRatingItems,
-      editingCalculatedScore,
-      editingComment: userReviewData.comment
-    })
-    
-    // 滚动到编辑区域
-    wx.pageScrollTo({
-      selector: '.section',
-      duration: 300
+    // 跳转到全屏编辑页（编辑模式）
+    wx.navigateTo({
+      url: `/pages/writeReview/writeReview?carId=${carInfo.id}&carName=${encodeURIComponent(carInfo.brand + ' ' + carInfo.model)}&isEdit=true&reviewId=${userReviewId}`
     })
   },
   
   startEdit(e) {
     const reviewId = e.currentTarget.dataset.id
     const review = this.data.reviews.find(r => r._id === reviewId)
+    const { carInfo } = this.data
     
-    if (!review) return
+    if (!review || !carInfo) return
     
-    const editingRatingItems = [
-      { key: 'power', name: '动力三电', value: review.dimensions[0].score, color: '#FFFFFF' },
-      { key: 'handling', name: '操控底盘', value: review.dimensions[1].score, color: '#FFFFFF' },
-      { key: 'space', name: '空间内饰', value: review.dimensions[2].score, color: '#FFFFFF' },
-      { key: 'adas', name: '辅驾安全', value: review.dimensions[3].score, color: '#FFFFFF' },
-      { key: 'other', name: '其他体验', value: review.dimensions[4].score, color: '#FFFFFF' }
-    ]
-    
-    const hasUnrated = editingRatingItems.some(item => item.value === 0)
-    const editingCalculatedScore = hasUnrated ? '-' : (
-      editingRatingItems[0].value * 0.3 +
-      editingRatingItems[1].value * 0.2 +
-      editingRatingItems[2].value * 0.2 +
-      editingRatingItems[3].value * 0.2 +
-      editingRatingItems[4].value * 0.1
-    ).toFixed(0)
-    
-    this.setData({
-      editingReview: true,
-      editingReviewId: reviewId,
-      editingRatingItems,
-      editingCalculatedScore,
-      editingComment: review.comment
+    // 跳转到全屏编辑页（编辑模式）
+    wx.navigateTo({
+      url: `/pages/writeReview/writeReview?carId=${carInfo.id}&carName=${encodeURIComponent(carInfo.brand + ' ' + carInfo.model)}&isEdit=true&reviewId=${reviewId}`
     })
   },
 
@@ -1112,5 +1060,31 @@ Page({
       title: `车友们给 ${carName} 打出了 ${score} 分，你也来评评理！`,
       query: `id=${carInfo.id}`
     }
+  },
+
+  // 切换评论展开/收起
+  toggleComment(e) {
+    const { index } = e.currentTarget.dataset
+    const { reviews } = this.data
+    const review = reviews[index]
+    
+    if (!review || !review.isLongComment) return
+    
+    const newExpanded = !review.isExpanded
+    const maxLength = 120
+    
+    // 更新该条评价的展开状态和显示内容
+    const newReviews = reviews.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          isExpanded: newExpanded,
+          displayComment: newExpanded ? item.comment : item.comment.slice(0, maxLength) + '...'
+        }
+      }
+      return item
+    })
+    
+    this.setData({ reviews: newReviews })
   }
 })

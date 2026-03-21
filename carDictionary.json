@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-03-22",
+  "brands": [
+    {
+      "name": "特斯拉",
+      "aliases": ["Tesla", "tesla", "特斯啦", "特斯拉汽车"],
+      "models": [
+        { "name": "Model 3", "aliases": ["model3", "Model3", "m3"], "powerType": "纯电" },
+        { "name": "Model Y", "aliases": ["modely", "ModelY", "my"], "powerType": "纯电" },
+        { "name": "Model S", "aliases": ["models", "ModelS"], "powerType": "纯电" },
+        { "name": "Model X", "aliases": ["modelx", "ModelX"], "powerType": "纯电" }
+      ]
+    },
+    {
+      "name": "比亚迪",
+      "aliases": ["BYD", "byd", "比亚的"],
+      "models": [
+        { "name": "汉EV", "aliases": ["汉ev", "hanev"], "powerType": "纯电" },
+        { "name": "海豹", "aliases": ["海豹ev", "haibao"], "powerType": "纯电" },
+        { "name": "海豚", "aliases": ["haitun"], "powerType": "纯电" },
+        { "name": "宋Pro DM-i", "aliases": ["宋pro", "songpro", "song prodmi"], "powerType": "插混" },
+        { "name": "唐DM-i", "aliases": ["唐dmi", "tangdmi"], "powerType": "插混" },
+        { "name": "秦PLUS DM-i", "aliases": ["秦plus", "qinplus", "qin plus dmi"], "powerType": "插混" }
+      ]
+    },
+    {
+      "name": "理想",
+      "aliases": ["LI Auto", "li auto", "理想汽车"],
+      "models": [
+        { "name": "L6", "aliases": ["l6"], "powerType": "增程" },
+        { "name": "L7", "aliases": ["l7"], "powerType": "增程" },
+        { "name": "L8", "aliases": ["l8"], "powerType": "增程" },
+        { "name": "L9", "aliases": ["l9"], "powerType": "增程" }
+      ]
+    },
+    {
+      "name": "问界",
+      "aliases": ["AITO", "aito", "问界汽车"],
+      "models": [
+        { "name": "M5", "aliases": ["m5"], "powerType": "增程" },
+        { "name": "M7", "aliases": ["m7"], "powerType": "增程" },
+        { "name": "M9", "aliases": ["m9"], "powerType": "增程" }
+      ]
+    },
+    {
+      "name": "小米",
+      "aliases": ["xiaomi", "Xiaomi", "小米汽车"],
+      "models": [
+        { "name": "SU7", "aliases": ["su7", "su 7"], "powerType": "纯电" },
+        { "name": "SU7 Pro", "aliases": ["su7pro", "su 7 pro"], "powerType": "纯电" },
+        { "name": "SU7 Max", "aliases": ["su7max", "su 7 max"], "powerType": "纯电" }
+      ]
+    },
+    {
+      "name": "蔚来",
+      "aliases": ["NIO", "nio", "蔚来汽车"],
+      "models": [
+        { "name": "ET5", "aliases": ["et5"], "powerType": "纯电" },
+        { "name": "ET5T", "aliases": ["et5t"], "powerType": "纯电" },
+        { "name": "ES6", "aliases": ["es6"], "powerType": "纯电" },
+        { "name": "EC6", "aliases": ["ec6"], "powerType": "纯电" }
+      ]
+    },
+    {
+      "name": "小鹏",
+      "aliases": ["XPENG", "xpeng", "小鹏汽车"],
+      "models": [
+        { "name": "MONA M03", "aliases": ["m03", "mona m03"], "powerType": "纯电" },
+        { "name": "P7+", "aliases": ["p7+", "p7plus"], "powerType": "纯电" },
+        { "name": "G6", "aliases": ["g6"], "powerType": "纯电" },
+        { "name": "X9", "aliases": ["x9"], "powerType": "纯电" }
+      ]
+    },
+    {
+      "name": "零跑",
+      "aliases": ["Leapmotor", "leapmotor", "零跑汽车"],
+      "models": [
+        { "name": "C10", "aliases": ["c10"], "powerType": "纯电" },
+        { "name": "C11", "aliases": ["c11"], "powerType": "纯电" },
+        { "name": "C16", "aliases": ["c16"], "powerType": "增程" }
+      ]
+    }
+  ]
+}

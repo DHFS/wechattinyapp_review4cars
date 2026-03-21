@@ -1,0 +1,2536 @@
+[
+  {
+    "brand": "212",
+    "model_name": "T01",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.99-20.58万"
+  },
+  {
+    "brand": "阿维塔",
+    "model_name": "06",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "21.59-27.99万"
+  },
+  {
+    "brand": "阿维塔",
+    "model_name": "07",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "21.99-28.99万"
+  },
+  {
+    "brand": "阿维塔",
+    "model_name": "11",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "30.08-39.08万"
+  },
+  {
+    "brand": "阿维塔",
+    "model_name": "12",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "26.58-40.08万"
+  },
+  {
+    "brand": "埃安",
+    "model_name": "AION i60",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.28-13.58万"
+  },
+  {
+    "brand": "埃安",
+    "model_name": "AION RT",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.98-16.58万"
+  },
+  {
+    "brand": "埃安",
+    "model_name": "AION S",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.98-14.98万"
+  },
+  {
+    "brand": "埃安",
+    "model_name": "AION UT",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "6.98-10.18万"
+  },
+  {
+    "brand": "埃安",
+    "model_name": "AION Y",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "7.68-12.28万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "A3",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "12.69-16.99万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "A4L",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "32.18-40.08万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "A5L",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "26.80-32.80万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "A5L Sportback",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "28.80-34.80万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "A6L",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "29.53-42.33万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "A7L",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "33.97-48.97万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "E5 Sportback",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "23.68-31.68万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "Q3",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "17.37-20.48万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "Q4 e-tron",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "28.99-36.71万"
+  },
+  {
+    "brand": "奥迪",
+    "model_name": "Q5L",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "39.88-48.88万"
+  },
+  {
+    "brand": "宝骏",
+    "model_name": "享境EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "11.98-14.98万"
+  },
+  {
+    "brand": "宝骏",
+    "model_name": "享境PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "10.98-13.98万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "3系",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "29.99-39.99万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "5系",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "43.99-52.59万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "i3",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "35.39-41.39万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "i5",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "33.99-46.59万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "iX3",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "40.50-44.50万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "X1",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "18.80-32.90万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "X3",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "29.99-38.99万"
+  },
+  {
+    "brand": "宝马",
+    "model_name": "X5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "57.80-74.50万"
+  },
+  {
+    "brand": "北京汽车",
+    "model_name": "北京越野BJ30",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.99-12.69万"
+  },
+  {
+    "brand": "北京汽车",
+    "model_name": "北京越野BJ40",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.78-17.89万"
+  },
+  {
+    "brand": "北京汽车",
+    "model_name": "北京越野BJ40增程",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "17.98-27.98万"
+  },
+  {
+    "brand": "北京汽车制造厂",
+    "model_name": "极石01",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "29.99-35.99万"
+  },
+  {
+    "brand": "北汽新能源",
+    "model_name": "极狐 阿尔法S5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "12.78-18.48万"
+  },
+  {
+    "brand": "北汽新能源",
+    "model_name": "极狐 阿尔法T5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.48-14.78万"
+  },
+  {
+    "brand": "北汽新能源",
+    "model_name": "极狐T1",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.68-8.68万"
+  },
+  {
+    "brand": "奔驰",
+    "model_name": "C级",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "33.48-38.06万"
+  },
+  {
+    "brand": "奔驰",
+    "model_name": "E级",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "44.90-59.98万"
+  },
+  {
+    "brand": "奔驰",
+    "model_name": "EQE SUV",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "48.60-63.06万"
+  },
+  {
+    "brand": "奔驰",
+    "model_name": "GLC",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "27.18-40.13万"
+  },
+  {
+    "brand": "奔腾",
+    "model_name": "小马",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "2.49-3.99万"
+  },
+  {
+    "brand": "奔腾",
+    "model_name": "悦意03",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "7.98-11.39万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "缤智",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.98-10.58万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "飞度",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.28-8.88万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "皓影",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "12.99-20.39万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "思域",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "12.99-18.79万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "型格",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.19-13.69万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "雅阁",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "17.98-22.88万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "雅阁 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "18.58-22.58万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "英仕派",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.28-15.58万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "CR-V",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "18.59-26.39万"
+  },
+  {
+    "brand": "本田",
+    "model_name": "HR-V",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.99-12.59万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豹05DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "7.28-9.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豹06 DM-i",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "9.98-13.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豹06DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "7.68-10.68万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豹06DM旅行版",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "8.98-12.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豹06EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.98-13.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豹06GT",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "12.48-15.48万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豹07DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "13.98-19.58万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海鸥",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "5.68-7.28万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海狮05EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "11.78-13.78万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海狮06DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "13.98-15.68万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海狮06EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "14.38-17.99万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海狮07 EV",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "18.98-23.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "海豚",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "7.78-10.68万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "汉DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "16.58-22.58万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "汉DM-i",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "16.58-22.58万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "汉EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "17.98-23.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "汉L DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "20.98-25.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "汉L EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "21.98-27.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "秦L DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "8.98-12.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "秦L DM-i",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "9.98-13.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "秦L EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.98-13.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "秦PLUS DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "5.98-8.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "秦PLUS DM-i",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "7.98-12.58万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "秦PLUS EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "9.98-12.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "宋L DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "11.98-15.48万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "宋PLUS DM-i",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "13.58-17.58万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "宋Pro DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "8.78-12.78万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "唐DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "15.48-19.78万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "唐DM-i",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "17.98-24.98万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "元PLUS",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "11.98-14.78万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "元UP",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "6.98-10.68万"
+  },
+  {
+    "brand": "比亚迪",
+    "model_name": "e7",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.38-11.58万"
+  },
+  {
+    "brand": "标致",
+    "model_name": "408",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.57-12.57万"
+  },
+  {
+    "brand": "别克",
+    "model_name": "昂科威",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "16.49-19.49万"
+  },
+  {
+    "brand": "别克",
+    "model_name": "君威",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.69-15.89万"
+  },
+  {
+    "brand": "别克",
+    "model_name": "君越",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "17.99-23.99万"
+  },
+  {
+    "brand": "别克",
+    "model_name": "威朗",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.89-11.89万"
+  },
+  {
+    "brand": "别克",
+    "model_name": "至境L7",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "18.99-23.99万"
+  },
+  {
+    "brand": "别克",
+    "model_name": "E5",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "16.99-21.19万"
+  },
+  {
+    "brand": "别克",
+    "model_name": "GL8",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "23.29-47.39万"
+  },
+  {
+    "brand": "传祺",
+    "model_name": "向往S7",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "15.38-21.78万"
+  },
+  {
+    "brand": "传祺",
+    "model_name": "影豹",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.80-12.80万"
+  },
+  {
+    "brand": "传祺",
+    "model_name": "GS3",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.38-8.38万"
+  },
+  {
+    "brand": "传祺",
+    "model_name": "GS8",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "14.48-19.08万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "宝来",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "7.69-11.59万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "高尔夫",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "12.98-16.58万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "揽巡",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "18.69-24.39万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "朗逸",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.30-9.99万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "凌渡",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.19-14.19万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "迈腾",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "17.99-24.69万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "帕萨特",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "18.19-24.33万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "速腾",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.19-12.69万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "探歌",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.89-11.87万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "探岳",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.39-19.49万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "途昂",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "22.90-31.99万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "途观L",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.48-20.98万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "途岳",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "7.69-16.49万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "CC",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "18.49-22.49万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "ID.3",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "12.99-16.29万"
+  },
+  {
+    "brand": "大众",
+    "model_name": "ID.4 X",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "15.99-21.19万"
+  },
+  {
+    "brand": "东风",
+    "model_name": "奕炫",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.69-8.19万"
+  },
+  {
+    "brand": "东风风神",
+    "model_name": "风神L7 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "8.99-12.99万"
+  },
+  {
+    "brand": "东风风神",
+    "model_name": "L8 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "12.99-14.99万"
+  },
+  {
+    "brand": "东风风行",
+    "model_name": "星海S7",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.99-14.99万"
+  },
+  {
+    "brand": "东风纳米",
+    "model_name": "纳米01",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "6.58-9.58万"
+  },
+  {
+    "brand": "方程豹",
+    "model_name": "豹5",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "23.98-32.98万"
+  },
+  {
+    "brand": "方程豹",
+    "model_name": "钛3",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "13.38-17.78万"
+  },
+  {
+    "brand": "方程豹",
+    "model_name": "钛7 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "17.98-21.98万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "铂智3X",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.48-14.48万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "锋兰达",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.78-14.68万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "汉兰达",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "24.98-32.58万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "皇冠陆放",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "23.28-28.08万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "卡罗拉",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "7.38-10.08万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "卡罗拉锐放",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.38-15.18万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "凯美瑞",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "17.18-25.98万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "雷凌",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.78-11.78万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "普拉多",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "39.98-55.98万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "威兰达",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "12.98-22.08万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "亚洲龙",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "12.88-18.88万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "bZ3",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "13.98-16.98万"
+  },
+  {
+    "brand": "丰田",
+    "model_name": "RAV4荣放",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "16.98-23.88万"
+  },
+  {
+    "brand": "福特",
+    "model_name": "烈马",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "29.98-43.88万"
+  },
+  {
+    "brand": "福特",
+    "model_name": "领睿",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.88-15.98万"
+  },
+  {
+    "brand": "福特",
+    "model_name": "蒙迪欧",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "14.98-21.88万"
+  },
+  {
+    "brand": "福特",
+    "model_name": "锐界",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "20.18-28.48万"
+  },
+  {
+    "brand": "福特",
+    "model_name": "锐界L",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "22.98-30.98万"
+  },
+  {
+    "brand": "福特",
+    "model_name": "探险者",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "30.98-39.98万"
+  },
+  {
+    "brand": "哈弗",
+    "model_name": "大狗",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.09-12.49万"
+  },
+  {
+    "brand": "哈弗",
+    "model_name": "猛龙PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "14.38-18.68万"
+  },
+  {
+    "brand": "哈弗",
+    "model_name": "H6",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "7.19-12.19万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "E-QM5",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "12.28-20.18万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "H5",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "15.98-22.58万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "H5 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "15.98-18.58万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "H6",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "14.58-19.58万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "H9",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "25.98-53.98万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "HS3 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "13.08-13.28万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "HS5",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "18.38-24.98万"
+  },
+  {
+    "brand": "红旗",
+    "model_name": "HS6 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "17.58-22.58万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "缤瑞",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.48-9.08万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "缤越",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.88-8.58万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "博越L",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.29-11.99万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "帝豪",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "4.89-7.39万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "豪越L",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.99-14.79万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "星瑞",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.97-12.57万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "星越L",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "13.72-18.52万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "银河E8",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "16.58-22.88万"
+  },
+  {
+    "brand": "吉利",
+    "model_name": "银河L7",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "12.57-16.97万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "星愿",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.88-9.78万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "熊猫",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "2.99-4.69万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "银河星舰7 EM-i",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "8.78-12.38万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "银河星耀6",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "9.28-12.28万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "银河星耀8 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "12.58-16.58万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "银河A7 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "8.98-12.98万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "银河E5",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "9.28-16.48万"
+  },
+  {
+    "brand": "吉利银河",
+    "model_name": "银河M9",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "17.38-23.88万"
+  },
+  {
+    "brand": "极狐",
+    "model_name": "阿尔法S",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "18.98-32.98万"
+  },
+  {
+    "brand": "极狐",
+    "model_name": "阿尔法S5",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "17.68-21.68万"
+  },
+  {
+    "brand": "极狐",
+    "model_name": "阿尔法T",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "18.58-28.08万"
+  },
+  {
+    "brand": "极狐",
+    "model_name": "阿尔法T5",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "15.58-19.98万"
+  },
+  {
+    "brand": "极狐",
+    "model_name": "考拉",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "10.98-13.38万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "001",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "25.90-32.90万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "007",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "20.99-29.99万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "009",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "43.90-78.90万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "7X",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "22.99-29.99万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "MIX",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "27.99-29.99万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "X",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "14.90-19.90万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "ZEEKR 7X",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "22.98-26.99万"
+  },
+  {
+    "brand": "极氪",
+    "model_name": "ZEEKR 9X",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "46.59-59.99万"
+  },
+  {
+    "brand": "江淮",
+    "model_name": "尊界S800",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "70.80-101.80万"
+  },
+  {
+    "brand": "凯迪拉克",
+    "model_name": "CT5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "21.59-28.59万"
+  },
+  {
+    "brand": "凯迪拉克",
+    "model_name": "XT5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "23.49-32.59万"
+  },
+  {
+    "brand": "岚图",
+    "model_name": "梦想家",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "33.99-63.99万"
+  },
+  {
+    "brand": "岚图",
+    "model_name": "泰山",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "37.99-50.99万"
+  },
+  {
+    "brand": "岚图",
+    "model_name": "知音",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "19.69-23.69万"
+  },
+  {
+    "brand": "岚图",
+    "model_name": "追光",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "25.28-38.59万"
+  },
+  {
+    "brand": "岚图",
+    "model_name": "追光L",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "24.28-32.28万"
+  },
+  {
+    "brand": "岚图",
+    "model_name": "FREE",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "26.69-33.69万"
+  },
+  {
+    "brand": "岚图",
+    "model_name": "FREE 318",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "22.89-26.69万"
+  },
+  {
+    "brand": "蓝电",
+    "model_name": "E5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.98-15.19万"
+  },
+  {
+    "brand": "理想",
+    "model_name": "i6",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "24.98-26.98万"
+  },
+  {
+    "brand": "理想",
+    "model_name": "i8",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "33.98万"
+  },
+  {
+    "brand": "理想",
+    "model_name": "L6",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "24.98-27.98万"
+  },
+  {
+    "brand": "理想",
+    "model_name": "L7",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "30.18-35.98万"
+  },
+  {
+    "brand": "理想",
+    "model_name": "L8",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "32.18-37.98万"
+  },
+  {
+    "brand": "理想",
+    "model_name": "L9",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "40.98-43.98万"
+  },
+  {
+    "brand": "理想",
+    "model_name": "MEGA",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "52.98-55.98万"
+  },
+  {
+    "brand": "林肯",
+    "model_name": "航海家",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "23.99-40.88万"
+  },
+  {
+    "brand": "林肯",
+    "model_name": "Z",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "18.88-25.88万"
+  },
+  {
+    "brand": "零跑",
+    "model_name": "B10",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "10.98-13.98万"
+  },
+  {
+    "brand": "零跑",
+    "model_name": "C01",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "13.68-17.18万"
+  },
+  {
+    "brand": "零跑",
+    "model_name": "C10",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "12.88-16.88万"
+  },
+  {
+    "brand": "零跑",
+    "model_name": "C11",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "14.88-20.58万"
+  },
+  {
+    "brand": "零跑",
+    "model_name": "C16",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "15.58-18.98万"
+  },
+  {
+    "brand": "零跑",
+    "model_name": "T03",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "4.99-6.99万"
+  },
+  {
+    "brand": "零跑汽车",
+    "model_name": "零跑B01",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "9.58-12.98万"
+  },
+  {
+    "brand": "零跑汽车",
+    "model_name": "零跑B10",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "9.28-12.28万"
+  },
+  {
+    "brand": "零跑汽车",
+    "model_name": "零跑C10",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "11.38-16.88万"
+  },
+  {
+    "brand": "零跑汽车",
+    "model_name": "零跑C11",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "13.88-20.58万"
+  },
+  {
+    "brand": "零跑汽车",
+    "model_name": "零跑C16",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "13.88-18.98万"
+  },
+  {
+    "brand": "零跑汽车",
+    "model_name": "零跑Lafa5",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "7.98-10.98万"
+  },
+  {
+    "brand": "零跑汽车",
+    "model_name": "零跑T03",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "4.99-6.99万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "01",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "15.58-19.68万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "03",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "13.78-17.68万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "06",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.96-11.18万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "07 EM-P",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "13.58-17.58万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "08 EM-P",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "18.58-24.88万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "09",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "19.88-23.28万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "10 EM-P",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "18.58-24.58万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "900",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "27.99-38.69万"
+  },
+  {
+    "brand": "领克",
+    "model_name": "Z20",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.99-14.29万"
+  },
+  {
+    "brand": "路虎",
+    "model_name": "捷豹XFL",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "26.98-36.98万"
+  },
+  {
+    "brand": "路虎",
+    "model_name": "揽胜极光",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "21.39-24.88万"
+  },
+  {
+    "brand": "马自达",
+    "model_name": "3 昂克赛拉",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.99-14.19万"
+  },
+  {
+    "brand": "马自达",
+    "model_name": "CX-5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.58-14.38万"
+  },
+  {
+    "brand": "马自达",
+    "model_name": "EZ-6",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.98-17.98万"
+  },
+  {
+    "brand": "马自达",
+    "model_name": "EZ-60",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.99-16.69万"
+  },
+  {
+    "brand": "猛士",
+    "model_name": "M817",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "30.19-36.99万"
+  },
+  {
+    "brand": "欧拉",
+    "model_name": "5 EV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "8.98-12.38万"
+  },
+  {
+    "brand": "欧拉",
+    "model_name": "好猫",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "8.78-12.58万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "艾瑞泽5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "4.39-6.39万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "艾瑞泽8",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "7.29-10.89万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "风云A8",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "10.99-14.99万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "风云A9L",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "14.99-19.99万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "风云T11",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "17.99-23.99万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "风云T9",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "11.09-16.19万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "捷途旅行者",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.99-20.99万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "捷途山海L7 PLUS",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.69-15.29万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "捷途X70",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.99-14.99万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "瑞虎3x",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "4.99-6.19万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "瑞虎5x",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.59-7.59万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "瑞虎7",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.99-9.39万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "瑞虎8",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "10.99-16.29万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "瑞虎9",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.29-18.39万"
+  },
+  {
+    "brand": "奇瑞",
+    "model_name": "星纪元 ES",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "19.59-29.99万"
+  },
+  {
+    "brand": "奇瑞新能源",
+    "model_name": "冰淇淋",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "2.99-4.99万"
+  },
+  {
+    "brand": "奇瑞新能源",
+    "model_name": "小蚂蚁",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "5.99-7.49万"
+  },
+  {
+    "brand": "起亚",
+    "model_name": "赛图斯",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.99-15.99万"
+  },
+  {
+    "brand": "起亚",
+    "model_name": "奕跑",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.59-7.28万"
+  },
+  {
+    "brand": "起亚",
+    "model_name": "K3",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.99-11.99万"
+  },
+  {
+    "brand": "日产",
+    "model_name": "奇骏",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.98-20.49万"
+  },
+  {
+    "brand": "日产",
+    "model_name": "天籁",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "17.98-23.98万"
+  },
+  {
+    "brand": "日产",
+    "model_name": "逍客",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.13-14.38万"
+  },
+  {
+    "brand": "日产",
+    "model_name": "轩逸",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "10.86-17.49万"
+  },
+  {
+    "brand": "日产",
+    "model_name": "ARIYA 艾睿雅",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "19.99-28.29万"
+  },
+  {
+    "brand": "日产",
+    "model_name": "N6",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.88-14.38万"
+  },
+  {
+    "brand": "日产",
+    "model_name": "N7",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.99-14.99万"
+  },
+  {
+    "brand": "荣威",
+    "model_name": "D7 DMH",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "9.98-12.98万"
+  },
+  {
+    "brand": "荣威",
+    "model_name": "i5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "4.99-7.69万"
+  },
+  {
+    "brand": "荣威",
+    "model_name": "M7 DMH",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "12.38-15.38万"
+  },
+  {
+    "brand": "上汽",
+    "model_name": "尚界H5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "15.98-19.98万"
+  },
+  {
+    "brand": "深蓝",
+    "model_name": "G318",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "17.59-31.80万"
+  },
+  {
+    "brand": "深蓝",
+    "model_name": "L06",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "11.99-14.99万"
+  },
+  {
+    "brand": "深蓝",
+    "model_name": "L07",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "15.19-17.39万"
+  },
+  {
+    "brand": "深蓝",
+    "model_name": "S05",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "11.99-14.99万"
+  },
+  {
+    "brand": "深蓝",
+    "model_name": "S07",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "14.99-21.29万"
+  },
+  {
+    "brand": "深蓝",
+    "model_name": "SL03",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "12.99-16.99万"
+  },
+  {
+    "brand": "斯柯达",
+    "model_name": "速派",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "13.19-17.49万"
+  },
+  {
+    "brand": "坦克",
+    "model_name": "300",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "19.98-23.48万"
+  },
+  {
+    "brand": "坦克",
+    "model_name": "400 Hi4-T",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "28.58-29.98万"
+  },
+  {
+    "brand": "坦克",
+    "model_name": "500 Hi4-T",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "33.50-35.50万"
+  },
+  {
+    "brand": "特斯拉",
+    "model_name": "Model 3",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "23.55-33.95万"
+  },
+  {
+    "brand": "特斯拉",
+    "model_name": "Model 3 Performance",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "33.59-33.59万"
+  },
+  {
+    "brand": "特斯拉",
+    "model_name": "Model S",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "68.49-81.49万"
+  },
+  {
+    "brand": "特斯拉",
+    "model_name": "Model X",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "72.49-82.49万"
+  },
+  {
+    "brand": "特斯拉",
+    "model_name": "Model Y",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "24.99-35.49万"
+  },
+  {
+    "brand": "特斯拉",
+    "model_name": "Model Y 长续航版",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "31.35-31.35万"
+  },
+  {
+    "brand": "腾势",
+    "model_name": "D9",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "33.98-60.06万"
+  },
+  {
+    "brand": "腾势",
+    "model_name": "N7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "23.98-32.98万"
+  },
+  {
+    "brand": "腾势",
+    "model_name": "N8L",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "37.98-44.98万"
+  },
+  {
+    "brand": "腾势",
+    "model_name": "N8L DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "29.98-32.98万"
+  },
+  {
+    "brand": "腾势",
+    "model_name": "N9 DM",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "38.98-44.98万"
+  },
+  {
+    "brand": "腾势",
+    "model_name": "Z9",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "33.48-41.48万"
+  },
+  {
+    "brand": "腾势",
+    "model_name": "Z9 GT",
+    "model_year": "2025款",
+    "power_type": "插混",
+    "price_range": "33.48-41.48万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "乐道L60",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "20.69-25.59万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "乐道L90",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "26.58-31.68万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "EC6",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "35.80-41.60万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "EC7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "45.80-54.80万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "ES6",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "33.80-39.60万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "ES8",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "49.80-59.80万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "ET5",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "29.80-35.60万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "ET5T",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "29.80-35.60万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "ET7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "42.80-51.60万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "ET9",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "78.80-81.80万"
+  },
+  {
+    "brand": "蔚来",
+    "model_name": "firefly萤火虫",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "11.98-12.58万"
+  },
+  {
+    "brand": "魏牌",
+    "model_name": "蓝山",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "26.48-29.18万"
+  },
+  {
+    "brand": "问界",
+    "model_name": "M5",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "24.98-27.98万"
+  },
+  {
+    "brand": "问界",
+    "model_name": "M7",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "27.98-37.98万"
+  },
+  {
+    "brand": "问界",
+    "model_name": "M8",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "35.98-44.98万"
+  },
+  {
+    "brand": "问界",
+    "model_name": "M9",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "46.98-56.98万"
+  },
+  {
+    "brand": "沃尔沃",
+    "model_name": "S60",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "18.90-25.81万"
+  },
+  {
+    "brand": "沃尔沃",
+    "model_name": "S90",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "29.85-37.29万"
+  },
+  {
+    "brand": "沃尔沃",
+    "model_name": "XC60",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "24.49-31.99万"
+  },
+  {
+    "brand": "沃尔沃",
+    "model_name": "XC70",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "26.99-34.99万"
+  },
+  {
+    "brand": "五菱",
+    "model_name": "缤果",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "5.68-8.48万"
+  },
+  {
+    "brand": "五菱",
+    "model_name": "缤果S",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "4.98-6.98万"
+  },
+  {
+    "brand": "五菱",
+    "model_name": "宏光MINIEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "2.78-4.98万"
+  },
+  {
+    "brand": "五菱",
+    "model_name": "星光560",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.28-7.58万"
+  },
+  {
+    "brand": "五菱",
+    "model_name": "星光560 PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "9.18万"
+  },
+  {
+    "brand": "现代",
+    "model_name": "索纳塔",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.98-16.98万"
+  },
+  {
+    "brand": "现代",
+    "model_name": "途胜",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "10.68-15.98万"
+  },
+  {
+    "brand": "现代",
+    "model_name": "伊兰特",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.38-9.38万"
+  },
+  {
+    "brand": "享界",
+    "model_name": "S9",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "39.98-44.98万"
+  },
+  {
+    "brand": "享界",
+    "model_name": "S9 增程版",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "31.80-36.80万"
+  },
+  {
+    "brand": "享界",
+    "model_name": "S9T",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "30.98-36.98万"
+  },
+  {
+    "brand": "小米",
+    "model_name": "SU7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "21.59-29.99万"
+  },
+  {
+    "brand": "小米",
+    "model_name": "SU7 Max",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "29.99-29.99万"
+  },
+  {
+    "brand": "小米",
+    "model_name": "SU7 Pro",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "24.59-24.59万"
+  },
+  {
+    "brand": "小米",
+    "model_name": "SU7 Ultra",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "52.99-81.49万"
+  },
+  {
+    "brand": "小米",
+    "model_name": "YU7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "25.99-35.99万"
+  },
+  {
+    "brand": "小鹏",
+    "model_name": "G6",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "17.68-19.88万"
+  },
+  {
+    "brand": "小鹏",
+    "model_name": "G7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "23.58-28.58万"
+  },
+  {
+    "brand": "小鹏",
+    "model_name": "G9",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "26.39-35.99万"
+  },
+  {
+    "brand": "小鹏",
+    "model_name": "MONA M03",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "11.98-15.98万"
+  },
+  {
+    "brand": "小鹏",
+    "model_name": "P7",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "19.39-28.99万"
+  },
+  {
+    "brand": "小鹏",
+    "model_name": "P7+",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "18.68-21.88万"
+  },
+  {
+    "brand": "小鹏",
+    "model_name": "X9",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "35.98-41.98万"
+  },
+  {
+    "brand": "星途",
+    "model_name": "凌云",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.79-16.77万"
+  },
+  {
+    "brand": "雪佛兰",
+    "model_name": "迈锐宝XL",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.09-15.49万"
+  },
+  {
+    "brand": "雪铁龙",
+    "model_name": "凡尔赛C5 X",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "12.87-15.87万"
+  },
+  {
+    "brand": "一汽-大众捷达",
+    "model_name": "捷达VA3",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.55-7.45万"
+  },
+  {
+    "brand": "一汽-大众捷达",
+    "model_name": "捷达VS5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "6.96-10.29万"
+  },
+  {
+    "brand": "一汽-大众捷达",
+    "model_name": "捷达VS7",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "8.58-9.99万"
+  },
+  {
+    "brand": "一汽-大众捷达",
+    "model_name": "捷达VS8",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "9.59-10.99万"
+  },
+  {
+    "brand": "奕派",
+    "model_name": "eπ007",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.99-14.99万"
+  },
+  {
+    "brand": "奕派",
+    "model_name": "eπ008",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "15.99-19.16万"
+  },
+  {
+    "brand": "羿驰",
+    "model_name": "易至EV3",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "5.28-6.68万"
+  },
+  {
+    "brand": "羿驰",
+    "model_name": "羿",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "11.88-17.88万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "启源A06",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "8.89-11.39万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "启源A07",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "13.59-17.99万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "启源Q05",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "7.49-10.49万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "启源Q07",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "10.98-15.68万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "逸动",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.39-7.09万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "CS55 PLUS",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "7.89-9.69万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "CS75 PLUS",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "11.79-14.99万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "Lumin",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "3.79-5.59万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "UNI-V",
+    "model_year": "2025款",
+    "power_type": "燃油",
+    "price_range": "10.89-13.99万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "UNI-Z PHEV",
+    "model_year": "2026年2月榜单",
+    "power_type": "插混",
+    "price_range": "9.89-11.89万"
+  },
+  {
+    "brand": "长安",
+    "model_name": "X5 PLUS",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.99-8.39万"
+  },
+  {
+    "brand": "智己",
+    "model_name": "L6",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "20.49-27.99万"
+  },
+  {
+    "brand": "智己",
+    "model_name": "LS6",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "19.49-26.69万"
+  },
+  {
+    "brand": "智己",
+    "model_name": "LS9",
+    "model_year": "2026年2月榜单",
+    "power_type": "增程",
+    "price_range": "32.28-35.28万"
+  },
+  {
+    "brand": "智界",
+    "model_name": "R7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "24.98-33.98万"
+  },
+  {
+    "brand": "智界",
+    "model_name": "R7 增程版",
+    "model_year": "2025款",
+    "power_type": "增程",
+    "price_range": "24.98-29.98万"
+  },
+  {
+    "brand": "智界",
+    "model_name": "S7",
+    "model_year": "2025款",
+    "power_type": "纯电",
+    "price_range": "24.98-34.98万"
+  },
+  {
+    "brand": "iCAR",
+    "model_name": "超级V23",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.48-16.98万"
+  },
+  {
+    "brand": "MG",
+    "model_name": "4",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "9.68-13.98万"
+  },
+  {
+    "brand": "MG",
+    "model_name": "5",
+    "model_year": "2026年2月榜单",
+    "power_type": "燃油",
+    "price_range": "5.79-8.59万"
+  },
+  {
+    "brand": "MG",
+    "model_name": "7",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "10.99-15.99万"
+  },
+  {
+    "brand": "smart",
+    "model_name": "精灵#1",
+    "model_year": "2026年2月榜单",
+    "power_type": "纯电",
+    "price_range": "15.49-24.99万"
+  }
+]

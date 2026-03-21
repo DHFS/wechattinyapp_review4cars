@@ -1,55 +1,88 @@
 <view class="page">
-  <!-- 页面标题 -->
   <view class="header">
     <text class="header-title">添加新车型</text>
-    <text class="header-subtitle">填写车辆信息，让更多车友参与评价</text>
+    <text class="header-subtitle">品牌和车型支持本地联想，提交前会再做一次智能纠错</text>
   </view>
 
-  <!-- 表单区域 -->
   <view class="form-section">
-    
-    <!-- 品牌厂家 -->
     <view class="form-item">
       <text class="form-label">品牌厂家 <text class="required">*</text></text>
-      <input 
-        class="form-input" 
-        placeholder="如：特斯拉、比亚迪、理想" 
+      <input
+        class="form-input"
+        placeholder="如：特斯拉、比亚迪、理想"
         value="{{formData.brand}}"
         data-field="brand"
         bindinput="onInputChange"
+        bindfocus="onBrandFocus"
+        bindblur="onInputBlur"
       />
+
+      <view class="suggestion-list" wx:if="{{showBrandSuggestions}}">
+        <view
+          wx:for="{{brandSuggestions}}"
+          wx:key="name"
+          class="suggestion-item"
+          data-brand="{{item.name}}"
+          bindtap="selectBrandSuggestion"
+        >
+          <text class="suggestion-title">{{item.name}}</text>
+          <text class="suggestion-subtitle">{{item.subtitle}}</text>
+        </view>
+      </view>
     </view>
 
-    <!-- 车型名称 -->
     <view class="form-item">
       <text class="form-label">车型名称 <text class="required">*</text></text>
-      <input 
-        class="form-input" 
-        placeholder="如：Model 3、汉EV、L9" 
+      <input
+        class="form-input"
+        placeholder="如：Model 3、汉EV、L9"
         value="{{formData.model}}"
         data-field="model"
         bindinput="onInputChange"
+        bindfocus="onModelFocus"
+        bindblur="onInputBlur"
       />
+
+      <view class="suggestion-list" wx:if="{{showModelSuggestions}}">
+        <view
+          wx:for="{{modelSuggestions}}"
+          wx:key="id"
+          class="suggestion-item"
+          data-brand="{{item.brand}}"
+          data-model="{{item.model}}"
+          data-powertype="{{item.powerType}}"
+          data-pricerange="{{item.priceRange}}"
+          bindtap="selectModelSuggestion"
+        >
+          <view class="suggestion-top">
+            <text class="suggestion-title">{{item.brand}} {{item.model}}</text>
+            <text
+              class="suggestion-tag"
+              wx:if="{{item.powerType}}"
+              style="color: {{item.powerTypeColor}}; background: {{item.powerTypeBackground}};"
+            >{{item.powerType}}</text>
+          </view>
+          <text class="suggestion-subtitle">{{item.subtitle}}</text>
+        </view>
+      </view>
     </view>
 
-    <!-- 年款 -->
     <view class="form-item">
       <text class="form-label">年款 <text class="required">*</text></text>
-      <input 
-        class="form-input" 
-        placeholder="如：2024款" 
+      <input
+        class="form-input"
+        placeholder="如：2024款"
         value="{{formData.year}}"
         data-field="year"
         bindinput="onInputChange"
       />
     </view>
 
-    <!-- 动力形式 -->
     <view class="form-item">
       <text class="form-label">动力形式 <text class="required">*</text></text>
       <view class="power-type-list">
-        <view 
-          wx:for="{{powerTypes}}" 
+        <view
+          wx:for="{{powerTypes}}"
           wx:key="value"
           class="power-type-item {{formData.powerType === item.value ? 'active' : ''}}"
           data-value="{{item.value}}"
@@ -61,44 +94,26 @@
       </view>
     </view>
 
-    <!-- 售价区间 -->
     <view class="form-item">
       <text class="form-label">售价区间 <text class="required">*</text></text>
-      <input 
-        class="form-input" 
-        placeholder="如：23.19-33.19万" 
+      <input
+        class="form-input"
+        placeholder="如：23.19-33.19万"
         value="{{formData.price}}"
         data-field="price"
         bindinput="onInputChange"
       />
     </view>
-
-    <!-- TODO: 车辆图片上传功能（预留接口，未来升级） -->
-    <!-- 
-    <view class="form-item">
-      <text class="form-label">车辆图片</text>
-      <view class="image-upload" bindtap="chooseImage">
-        <image wx:if="{{formData.imageUrl}}" class="uploaded-image" src="{{formData.imageUrl}}" mode="aspectFill"/>
-        <view wx:else class="upload-placeholder">
-          <text class="upload-icon">+</text>
-          <text class="upload-text">点击上传车辆图片</text>
-        </view>
-      </view>
-    </view>
-    -->
-
   </view>
 
-  <!-- 提交按钮 -->
   <button class="submit-btn" bindtap="submitCar" loading="{{submitting}}">
     {{submitting ? '提交中...' : '提交新车型'}}
   </button>
 
-  <!-- 提示信息 -->
   <view class="tips-section">
-    <text class="tips-title">温馨提示：</text>
-    <text class="tips-item">1. 请确保填写的车型信息准确无误</text>
-    <text class="tips-item">2. 车型添加后将立即上架展示</text>
-    <text class="tips-item">3. 邀请车友们来为新车打分评价吧</text>
+    <text class="tips-title">使用建议：</text>
+    <text class="tips-item">1. 先输入品牌，再从联想结果里选择车型，会更准确</text>
+    <text class="tips-item">2. 如果输成了别名、英文或错别字，提交前会再尝试纠错</text>
+    <text class="tips-item">3. 这版词典是本地优先，后面再逐步接入混元做更强纠错</text>
   </view>
 </view>

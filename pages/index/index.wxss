@@ -57,19 +57,19 @@ page {
   border: 1px solid #333333;
 }
 
-/* 第一名 - 橙色 */
+/* 第一名 - 霓虹红橙 */
 .card.rank-0 {
+  border-left: 4px solid #FF2D55;
+}
+
+/* 第二名 - 品牌橙 */
+.card.rank-1 {
   border-left: 4px solid #FF6B35;
 }
 
-/* 第二名 - 古铜 */
-.card.rank-1 {
-  border-left: 4px solid #CD7F32;
-}
-
-/* 第三名 - 浅橙 */
+/* 第三名 - 金黄 */
 .card.rank-2 {
-  border-left: 4px solid #ffb163;
+  border-left: 4px solid #FFCC00;
 }
 
 /* 左侧：名次区 */
@@ -87,26 +87,26 @@ page {
   color: #AAAAAA;
 }
 
-/* 前三名特殊样式 - 更新颜色 */
-.rank-0 {
+/* 前三名特殊样式 - 仅作用于名次数字，避免影响整张卡片文本 */
+.rank-num.rank-0 {
   font-size: 30px;
   font-weight: 800;
+  color: #FF2D55;
+  text-shadow: 0 0 6px rgba(255, 45, 85, 0.28), 0 0 14px rgba(255, 45, 85, 0.16);
+}
+
+.rank-num.rank-1 {
+  font-size: 30px;
+  font-weight: 700;
   color: #FF6B35;
-  text-shadow: 0 0 16px rgba(255, 107, 53, 0.6), 0 0 32px rgba(255, 107, 53, 0.3);
+  text-shadow: 0 0 5px rgba(255, 107, 53, 0.24), 0 0 12px rgba(255, 107, 53, 0.14);
 }
 
-.rank-1 {
+.rank-num.rank-2 {
   font-size: 30px;
   font-weight: 700;
-  color: #CD7F32;
-  text-shadow: 0 0 10px rgba(205, 127, 50, 0.35);
-}
-
-.rank-2 {
-  font-size: 30px;
-  font-weight: 700;
-  color: #ffb163;
-  text-shadow: 0 0 10px rgba(255, 177, 99, 0.35);
+  color: #FFCC00;
+  text-shadow: 0 0 4px rgba(255, 204, 0, 0.22), 0 0 10px rgba(255, 204, 0, 0.12);
 }
 
 /* 中间：信息区 */
@@ -185,20 +185,20 @@ page {
   letter-spacing: -0.5px;
 }
 
-/* 前三名分数金色系 - 强区分度 */
+/* 前三名分数霓虹光谱配色 */
 .score-rank-0 {
-  color: #FFD700;
-  text-shadow: 0 0 16px rgba(255, 215, 0, 0.6), 0 0 32px rgba(255, 215, 0, 0.3);
+  color: #FF2D55;
+  text-shadow: 0 0 6px rgba(255, 45, 85, 0.28), 0 0 14px rgba(255, 45, 85, 0.16);
 }
 
 .score-rank-1 {
-  color: #FFA726;
-  text-shadow: 0 0 10px rgba(255, 167, 38, 0.35);
+  color: #FF6B35;
+  text-shadow: 0 0 5px rgba(255, 107, 53, 0.24), 0 0 12px rgba(255, 107, 53, 0.14);
 }
 
 .score-rank-2 {
-  color: #CD7F32;
-  text-shadow: 0 0 8px rgba(205, 127, 50, 0.25);
+  color: #FFCC00;
+  text-shadow: 0 0 4px rgba(255, 204, 0, 0.22), 0 0 10px rgba(255, 204, 0, 0.12);
 }
 
 .count {

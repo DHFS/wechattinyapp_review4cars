@@ -1,0 +1,147 @@
+<!--pages/writeReview/writeReview.wxml-->
+<view class="container">
+  <!-- 评分步骤 -->
+  <view class="step rating-step" wx:if="{{currentStep === 'rating'}}">
+    <!-- 顶部标题 -->
+    <view class="header">
+      <view class="cancel-btn" bindtap="onCancel">
+        <text class="cancel-icon">×</text>
+      </view>
+      <view class="title">{{carName}}</view>
+      <view class="next-btn" bindtap="nextStep">
+        <text>下一步</text>
+      </view>
+    </view>
+
+    <!-- 综合得分 -->
+    <view class="total-score-section">
+      <view class="score-display">
+        <text class="score-value">{{calculatedScore}}</text>
+        <text class="score-label">综合评分</text>
+      </view>
+      <view class="score-hint">请为以下5个维度评分</view>
+    </view>
+
+    <!-- 评分列表 -->
+    <scroll-view class="rating-list" scroll-y>
+      <view class="rating-item" wx:for="{{ratingItems}}" wx:key="key">
+        <view class="rating-header">
+          <view class="rating-name">{{item.name}}</view>
+          <view class="rating-value" wx:if="{{item.value > 0}}">{{item.value}}分</view>
+          <view class="rating-value unrated" wx:else>待评分</view>
+        </view>
+        <view class="rating-desc">{{item.desc}}</view>
+        <view class="slider-container">
+          <text class="slider-label">0</text>
+          <slider 
+            class="rating-slider" 
+            min="0" 
+            max="100" 
+            step="1" 
+            value="{{item.value}}"
+            activeColor="#FF6B35"
+            backgroundColor="#3A3A3A"
+            block-color="#FF6B35"
+            block-size="22"
+            data-key="{{item.key}}"
+            bindchanging="onSliderChange"
+            bindchange="onSliderChange"
+          />
+          <text class="slider-label">100</text>
+        </view>
+      </view>
+      
+      <!-- 底部提示 -->
+      <view class="rating-tip">
+        <text class="tip-text">提示：每项0-100分，权重不同，建议根据实际体验打分</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 写作步骤 -->
+  <view class="step writing-step" wx:if="{{currentStep === 'writing'}}">
+    <!-- 顶部栏 -->
+    <view class="header">
+      <view class="back-btn" bindtap="prevStep">
+        <text class="back-icon">←</text>
+        <text class="back-text">返回</text>
+      </view>
+      <view class="title">撰写评价</view>
+      <view class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="submitReview">
+        <text>{{submitting ? '提交中...' : (isEdit ? '保存' : '发布')}}</text>
+      </view>
+    </view>
+
+    <!-- 评分摘要 -->
+    <view class="score-summary">
+      <view class="summary-title">{{carName}}</view>
+      <view class="summary-scores">
+        <view class="summary-item">
+          <text class="summary-label">综合</text>
+          <text class="summary-value highlight">{{calculatedScore}}</text>
+        </view>
+        <view class="summary-item" wx:for="{{ratingItems}}" wx:key="key">
+          <text class="summary-label">{{item.name}}</text>
+          <text class="summary-value">{{item.value}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 全屏文本输入区 -->
+    <view class="writing-area">
+      <textarea 
+        class="comment-editor"
+        placeholder="{{commentPlaceholder}}"
+        placeholder-class="placeholder-text"
+        value="{{comment}}"
+        bindinput="onCommentInput"
+        maxlength="2000"
+        auto-focus
+        show-confirm-bar="{{false}}"
+        cursor-spacing="100"
+      />
+    </view>
+
+    <!-- 底部工具栏 -->
+    <view class="toolbar">
+      <view class="char-count">{{comment.length}} / 2000</view>
+      <view class="toolbar-actions">
+        <view class="action-btn" bindtap="prevStep">
+          <text>修改评分</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 完善资料弹窗 -->
+  <view class="profile-modal {{showProfileModal ? 'show' : ''}}" wx:if="{{showProfileModal}}">
+    <view class="modal-mask" bindtap="closeProfileModal"></view>
+    <view class="modal-content">
+      <view class="modal-title">完善资料</view>
+      <text class="modal-desc">请设置您的头像和昵称</text>
+      
+      <view class="avatar-section">
+        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+          <image class="avatar-img" src="{{tempAvatarUrl || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"/>
+          <text class="avatar-hint">点击选择头像</text>
+        </button>
+      </view>
+      
+      <view class="nickname-section">
+        <text class="input-label">昵称</text>
+        <input 
+          type="nickname"
+          class="nickname-input" 
+          placeholder="请输入昵称"
+          value="{{tempNickname}}"
+          bindinput="onNicknameInput"
+        />
+      </view>
+      
+      <view class="modal-actions">
+        <button class="modal-btn cancel" bindtap="closeProfileModal">取消</button>
+        <button class="modal-btn confirm" bindtap="confirmProfile">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

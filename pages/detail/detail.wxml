@@ -71,109 +71,15 @@
     </button>
   </view>
 
-  <!-- 我要评分 - 默认0分，必须全部评分 -->
-  <view class="section" wx:if="{{!hasReviewed && !editingReview}}">
-    <view class="section-title">我要评分</view>
-    
-    <!-- 五个评分维度 - 实时显示分数 -->
-    <view class="rating-list">
-      <view class="rating-item" wx:for="{{ratingItems}}" wx:key="key">
-        <view class="rating-header">
-          <text class="rating-name">{{item.name}}</text>
-          <view class="rating-value-box">
-            <text class="rating-value {{item.value === 0 ? 'unrated' : ''}}">{{item.value === 0 ? '未评分' : item.value + '分'}}</text>
-          </view>
-        </view>
-        <slider 
-          class="rating-slider" 
-          min="0" 
-          max="100" 
-          value="{{item.value}}" 
-          activeColor="#888888"
-          backgroundColor="#333333"
-          block-color="#FFFFFF"
-          block-size="20"
-          show-value="{{false}}"
-          bindchanging="onSliderChange"
-          bindchange="onSliderChange"
-          data-key="{{item.key}}"
-        />
-        <text class="rating-desc">{{item.desc}}</text>
-      </view>
+  <!-- 撰写评价入口 -->
+  <view class="section write-review-section" wx:if="{{!hasReviewed}}">
+    <view class="write-review-content">
+      <text class="write-review-title">分享您的用车体验</text>
+      <text class="write-review-desc">撰写评价，帮助更多车友了解这款车</text>
     </view>
-
-    <!-- 综合得分显示 -->
-    <view class="calculated-score {{calculatedScore === '-' ? 'unrated' : ''}}">
-      <text class="calc-label">综合得分</text>
-      <text class="calc-value">{{calculatedScore}}</text>
-    </view>
-
-    <!-- 文字评价 -->
-    <textarea 
-      class="comment-input" 
-      placeholder="分享您的用车体验...（最多1000字）" 
-      maxlength="1000"
-      value="{{comment}}"
-      bindinput="onInputComment"
-    />
-    <text class="char-count">{{comment.length}}/1000</text>
-
-    <!-- 提交按钮 - 点击后获取用户信息 -->
-    <button class="submit-btn" bindtap="submitReview" loading="{{submitting}}">
-      {{submitting ? '提交中...' : '提交评价'}}
-    </button>
-    
-    <text class="submit-tips">点击提交后请完善您的头像和昵称</text>
-  </view>
-
-  <!-- 编辑评价区域 -->
-  <view class="section" wx:if="{{editingReview}}">
-    <view class="section-header">
-      <text class="section-title">编辑评价</text>
-      <text class="cancel-edit" bindtap="cancelEdit">取消</text>
-    </view>
-    
-    <view class="rating-list">
-      <view class="rating-item" wx:for="{{editingRatingItems}}" wx:key="key">
-        <view class="rating-header">
-          <text class="rating-name">{{item.name}}</text>
-          <view class="rating-value-box">
-            <text class="rating-value {{item.value === 0 ? 'unrated' : ''}}">{{item.value === 0 ? '未评分' : item.value + '分'}}</text>
-          </view>
-        </view>
-        <slider 
-          class="rating-slider" 
-          min="0" 
-          max="100" 
-          value="{{item.value}}" 
-          activeColor="#888888"
-          backgroundColor="#333333"
-          block-color="#FFFFFF"
-          block-size="20"
-          show-value="{{false}}"
-          bindchanging="onEditSliderChange"
-          bindchange="onEditSliderChange"
-          data-key="{{item.key}}"
-        />
-      </view>
-    </view>
-
-    <view class="calculated-score {{editingCalculatedScore === '-' ? 'unrated' : ''}}">
-      <text class="calc-label">综合得分</text>
-      <text class="calc-value">{{editingCalculatedScore}}</text>
-    </view>
-
-    <textarea 
-      class="comment-input" 
-      placeholder="修改您的评价..." 
-      maxlength="1000"
-      value="{{editingComment}}"
-      bindinput="onEditInputComment"
-    />
-    <text class="char-count">{{editingComment.length}}/1000</text>
-
-    <button class="submit-btn" bindtap="updateReview" loading="{{submitting}}">
-      {{submitting ? '保存中...' : '保存修改'}}
+    <button class="submit-btn write-btn" bindtap="submitReview">
+      <text class="btn-icon">✎</text>
+      <text>撰写评价</text>
     </button>
   </view>
 
@@ -198,7 +104,18 @@
           </view>
         </view>
         
-        <text class="review-text">{{item.comment}}</text>
+        <view class="review-content">
+          <text class="review-text">{{item.displayComment}}</text>
+          <view 
+            class="expand-btn" 
+            wx:if="{{item.isLongComment}}"
+            data-index="{{index}}"
+            bindtap="toggleComment"
+          >
+            <text>{{item.isExpanded ? '收起' : '展开'}}</text>
+            <text class="expand-icon">{{item.isExpanded ? '↑' : '↓'}}</text>
+          </view>
+        </view>
         
         <view class="review-dimensions">
           <view class="review-dim" wx:for="{{item.dimensions}}" wx:key="name" wx:for-item="dim" style="color: {{dim.color}}; border-color: {{dim.color}};">
