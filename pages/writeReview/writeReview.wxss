@@ -1,23 +1,26 @@
 /* pages/writeReview/writeReview.wxss */
 page {
-  height: 100vh;
-  background-color: #121212;
+  min-height: 100vh;
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
+  background: #121212;
 }
 
 /* ========== 通用头部 ========== */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
   padding-top: calc(12px + env(safe-area-inset-top));
-  background-color: #1A1A1A;
+  background-color: rgba(18, 18, 18, 0.96);
   border-bottom: 0.5px solid #333;
 }
 
@@ -80,16 +83,29 @@ page {
 
 /* ========== 评分步骤 ========== */
 .step {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
+  min-height: 100vh;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.step-content {
+  padding: 16px 0 0;
+}
+
+.rating-content {
+  padding-bottom: 12px;
+}
+
+.writing-content {
+  padding-bottom: 12px;
 }
 
 .total-score-section {
-  padding: 24px 20px;
-  background: linear-gradient(180deg, #1A1A1A 0%, #121212 100%);
+  padding: 24px 20px 20px;
+  background: #1A1A1A;
+  border-radius: 0;
   text-align: center;
+  margin-bottom: 16px;
 }
 
 .score-display {
@@ -97,9 +113,9 @@ page {
 }
 
 .score-value {
-  font-size: 64px;
-  font-weight: 700;
-  color: #FF6B35;
+  font-size: 56px;
+  font-weight: 800;
+  color: #FFD700;
   line-height: 1;
 }
 
@@ -117,14 +133,15 @@ page {
 
 /* 评分列表 */
 .rating-list {
-  flex: 1;
-  padding: 0 16px;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .rating-item {
-  padding: 16px 0;
-  border-bottom: 0.5px solid #2A2A2A;
+  padding: 20px 16px;
+  background: #1A1A1A;
+  border-radius: 0;
 }
 
 .rating-header {
@@ -160,25 +177,57 @@ page {
 }
 
 /* 滑块样式 */
+.slider-surface {
+  background: #252525;
+  border-radius: 12px;
+  padding: 14px 12px 12px;
+}
+
 .slider-container {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .slider-label {
   font-size: 12px;
   color: #666;
-  width: 20px;
+  width: 28px;
   text-align: center;
 }
 
 .rating-slider {
   flex: 1;
-  margin: 0 8px;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.quick-score-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0;
+  flex-wrap: nowrap;
+  margin-top: 12px;
+}
+
+.quick-score-chip {
+  width: 18%;
+  height: 34px;
+  border-radius: 10px;
+  background: #252525;
+  border: 1px solid #363636;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-score-text {
+  font-size: 12px;
+  color: #CFCFCF;
 }
 
 .rating-tip {
-  padding: 20px 0 40px;
+  padding: 8px 4px 4px;
   text-align: center;
 }
 
@@ -188,16 +237,49 @@ page {
   line-height: 1.6;
 }
 
+.rating-bottom-safe {
+  height: calc(12px + env(safe-area-inset-bottom));
+}
+
+.rating-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 9;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0) 0%, rgba(18, 18, 18, 0.92) 40%, #121212 100%);
+}
+
+.bottom-action-btn {
+  width: 100%;
+  height: 52px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.bottom-action-btn::after {
+  border: none;
+}
+
 /* ========== 写作步骤 ========== */
 .writing-step {
-  background-color: #121212;
+  background: transparent;
 }
 
 /* 评分摘要 */
 .score-summary {
-  padding: 12px 16px;
-  background-color: #1A1A1A;
-  border-bottom: 0.5px solid #2A2A2A;
+  padding: 20px 16px;
+  background: #1A1A1A;
+  border-radius: 0;
+  margin-bottom: 16px;
 }
 
 .summary-title {
@@ -241,21 +323,19 @@ page {
 
 /* 写作区域 */
 .writing-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  background: #1A1A1A;
+  border-radius: 0;
   overflow: hidden;
-  position: relative;
 }
 
 .comment-editor {
-  flex: 1;
   width: 100%;
+  min-height: 56vh;
   padding: 16px;
   font-size: 16px;
   line-height: 1.9;
   color: #FFFFFF;
-  background-color: #121212;
+  background-color: #1A1A1A;
   box-sizing: border-box;
 }
 
@@ -267,9 +347,10 @@ page {
 
 /* 底部工具栏 */
 .toolbar {
+  margin-top: 12px;
   padding: 12px 16px;
   padding-bottom: calc(12px + env(safe-area-inset-bottom));
-  background-color: #1A1A1A;
+  background-color: rgba(18, 18, 18, 0.96);
   border-top: 0.5px solid #2A2A2A;
   display: flex;
   align-items: center;

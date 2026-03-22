@@ -15,9 +15,11 @@
         bindinput="onInputChange"
         bindfocus="onBrandFocus"
         bindblur="onInputBlur"
+        hold-keyboard="{{true}}"
+        always-embed="{{true}}"
       />
 
-      <view class="suggestion-list" wx:if="{{showBrandSuggestions}}">
+      <view class="inline-suggestion-list" wx:if="{{showBrandSuggestions}}">
         <view
           wx:for="{{brandSuggestions}}"
           wx:key="name"
@@ -41,30 +43,9 @@
         bindinput="onInputChange"
         bindfocus="onModelFocus"
         bindblur="onInputBlur"
+        hold-keyboard="{{true}}"
+        always-embed="{{true}}"
       />
-
-      <view class="suggestion-list" wx:if="{{showModelSuggestions}}">
-        <view
-          wx:for="{{modelSuggestions}}"
-          wx:key="id"
-          class="suggestion-item"
-          data-brand="{{item.brand}}"
-          data-model="{{item.model}}"
-          data-powertype="{{item.powerType}}"
-          data-pricerange="{{item.priceRange}}"
-          bindtap="selectModelSuggestion"
-        >
-          <view class="suggestion-top">
-            <text class="suggestion-title">{{item.brand}} {{item.model}}</text>
-            <text
-              class="suggestion-tag"
-              wx:if="{{item.powerType}}"
-              style="color: {{item.powerTypeColor}}; background: {{item.powerTypeBackground}};"
-            >{{item.powerType}}</text>
-          </view>
-          <text class="suggestion-subtitle">{{item.subtitle}}</text>
-        </view>
-      </view>
     </view>
 
     <view class="form-item">
@@ -75,6 +56,7 @@
         value="{{formData.year}}"
         data-field="year"
         bindinput="onInputChange"
+        always-embed="{{true}}"
       />
     </view>
 
@@ -102,6 +84,7 @@
         value="{{formData.price}}"
         data-field="price"
         bindinput="onInputChange"
+        always-embed="{{true}}"
       />
     </view>
   </view>
@@ -115,5 +98,48 @@
     <text class="tips-item">1. 先输入品牌，再从联想结果里选择车型，会更准确</text>
     <text class="tips-item">2. 如果输成了别名、英文或错别字，提交前会再尝试纠错</text>
     <text class="tips-item">3. 这版词典是本地优先，后面再逐步接入混元做更强纠错</text>
+  </view>
+
+  <view
+    class="suggestion-mask"
+    wx:if="{{showSuggestionPanel}}"
+    catchtouchmove="noop"
+    bindtap="onSuggestionMaskTap"
+  ></view>
+
+  <view
+    class="floating-suggestion-panel"
+    wx:if="{{showSuggestionPanel && suggestionField === 'model'}}"
+    style="bottom: {{panelBottomOffset}}px;"
+  >
+    <view class="floating-suggestion-panel-bg"></view>
+
+    <view class="floating-suggestion-header">
+      <text class="floating-suggestion-title">推荐车型</text>
+      <text class="floating-suggestion-close" bindtap="onSuggestionMaskTap">收起</text>
+    </view>
+
+    <scroll-view class="floating-suggestion-scroll" scroll-y enhanced show-scrollbar="false">
+      <view
+        wx:for="{{suggestionItems}}"
+        wx:key="id"
+        class="suggestion-item"
+        data-brand="{{item.brand}}"
+        data-model="{{item.model}}"
+        data-powertype="{{item.powerType}}"
+        data-pricerange="{{item.priceRange}}"
+        bindtap="selectModelSuggestion"
+      >
+        <view class="suggestion-top">
+          <text class="suggestion-title">{{item.brand}} {{item.model}}</text>
+          <text
+            class="suggestion-tag"
+            wx:if="{{item.powerType}}"
+            style="color: {{item.powerTypeColor}}; background: {{item.powerTypeBackground}};"
+          >{{item.powerType}}</text>
+        </view>
+        <text class="suggestion-subtitle">{{item.subtitle}}</text>
+      </view>
+    </scroll-view>
   </view>
 </view>

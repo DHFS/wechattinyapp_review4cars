@@ -19,7 +19,7 @@ Page({
     
     // 评价内容
     comment: '',
-    commentPlaceholder: '分享您的用车体验...\n\n建议您从以下几个方面展开：\n• 购车背景（为什么选择这款车）\n• 日常用车场景（通勤、长途、家用等）\n• 各维度详细体验（动力、操控、空间等）\n• 优点和不足\n• 给潜在买家的建议\n\n字数建议：200-1000字',
+    commentPlaceholder: '分享你的真实用车体验\n\n可以从这些方面展开：\n1. 为什么选这台车\n2. 平时主要怎么开\n3. 动力、操控、空间等真实感受\n4. 最满意和最想吐槽的地方\n5. 会不会推荐给别人\n\n建议 200-1000 字',
     
     // 编辑模式
     isEdit: false,
@@ -82,15 +82,26 @@ Page({
   onSliderChange(e) {
     const { key } = e.currentTarget.dataset
     const value = e.detail.value
-    
+
+    this.updateRatingItem(key, value)
+  },
+
+  updateRatingItem(key, nextValue) {
+    const clampedValue = Math.max(0, Math.min(100, Number(nextValue) || 0))
+
     const ratingItems = this.data.ratingItems.map(item => {
-      if (item.key === key) return { ...item, value }
+      if (item.key === key) return { ...item, value: clampedValue }
       return item
     })
-    
+
     this.setData({ ratingItems }, () => {
       this.calculateTotalScore()
     })
+  },
+
+  onQuickScore(e) {
+    const { key, value } = e.currentTarget.dataset
+    this.updateRatingItem(key, value)
   },
 
   // 计算综合得分

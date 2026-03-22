@@ -67,12 +67,19 @@ page {
   color: #555555;
 }
 
-.suggestion-list {
+.suggestion-list,
+.inline-suggestion-list {
   margin-top: 8px;
   background: #202020;
   border: 1px solid #2F2F2F;
   border-radius: 12px;
   overflow: hidden;
+  position: relative;
+  z-index: 8;
+}
+
+.inline-suggestion-list {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
 }
 
 .suggestion-item {
@@ -111,6 +118,65 @@ page {
   background: rgba(255, 107, 53, 0.14);
   border-radius: 10px;
   padding: 4px 8px;
+}
+
+.suggestion-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  z-index: 20;
+}
+
+.floating-suggestion-panel {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  background: #1C1C1C;
+  border: 1px solid #313131;
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.42);
+  overflow: hidden;
+  z-index: 21;
+}
+
+.floating-suggestion-panel-bg {
+  position: absolute;
+  inset: 0;
+  background: #1C1C1C;
+  z-index: 0;
+}
+
+.floating-suggestion-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid #2A2A2A;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.floating-suggestion-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #F2F2F2;
+}
+
+.floating-suggestion-close {
+  font-size: 12px;
+  color: #9A9A9A;
+}
+
+.floating-suggestion-scroll {
+  position: relative;
+  z-index: 1;
+  max-height: 320px;
+  background: #1C1C1C;
+}
+
+.floating-suggestion-scroll .suggestion-item {
+  background: #1C1C1C;
 }
 
 .power-type-list {

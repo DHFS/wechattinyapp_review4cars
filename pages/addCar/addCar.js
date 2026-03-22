@@ -108,12 +108,11 @@ function getModelSuggestionsForBrand(brandEntry, query = '') {
   const normalizedQuery = normalizeText(query)
 
   if (!normalizedQuery) {
-    return models.slice(0, 8).map(model => buildModelSuggestion(brandEntry, model))
+    return models.map(model => buildModelSuggestion(brandEntry, model))
   }
 
   return models
     .filter(model => buildModelKeywords(model).some(keyword => keyword.includes(normalizedQuery)))
-    .slice(0, 8)
     .map(model => buildModelSuggestion(brandEntry, model))
 }
 
@@ -156,16 +155,44 @@ Page({
     selectedBrandName: '',
     brandSuggestions: [],
     modelSuggestions: [],
+    suggestionItems: [],
+    suggestionField: '',
+    showSuggestionPanel: false,
+    keyboardHeight: 0,
+    panelBottomOffset: 12,
+    activeInputField: '',
     showBrandSuggestions: false,
     showModelSuggestions: false,
     submitting: false
   },
 
-  onLoad() {},
+  onLoad() {
+    if (typeof wx.onKeyboardHeightChange === 'function') {
+      this.handleKeyboardHeightChange = (res) => {
+        const nextHeight = Math.max(res.height || 0, 0)
+        const nextData = {
+          keyboardHeight: nextHeight
+        }
+
+        // 面板打开时锁定当前位置，避免 iOS 在滚动联想列表时因键盘收起导致面板跳动。
+        if (nextHeight > 0) {
+          nextData.panelBottomOffset = nextHeight + 12
+        } else if (!this.data.showSuggestionPanel) {
+          nextData.panelBottomOffset = 12
+        }
+
+        this.setData({
+          ...nextData
+        })
+      }
+
+      wx.onKeyboardHeightChange(this.handleKeyboardHeightChange)
+    }
+  },
 
   onUnload() {
-    if (this.blurTimer) {
-      clearTimeout(this.blurTimer)
+    if (typeof wx.offKeyboardHeightChange === 'function' && this.handleKeyboardHeightChange) {
+      wx.offKeyboardHeightChange(this.handleKeyboardHeightChange)
     }
   },
 
@@ -191,15 +218,37 @@ Page({
     }
   },
 
+  showSuggestionPanel(field, items) {
+    this.setData({
+      suggestionField: field,
+      suggestionItems: items,
+      showSuggestionPanel: items.length > 0,
+      showBrandSuggestions: field === 'brand' && items.length > 0,
+      showModelSuggestions: field === 'model' && items.length > 0
+    })
+  },
+
+  hideSuggestionPanel() {
+    this.setData({
+      suggestionField: '',
+      suggestionItems: [],
+      showSuggestionPanel: false,
+      panelBottomOffset: this.data.keyboardHeight > 0 ? this.data.keyboardHeight + 12 : 12,
+      showBrandSuggestions: false,
+      showModelSuggestions: false
+    })
+  },
+
   handleBrandInput(value) {
     const exactBrandEntry = findExactBrandEntry(value)
     const brandSuggestions = getBrandSuggestions(value)
     const currentModel = this.data.formData.model
+    const shouldShowBrandSuggestions = !!value.trim() && brandSuggestions.length > 0
 
     this.setData({
       selectedBrandName: exactBrandEntry ? exactBrandEntry.name : '',
       brandSuggestions,
-      showBrandSuggestions: !!value.trim() && brandSuggestions.length > 0,
+      showBrandSuggestions: shouldShowBrandSuggestions,
       modelSuggestions: exactBrandEntry
         ? getModelSuggestionsForBrand(exactBrandEntry, currentModel)
         : currentModel.trim()
@@ -207,6 +256,10 @@ Page({
           : this.data.modelSuggestions,
       showModelSuggestions: false
     })
+
+    if (this.data.showSuggestionPanel) {
+      this.hideSuggestionPanel()
+    }
   },
 
   handleModelInput(value) {
@@ -214,11 +267,21 @@ Page({
     const modelSuggestions = brandEntry
       ? getModelSuggestionsForBrand(brandEntry, value)
       : getModelSuggestionsAcrossBrands(value)
+    const shouldShowModelSuggestions = !!value.trim() && modelSuggestions.length > 0
 
     this.setData({
       modelSuggestions,
-      showModelSuggestions: !!value.trim() && modelSuggestions.length > 0
+      showModelSuggestions: shouldShowModelSuggestions
     })
+
+    if (shouldShowModelSuggestions) {
+      this.showSuggestionPanel('model', modelSuggestions)
+      return
+    }
+
+    if (this.data.suggestionField === 'model') {
+      this.hideSuggestionPanel()
+    }
   },
 
   getResolvedBrandEntry() {
@@ -229,10 +292,12 @@ Page({
   onBrandFocus() {
     const brandValue = this.data.formData.brand
     const brandSuggestions = getBrandSuggestions(brandValue)
+    const shouldShowBrandSuggestions = brandSuggestions.length > 0
 
     this.setData({
+      activeInputField: 'brand',
       brandSuggestions,
-      showBrandSuggestions: !!brandValue.trim() && brandSuggestions.length > 0
+      showBrandSuggestions: shouldShowBrandSuggestions
     })
   },
 
@@ -244,18 +309,34 @@ Page({
       : getModelSuggestionsAcrossBrands(modelValue)
 
     this.setData({
+      activeInputField: 'model',
+      showBrandSuggestions: false,
       modelSuggestions,
       showModelSuggestions: modelSuggestions.length > 0
     })
+
+    if (modelSuggestions.length > 0) {
+      this.showSuggestionPanel('model', modelSuggestions)
+      return
+    }
+
+    this.hideSuggestionPanel()
   },
 
-  onInputBlur() {
-    this.blurTimer = setTimeout(() => {
+  onInputBlur(e) {
+    const { field } = e.currentTarget.dataset
+
+    if (this.data.activeInputField === field) {
       this.setData({
-        showBrandSuggestions: false,
-        showModelSuggestions: false
+        activeInputField: ''
       })
-    }, 120)
+    }
+  },
+
+  noop() {},
+
+  onSuggestionMaskTap() {
+    this.hideSuggestionPanel()
   },
 
   selectBrandSuggestion(e) {
@@ -269,7 +350,7 @@ Page({
       brandSuggestions: [],
       showBrandSuggestions: false,
       modelSuggestions,
-      showModelSuggestions: modelSuggestions.length > 0
+      showModelSuggestions: false
     })
   },
 
@@ -295,6 +376,7 @@ Page({
     }
 
     this.setData(nextData)
+    this.hideSuggestionPanel()
   },
 
   onPowerTypeSelect(e) {
