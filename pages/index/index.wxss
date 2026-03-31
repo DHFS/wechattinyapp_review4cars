@@ -1,236 +1,283 @@
-/* 全局重置 */
+/* ============================================
+   Design System: Editorial Industrialism
+   首页车型排行榜 - 新卡片样式（图片融入卡片）
+   ============================================ */
+
+/* 基础变量 */
 page {
-  background: #121212;
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  background: #131313;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+/* 页面容器 */
 .page {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
-  padding: 0 16px 32px;
+  padding: 0 16px 40px;
 }
 
-/* 头部 */
+/* ============================================
+   Header 头部
+   ============================================ */
 .header {
-  padding: 48px 0 32px;
-}
-
-.header-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #FFFFFF;
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
+  padding: 32px 8px 24px;
 }
 
 .header-subtitle {
-  font-size: 13px;
-  color: #666666;
-}
-
-/* 列表 */
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* 卡片 - 极简无框，用留白分隔 */
-.card {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  background: #1A1A1A;
-  border-radius: 16px;
-  padding: 20px 16px;
-}
-
-.card:active {
-  opacity: 0.8;
-}
-
-/* 前三名特殊样式 */
-.card.top-three {
-  background: linear-gradient(to right, #1E1E1E, #252525);
-  border: 1px solid #333333;
-}
-
-/* 第一名 - 霓虹红橙 */
-.card.rank-0 {
-  border-left: 4px solid #FF2D55;
-}
-
-/* 第二名 - 品牌橙 */
-.card.rank-1 {
-  border-left: 4px solid #FF6B35;
-}
-
-/* 第三名 - 金黄 */
-.card.rank-2 {
-  border-left: 4px solid #FFCC00;
-}
-
-/* 左侧：名次区 */
-.rank-col {
-  width: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.rank-num {
-  font-size: 30px;
-  font-weight: 600;
-  color: #AAAAAA;
-}
-
-/* 前三名特殊样式 - 仅作用于名次数字，避免影响整张卡片文本 */
-.rank-num.rank-0 {
-  font-size: 30px;
-  font-weight: 800;
-  color: #FF2D55;
-  text-shadow: 0 0 6px rgba(255, 45, 85, 0.28), 0 0 14px rgba(255, 45, 85, 0.16);
-}
-
-.rank-num.rank-1 {
-  font-size: 30px;
-  font-weight: 700;
-  color: #FF6B35;
-  text-shadow: 0 0 5px rgba(255, 107, 53, 0.24), 0 0 12px rgba(255, 107, 53, 0.14);
-}
-
-.rank-num.rank-2 {
-  font-size: 30px;
-  font-weight: 700;
-  color: #FFCC00;
-  text-shadow: 0 0 4px rgba(255, 204, 0, 0.22), 0 0 10px rgba(255, 204, 0, 0.12);
-}
-
-/* 中间：信息区 */
-.info-col {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  margin: 0 12px;
-  gap: 5px;
-}
-
-.car-name {
-  font-size: 17px;
-  font-weight: 700;
-  color: #FFFFFF;
-  line-height: 1.2;
-}
-
-.tag-row {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-}
-
-.tag {
-  display: inline-flex;
-  font-size: 10px;
+  display: block;
+  font-size: 11px;
   font-weight: 500;
-  padding: 3px 8px;
-  border-radius: 4px;
-  line-height: 1;
+  color: #ff6b35;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
-/* 动力类型标签颜色 */
-.tag-zengcheng {
-  background: #007eba;
-  color: #FFFFFF;
-}
-
-.tag-chundi {
-  background: #22a568;
-  color: #FFFFFF;
-}
-
-.tag-ranyou {
-  background: #ffa200;
-  color: #FFFFFF;
-}
-
-.tag-chahun {
-  background: #c172d4;
-  color: #FFFFFF;
-}
-
-.car-meta {
-  font-size: 12px;
-  color: #555555;
-  line-height: 1.2;
-}
-
-/* 右侧：评分区 */
-.score-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-shrink: 0;
-  min-width: 85px;
-}
-
-.score {
-  font-size: 24px;
-  font-weight: 900;
-  color: #FFFFFF;
-  line-height: 1;
+.header-title {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: #e5e2e1;
   letter-spacing: -0.5px;
 }
 
-/* 前三名分数霓虹光谱配色 */
-.score-rank-0 {
-  color: #FF2D55;
-  text-shadow: 0 0 6px rgba(255, 45, 85, 0.28), 0 0 14px rgba(255, 45, 85, 0.16);
-}
-
-.score-rank-1 {
-  color: #FF6B35;
-  text-shadow: 0 0 5px rgba(255, 107, 53, 0.24), 0 0 12px rgba(255, 107, 53, 0.14);
-}
-
-.score-rank-2 {
-  color: #FFCC00;
-  text-shadow: 0 0 4px rgba(255, 204, 0, 0.22), 0 0 10px rgba(255, 204, 0, 0.12);
-}
-
-.count {
-  font-size: 12px;
-  color: #555555;
-  line-height: 1.2;
-}
-
-/* 点评用户头像堆叠 - 从右向左，新的在上层 */
-.reviewer-avatars {
+/* ============================================
+   List 列表容器
+   ============================================ */
+.list {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ============================================
+   Card 卡片主体 - 图片融入设计
+   ============================================ */
+.card {
+  background: #1c1b1b;
+  border-radius: 32rpx;
+  overflow: hidden;
+  transition: transform 0.15s ease;
+  /* 确保无外边距 */
+  margin: 0;
+  padding: 0;
+  /* 消除 inline 间隙 */
+  font-size: 0;
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+/* 图片区域 - 作为卡片上半部分背景 */
+.card-image-section {
+  position: relative;
+  width: 100%;
+  height: 520rpx;
+  overflow: hidden;
+  /* 不设置圆角，完全依赖 .card 的 overflow:hidden 裁剪 */
+  /* 消除 inline 元素间隙 */
+  font-size: 0;
+  line-height: 0;
+  /* 确保无内外边距 */
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+/* 背景图片 - 占满整个上半部分 */
+.card-bg-image {
+  position: absolute;
+  top: -1rpx;
+  left: -1rpx;
+  right: -1rpx;
+  bottom: -1rpx;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  vertical-align: top; /* 防止底部间隙 */
+}
+
+/* 无图时的渐变背景 */
+.card-bg-gradient {
+  position: absolute;
+  top: -1rpx;
+  left: -1rpx;
+  right: -1rpx;
+  bottom: -1rpx;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1c1b1b 100%);
+}
+
+.card-bg-gradient::after {
+  content: '🚗';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100rpx;
+  opacity: 0.1;
+}
+
+/* 暗色渐变遮罩 - 保证文字可读性 */
+.card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(28, 27, 27, 1) 100%
+  );
+  pointer-events: none;
+}
+
+/* 排名数字背景 */
+.rank-bg {
+  position: absolute;
+  bottom: -10rpx;
+  left: 28rpx;
+  pointer-events: none;
+}
+
+.rank-bg-num {
+  font-size: 140rpx;
+  font-weight: 900;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.08);
+  line-height: 1;
+  letter-spacing: -6rpx;
+}
+
+/* ============================================
+   Power Tag 动力类型标签 - 胶囊形状
+   ============================================ */
+.power-tag {
+  position: absolute;
+  top: 24rpx;
+  left: 24rpx;
+  display: flex;
   align-items: center;
-  margin-top: 4px;
-  height: 22px;
+  padding: 20rpx 36rpx;
+  border-radius: 9999rpx;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.power-tag text {
+  font-size: 26rpx;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* 纯电 EV - 绿色 #22a568 */
+.tag-chundi {
+  background: rgba(34, 165, 104, 0.25);
+  border: 2rpx solid rgba(34, 165, 104, 0.4);
+}
+.tag-chundi text {
+  color: #fff;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.4);
+}
+
+/* 插混 PHEV - 紫色 #c172d4 */
+.tag-chahun {
+  background: rgba(193, 114, 212, 0.25);
+  border: 2rpx solid rgba(193, 114, 212, 0.4);
+}
+.tag-chahun text {
+  color: #fff;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.4);
+}
+
+/* 燃油 ICE - 橙色 #ffa200 */
+.tag-ranyou {
+  background: rgba(255, 162, 0, 0.25);
+  border: 2rpx solid rgba(255, 162, 0, 0.4);
+}
+.tag-ranyou text {
+  color: #fff;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.4);
+}
+
+/* 增程 EREV - 蓝色 #007eba */
+.tag-zengcheng {
+  background: rgba(0, 126, 186, 0.25);
+  border: 2rpx solid rgba(0, 126, 186, 0.4);
+}
+.tag-zengcheng text {
+  color: #fff;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.4);
+}
+
+/* ============================================
+   Card Content 卡片内容区
+   ============================================ */
+/* ============================================
+   Card Content 卡片内容区
+   ============================================ */
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 32rpx 32rpx 36rpx;
+  min-height: 140rpx;
+  background: #1c1b1b;
+  /* 重置字体大小 */
+  font-size: initial;
+}
+
+.content-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 24rpx;
+}
+
+.car-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.car-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #e5e2e1;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+.car-meta {
+  font-size: 26rpx;
+  color: rgba(225, 191, 181, 0.7);
+  line-height: 1.4;
+}
+
+/* 评价用户区域 */
+.reviewer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: auto;
+  padding-top: 12rpx;
 }
 
 .avatar-stack {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
-  margin-right: 4px;
 }
 
 .avatar-img {
-  width: 20px;
-  height: 20px;
+  width: 44rpx;
+  height: 44rpx;
   border-radius: 50%;
-  border: 1px solid #1A1A1A;
-  background-color: #333333;
-  flex-shrink: 0;
-  margin-right: -8px;
+  border: 2rpx solid #1c1b1b;
+  background: #2a2a2a;
+  margin-right: -12rpx;
   position: relative;
 }
 
@@ -238,43 +285,65 @@ page {
   margin-right: 0;
 }
 
-.review-count-text {
-  font-size: 12px;
-  color: #666666;
-  margin-left: 10px;
-  white-space: nowrap;
-  flex-shrink: 0;
+.review-count {
+  font-size: 24rpx;
+  color: rgba(225, 191, 181, 0.6);
+  margin-left: 16rpx;
 }
 
-/* 加载更多 */
-.load-more {
-  text-align: center;
-  padding: 24px 16px 100px;
-  color: #666666;
-  font-size: 13px;
+.no-review {
+  font-size: 24rpx;
+  color: rgba(225, 191, 181, 0.4);
+  font-style: italic;
 }
 
-.load-more.no-more {
-  color: #666666;
+/* ============================================
+   Score 评分区域 - 右下角
+   ============================================ */
+.content-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-left: 24rpx;
 }
 
-/* 加载状态 */
+.score-num {
+  font-size: 100rpx; /* 更大的评分数字 */
+  font-weight: 800;
+  color: #ff6b35;
+  line-height: 0.85;
+  letter-spacing: -4rpx;
+}
+
+.score-label {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #ff6b35;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 8rpx;
+}
+
+/* ============================================
+   Loading & Empty States
+   ============================================ */
 .loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 100px 20px;
+  padding: 200rpx 40rpx;
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #333333;
-  border-top-color: #FF6B35;
+  width: 80rpx;
+  height: 80rpx;
+  border: 4rpx solid #2a2a2a;
+  border-top-color: #ff6b35;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 16px;
+  margin-bottom: 32rpx;
 }
 
 @keyframes spin {
@@ -282,50 +351,67 @@ page {
 }
 
 .loading-text {
-  font-size: 14px;
-  color: #666666;
+  font-size: 28rpx;
+  color: rgba(229, 226, 225, 0.6);
 }
 
-/* 空状态 */
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80px 20px;
+  padding: 160rpx 40rpx;
 }
 
 .empty-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
+  font-size: 120rpx;
+  margin-bottom: 32rpx;
+  opacity: 0.8;
 }
 
 .empty-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin-bottom: 8px;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #e5e2e1;
+  margin-bottom: 16rpx;
 }
 
 .empty-desc {
-  font-size: 13px;
-  color: #666666;
-  margin-bottom: 24px;
+  font-size: 28rpx;
+  color: rgba(229, 226, 225, 0.5);
+  margin-bottom: 48rpx;
 }
 
 .empty-btn {
-  background: linear-gradient(135deg, #FF6B35, #FF8C42);
-  color: #FFFFFF;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 32px;
-  border-radius: 24px;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  padding: 28rpx 64rpx;
+  border-radius: 48rpx;
 }
 
-/* 安全区适配 */
+.empty-btn text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #390c00;
+}
+
+/* ============================================
+   Load More
+   ============================================ */
+.load-more {
+  text-align: center;
+  padding: 48rpx 32rpx 120rpx;
+  color: rgba(229, 226, 225, 0.4);
+  font-size: 26rpx;
+}
+
+.load-more.no-more {
+  color: rgba(229, 226, 225, 0.3);
+}
+
+/* ============================================
+   Safe Area
+   ============================================ */
 .safe-area-bottom {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 }
-
-/* 添加车型按钮已移至底部导航栏中间 */

@@ -1,5 +1,5 @@
 <view class="page">
-  <!-- 头部统计 -->
+  <!-- 头部统计 - 大数字风格 -->
   <view class="header">
     <view class="stat-card">
       <text class="stat-num">{{reviewCount}}</text>

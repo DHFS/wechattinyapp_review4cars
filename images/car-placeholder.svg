@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="225" viewBox="0 0 400 225">
+  <rect width="400" height="225" fill="#1c1b1b"/>
+  <g transform="translate(160, 75)">
+    <path d="M40 15 L55 35 L80 35 L60 50 L70 75 L40 60 L10 75 L20 50 L0 35 L25 35 Z" fill="#2a2a2a"/>
+  </g>
+  <text x="200" y="160" text-anchor="middle" fill="#666" font-size="14" font-family="sans-serif">暂无图片</text>
+</svg>

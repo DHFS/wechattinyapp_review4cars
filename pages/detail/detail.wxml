@@ -7,6 +7,23 @@
 
   <!-- 页面内容 -->
   <block wx:else>
+  <!-- 车型封面图 -->
+  <view class="car-hero-image" bindlongpress="onImageLongPress">
+    <image 
+      wx:if="{{carInfo.imageUrl}}" 
+      class="hero-image" 
+      src="{{carInfo.imageUrl}}" 
+      mode="aspectFill"
+    />
+    <view wx:else class="hero-image-placeholder">
+      <text class="placeholder-icon">🚗</text>
+      <text class="placeholder-text">暂无官方图片</text>
+    </view>
+    <view class="image-edit-hint" wx:if="{{showEditHint}}">
+      <text>长按可编辑图片</text>
+    </view>
+  </view>
+
   <!-- 车型头部信息 -->
   <view class="header">
     <view class="car-basic">

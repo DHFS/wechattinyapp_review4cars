@@ -72,7 +72,10 @@ Page({
     tempAvatarUrl: '',
     tempNickname: '',
     tempAvatarFile: null,
-    isEditingReview: false
+    isEditingReview: false,
+
+    // 图片编辑
+    showEditHint: true
   },
 
   onLoad(options) {
@@ -335,6 +338,21 @@ Page({
         { name: '其他体验', score: Math.round(scoreOther), color: this.getScoreColor(scoreOther), weight: '10%' }
       ]
       
+      // 处理图片URL（如果是云存储fileID，需要转换为临时链接）
+      let imageUrl = car.image_url || ''
+      if (imageUrl && imageUrl.startsWith('cloud://')) {
+        try {
+          const tempRes = await wx.cloud.getTempFileURL({
+            fileList: [imageUrl]
+          })
+          if (tempRes.fileList && tempRes.fileList[0] && tempRes.fileList[0].tempFileURL) {
+            imageUrl = tempRes.fileList[0].tempFileURL
+          }
+        } catch (e) {
+          console.error('转换图片URL失败:', e)
+        }
+      }
+      
       this.setData({
         carInfo: {
           id: carId,
@@ -345,7 +363,8 @@ Page({
           year: car.model_year,
           price: car.price_range,
           avgScore: car.avg_score ? Math.round(car.avg_score).toString() : '0',
-          reviewCount: car.review_count || 0
+          reviewCount: car.review_count || 0,
+          imageUrl: imageUrl
         },
         dimensions: avgDimensions,
         pageLoading: false
@@ -1086,5 +1105,142 @@ Page({
     })
     
     this.setData({ reviews: newReviews })
+  },
+
+  // ============================================
+  // 图片编辑功能（仅管理员/开发者使用）
+  // ============================================
+
+  // 长按图片显示编辑菜单
+  onImageLongPress() {
+    wx.showActionSheet({
+      itemList: ['上传/更换图片', '删除图片'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          this.chooseCarImage()
+        } else if (res.tapIndex === 1) {
+          this.deleteCarImage()
+        }
+      }
+    })
+  },
+
+  // 选择并上传车型图片
+  chooseCarImage() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      sizeType: ['compressed'], // 使用压缩图片
+      success: (res) => {
+        const tempFile = res.tempFiles[0]
+        const maxSize = 5 * 1024 * 1024 // 5MB
+        
+        // 检查文件大小
+        if (tempFile.size > maxSize) {
+          wx.showToast({
+            title: '图片不能超过5MB',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        
+        this.uploadCarImage(tempFile.tempFilePath)
+      }
+    })
+  },
+
+  // 上传图片到云存储并更新数据库
+  async uploadCarImage(filePath) {
+    wx.showLoading({ title: '上传中...' })
+
+    try {
+      const carId = this.data.carInfo.id
+      console.log('开始上传图片，车型ID:', carId)
+      
+      const cloudPath = `car-images/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`
+      
+      // 1. 上传图片到云存储
+      const uploadRes = await wx.cloud.uploadFile({
+        cloudPath: cloudPath,
+        filePath: filePath
+      })
+      console.log('图片上传成功，fileID:', uploadRes.fileID)
+
+      // 2. 使用云函数更新数据库（管理员权限，绕过前端权限限制）
+      console.log('调用云函数更新车型图片...')
+      const updateRes = await wx.cloud.callFunction({
+        name: 'updateCarImage',
+        data: {
+          carId: carId,
+          imageUrl: uploadRes.fileID
+        }
+      })
+      console.log('云函数返回:', updateRes)
+
+      if (!updateRes.result || !updateRes.result.success) {
+        throw new Error(updateRes.result?.message || '更新数据库失败')
+      }
+
+      // 3. 更新本地显示
+      // 获取临时URL用于显示
+      const tempRes = await wx.cloud.getTempFileURL({
+        fileList: [uploadRes.fileID]
+      })
+      const tempUrl = tempRes.fileList[0]?.tempFileURL || uploadRes.fileID
+      
+      this.setData({
+        'carInfo.imageUrl': tempUrl
+      })
+
+      wx.showToast({
+        title: '上传成功，返回首页刷新查看',
+        icon: 'success',
+        duration: 2000
+      })
+    } catch (err) {
+      console.error('上传图片失败:', err)
+      wx.showToast({
+        title: '上传失败：' + (err.message || '未知错误'),
+        icon: 'none',
+        duration: 3000
+      })
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
+  // 删除车型图片
+  async deleteCarImage() {
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这张图片吗？',
+      confirmColor: '#ff6b35',
+      success: async (res) => {
+        if (!res.confirm) return
+
+        try {
+          const carId = this.data.carInfo.id
+          const db = wx.cloud.database()
+          
+          await db.collection('cars').doc(carId).update({
+            data: {
+              image_url: '',
+              updated_at: db.serverDate()
+            }
+          })
+
+          this.setData({
+            'carInfo.imageUrl': ''
+          })
+
+          wx.showToast({ title: '删除成功', icon: 'success' })
+        } catch (err) {
+          console.error('删除图片失败:', err)
+          wx.showToast({ title: '删除失败', icon: 'none' })
+        }
+      }
+    })
   }
 })

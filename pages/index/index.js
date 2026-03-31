@@ -18,8 +18,12 @@ Page({
   },
 
   onShow() {
-    // 页面显示时刷新数据（从添加车型页返回时）
-    this.setData({ page: 0, hasMore: true }, () => {
+    // 页面显示时刷新数据（从添加车型页或详情页返回时）
+    this.setData({ 
+      page: 0, 
+      hasMore: true,
+      carList: []  // 清空列表强制重新加载
+    }, () => {
       this.loadCarList()
     })
     // 设置tabBar选中状态
@@ -141,6 +145,13 @@ Page({
           console.log('获取评价头像失败:', e)
         }
         
+        // 处理图片URL（支持云存储fileID和普通URL）
+        let imageUrl = car.image_url || ''
+        if (imageUrl && imageUrl.startsWith('cloud://')) {
+          // 云存储fileID需要在获取列表时批量转换，这里先保留
+          // 实际转换在获取列表后统一处理
+        }
+
         return {
           id: car._id,
           brand: car.brand,
@@ -152,15 +163,25 @@ Page({
           count: car.review_count || 0,
           tagClass: tagClass,
           reviewerAvatars: reviewerAvatars,
-          reviewCount: reviewCount
+          reviewCount: reviewCount,
+          imageUrl: car.image_url || ''
         }
       }))
       
+      // 处理图片URL转换（云存储fileID转HTTPS）
+      const carListWithImages = await this.processImageUrls(newList)
+      
       // 检查是否还有更多数据
-      const hasMore = newList.length === pageSize
+      const hasMore = carListWithImages.length === pageSize
+      
+      // 调试：打印图片状态
+      console.log('=== 首页车型图片状态 ===')
+      carListWithImages.forEach((car, idx) => {
+        console.log(`${idx + 1}. ${car.brand} ${car.model}: imageUrl=${car.imageUrl ? '有' : '无'}`)
+      })
       
       this.setData({
-        carList: page === 0 ? newList : [...this.data.carList, ...newList],
+        carList: page === 0 ? carListWithImages : [...this.data.carList, ...carListWithImages],
         loading: false,
         hasMore: hasMore
       })
@@ -195,6 +216,56 @@ Page({
       return (num / 1000).toFixed(1) + 'k'
     }
     return num.toString()
+  },
+
+  // 处理车型图片URL转换（云存储fileID转临时HTTPS链接）
+  async processImageUrls(carList) {
+    // 收集所有需要转换的云存储fileID
+    const cloudFileIDs = []
+    const fileIDMap = new Map()
+
+    carList.forEach((car, index) => {
+      if (car.imageUrl && car.imageUrl.startsWith('cloud://')) {
+        cloudFileIDs.push(car.imageUrl)
+        fileIDMap.set(car.imageUrl, index)
+      }
+    })
+
+    // 如果没有云存储图片，直接返回
+    if (cloudFileIDs.length === 0) {
+      return carList
+    }
+
+    try {
+      // 批量获取临时链接
+      const tempRes = await wx.cloud.getTempFileURL({
+        fileList: cloudFileIDs
+      })
+
+      // 创建fileID到临时URL的映射
+      const urlMap = {}
+      tempRes.fileList.forEach(item => {
+        if (item.fileID && item.tempFileURL) {
+          urlMap[item.fileID] = item.tempFileURL
+        }
+      })
+
+      // 更新carList中的图片URL
+      const updatedList = carList.map(car => {
+        if (car.imageUrl && car.imageUrl.startsWith('cloud://') && urlMap[car.imageUrl]) {
+          return {
+            ...car,
+            imageUrl: urlMap[car.imageUrl]
+          }
+        }
+        return car
+      })
+
+      return updatedList
+    } catch (err) {
+      console.error('转换图片URL失败:', err)
+      return carList
+    }
   },
 
   // 点击卡片跳转详情

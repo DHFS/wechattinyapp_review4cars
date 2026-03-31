@@ -388,6 +388,94 @@ Page({
   },
 
   // ============================================
+  // 图片上传处理
+  // ============================================
+
+  // 选择图片
+  chooseImage() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      sizeType: ['compressed'], // 使用压缩图片
+      success: (res) => {
+        const tempFile = res.tempFiles[0]
+        const maxSize = 5 * 1024 * 1024 // 5MB
+        
+        // 检查文件大小
+        if (tempFile.size > maxSize) {
+          wx.showToast({
+            title: '图片不能超过5MB',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        
+        this.uploadImage(tempFile.tempFilePath)
+      }
+    })
+  },
+
+  // 上传图片到云存储
+  async uploadImage(filePath) {
+    wx.showLoading({ title: '上传中...' })
+
+    try {
+      const cloudPath = `car-images/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`
+      
+      const uploadRes = await wx.cloud.uploadFile({
+        cloudPath: cloudPath,
+        filePath: filePath
+      })
+
+      this.setData({
+        'formData.imageUrl': uploadRes.fileID
+      })
+
+      wx.showToast({
+        title: '上传成功',
+        icon: 'success'
+      })
+    } catch (err) {
+      console.error('上传图片失败:', err)
+      wx.showToast({
+        title: '上传失败',
+        icon: 'none'
+      })
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
+  // 预览图片
+  previewImage() {
+    const { imageUrl } = this.data.formData
+    if (!imageUrl) return
+
+    wx.previewImage({
+      urls: [imageUrl],
+      current: imageUrl
+    })
+  },
+
+  // 删除图片
+  deleteImage() {
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这张图片吗？',
+      confirmColor: '#ff6b35',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({
+            'formData.imageUrl': ''
+          })
+        }
+      }
+    })
+  },
+
+  // ============================================
   // 提交前智能纠错
   // ============================================
 

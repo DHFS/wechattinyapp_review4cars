@@ -1,8 +1,8 @@
 <view class="page">
   <!-- 头部 -->
   <view class="header">
-    <view class="header-title">热门车型排行榜</view>
-    <view class="header-subtitle">基于真实用户评价</view>
+    <text class="header-subtitle">基于真实用户评价</text>
+    <text class="header-title">车型排行榜</text>
   </view>
 
   <!-- 加载中状态 -->
@@ -26,40 +26,68 @@
     <view 
       wx:for="{{carList}}" 
       wx:key="id"
-      class="card {{index < 3 ? 'top-three rank-' + index : ''}}"
+      class="card"
       data-id="{{item.id}}"
       bindtap="goDetail"
     >
-      <!-- 左侧：名次 -->
-      <view class="rank-col">
-        <text class="rank-num {{index < 3 ? 'rank-' + index : ''}}">{{index + 1}}</text>
-      </view>
-
-      <!-- 中间：车辆信息 -->
-      <view class="info-col">
-        <text class="car-name">{{item.brand}} {{item.model}}</text>
-        <view class="tag-row">
-          <text class="tag {{item.tagClass}}">{{item.powerType}}</text>
+      <!-- 图片作为卡片背景，占满上半部分 -->
+      <view class="card-image-section">
+        <image 
+          wx:if="{{item.imageUrl}}"
+          class="card-bg-image" 
+          src="{{item.imageUrl}}" 
+          mode="aspectFill"
+          lazy-load
+        />
+        <!-- 无图时的渐变背景 -->
+        <view wx:else class="card-bg-gradient"></view>
+        
+        <!-- 暗色渐变遮罩 -->
+        <view class="card-image-overlay"></view>
+        
+        <!-- 动力类型标签 -->
+        <view class="power-tag {{item.tagClass}}">
+          <text>{{item.powerType}}</text>
         </view>
-        <text class="car-meta">{{item.year}} | {{item.price}}</text>
+        
+        <!-- 排名数字（大背景） -->
+        <view class="rank-bg">
+          <text class="rank-bg-num">{{index < 9 ? '0' + (index + 1) : index + 1}}</text>
+        </view>
       </view>
 
-      <!-- 右侧：评分 -->
-      <view class="score-col">
-        <text class="score {{index < 3 ? 'score-rank-' + index : ''}}">{{item.score}}分</text>
-        <view class="reviewer-avatars">
-          <view class="avatar-stack">
-            <image 
-              wx:for="{{item.reviewerAvatars}}" 
-              wx:key="index"
-              wx:for-item="avatar"
-              class="avatar-img"
-              style="z-index: {{10 - index}};"
-              src="{{avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
-              mode="aspectFill"
-            />
+      <!-- 信息区域 -->
+      <view class="card-content">
+        <view class="content-left">
+          <view class="car-info">
+            <text class="car-name">{{item.brand}} {{item.model}}</text>
+            <text class="car-meta">{{item.year}} · {{item.price}}</text>
           </view>
-          <text class="review-count-text">{{item.reviewCount}}人已点评</text>
+          
+          <!-- 评价用户头像 -->
+          <view class="reviewer-wrap" wx:if="{{item.reviewCount > 0}}">
+            <view class="avatar-stack">
+              <image 
+                wx:for="{{item.reviewerAvatars}}" 
+                wx:key="index"
+                wx:for-item="avatar"
+                class="avatar-img"
+                style="z-index: {{10 - index}};"
+                src="{{avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
+                mode="aspectFill"
+              />
+            </view>
+            <text class="review-count">{{item.reviewCount}} 人评价</text>
+          </view>
+          <view class="reviewer-wrap" wx:else>
+            <text class="no-review">暂无评价</text>
+          </view>
+        </view>
+
+        <!-- 评分区域 - 右下角 -->
+        <view class="content-right">
+          <text class="score-num">{{item.score}}</text>
+          <text class="score-label">Score</text>
         </view>
       </view>
     </view>
@@ -68,10 +96,8 @@
     <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
       <text>{{loading ? '加载中...' : '点击加载更多'}}</text>
     </view>
-    <view wx:else-if="{{carList.length > 0}}" class="load-more no-more">
+    <view wx:elif="{{carList.length > 0}}" class="load-more no-more">
       <text>已经到底啦 ~</text>
     </view>
   </view>
-
-  <!-- 添加车型按钮已移至底部导航栏 -->
 </view>
