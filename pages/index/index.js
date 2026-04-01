@@ -278,6 +278,27 @@ Page({
     })
   },
 
+  // 跳转添加车型页面（需登录）
+  goAddCar() {
+    const app = getApp()
+    const userInfo = app.globalData.userInfo || {}
+    console.log('goAddCar 检查登录状态:', app.isLoggedIn(), 'openid:', userInfo.openid)
+    
+    if (!app.isLoggedIn()) {
+      wx.showModal({
+        title: '需要登录',
+        content: '添加车型需要先登录',
+        showCancel: false,
+        confirmText: '去登录',
+        success: () => {
+          wx.switchTab({ url: '/pages/myReviews/myReviews' })
+        }
+      })
+      return
+    }
+    wx.navigateTo({ url: '/pages/addCar/addCar' })
+  },
+
   // ============================================
   // 分享功能
   // ============================================

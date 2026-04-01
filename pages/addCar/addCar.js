@@ -167,6 +167,23 @@ Page({
   },
 
   onLoad() {
+    // 检查登录状态，未登录则引导登录
+    const userInfo = app.globalData.userInfo || {}
+    console.log('addCar onLoad 检查登录状态:', app.isLoggedIn(), 'openid:', userInfo.openid)
+    
+    if (!app.isLoggedIn()) {
+      wx.showModal({
+        title: '需要登录',
+        content: '添加车型需要先登录',
+        showCancel: false,
+        confirmText: '去登录',
+        success: () => {
+          wx.switchTab({ url: '/pages/myReviews/myReviews' })
+        }
+      })
+      return
+    }
+    
     if (typeof wx.onKeyboardHeightChange === 'function') {
       this.handleKeyboardHeightChange = (res) => {
         const nextHeight = Math.max(res.height || 0, 0)
@@ -393,6 +410,29 @@ Page({
 
   // 选择图片
   chooseImage() {
+    // 检查是否登录
+    const app = getApp()
+    const userInfo = app.globalData.userInfo || {}
+    const cachedProfile = wx.getStorageSync('userProfile') || {}
+    const isLoggedIn = !!(userInfo.openid || cachedProfile.openid)
+    
+    if (!isLoggedIn) {
+      wx.showModal({
+        title: '需要登录',
+        content: '上传图片需要登录账号，是否立即登录？',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            // 跳转到我的页面登录
+            wx.switchTab({
+              url: '/pages/myReviews/myReviews'
+            })
+          }
+        }
+      })
+      return
+    }
+    
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],

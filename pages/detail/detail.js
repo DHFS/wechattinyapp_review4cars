@@ -612,6 +612,21 @@ Page({
   submitReview() {
     const { hasReviewed, carInfo } = this.data
     
+    // 检查是否已登录
+    const app = getApp()
+    if (!app.isLoggedIn()) {
+      wx.showModal({
+        title: '需要登录',
+        content: '撰写评价需要先登录',
+        showCancel: false,
+        confirmText: '去登录',
+        success: () => {
+          wx.switchTab({ url: '/pages/myReviews/myReviews' })
+        }
+      })
+      return
+    }
+    
     // 检查是否已评价过
     if (hasReviewed) {
       wx.showModal({
@@ -1113,6 +1128,29 @@ Page({
 
   // 长按图片显示编辑菜单
   onImageLongPress() {
+    // 检查是否登录
+    const app = getApp()
+    const userInfo = app.globalData.userInfo || {}
+    const cachedProfile = wx.getStorageSync('userProfile') || {}
+    const isLoggedIn = !!(userInfo.openid || cachedProfile.openid)
+    
+    if (!isLoggedIn) {
+      wx.showModal({
+        title: '需要登录',
+        content: '上传图片需要登录账号，是否立即登录？',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            // 跳转到我的页面登录
+            wx.switchTab({
+              url: '/pages/myReviews/myReviews'
+            })
+          }
+        }
+      })
+      return
+    }
+    
     wx.showActionSheet({
       itemList: ['上传/更换图片', '删除图片'],
       success: (res) => {
@@ -1180,6 +1218,16 @@ Page({
       console.log('云函数返回:', updateRes)
 
       if (!updateRes.result || !updateRes.result.success) {
+        // 处理每日上传次数限制
+        if (updateRes.result.code === 'DAILY_LIMIT_REACHED') {
+          wx.showModal({
+            title: '上传限制',
+            content: updateRes.result.message,
+            showCancel: false,
+            confirmText: '知道了'
+          })
+          return
+        }
         throw new Error(updateRes.result?.message || '更新数据库失败')
       }
 

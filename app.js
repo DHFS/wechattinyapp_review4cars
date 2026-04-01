@@ -90,7 +90,7 @@ App({
   // 检查是否已登录
   isLoggedIn() {
     const userInfo = this.globalData.userInfo
-    return userInfo && userInfo.openid
+    return !!(userInfo && userInfo.openid)
   },
 
   // 检查是否已完善资料（头像+昵称）
