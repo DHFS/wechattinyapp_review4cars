@@ -1,0 +1,9 @@
+{
+  "name": "reviewCarSubmission",
+  "version": "1.0.0",
+  "description": "审核新增车型提交",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

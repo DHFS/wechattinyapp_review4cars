@@ -5,6 +5,7 @@
     "pages/detail/detail",
     "pages/writeReview/writeReview",
     "pages/addCar/addCar",
+    "pages/adminCars/adminCars",
     "pages/myReviews/myReviews",
     "pages/allReviews/allReviews"
   ],

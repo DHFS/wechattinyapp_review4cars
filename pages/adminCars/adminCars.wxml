@@ -1,0 +1,74 @@
+<view class="page">
+  <view class="hero">
+    <text class="hero-title">车型审核台</text>
+    <text class="hero-desc">用户新增车型后，会继续完成首评并整包提交。管理员通过后，车型、评分和首评才会对所有用户公开。</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载待审核车型中...</text>
+  </view>
+
+  <view wx:elif="{{pendingCars.length === 0}}" class="empty-state">
+    <text class="empty-icon">✓</text>
+    <text class="empty-title">当前没有待审核车型</text>
+    <text class="empty-desc">新的车型提交会自动出现在这里。</text>
+  </view>
+
+  <view wx:else class="list">
+    <view wx:for="{{pendingCars}}" wx:key="id" class="card">
+      <view class="card-head">
+        <view class="card-copy">
+          <text class="car-title">{{item.brand}} {{item.modelName}}</text>
+          <text class="car-meta">{{item.modelYear}} · {{item.powerType}} · {{item.priceRange}}</text>
+          <text class="car-submitted">提交时间：{{item.submittedAt}}</text>
+        </view>
+        <view class="status-badge">
+          <text>待审核</text>
+        </view>
+      </view>
+
+      <view wx:if="{{item.previewImageUrl}}" class="image-wrap" data-url="{{item.previewImageUrl}}" bindtap="previewImage">
+        <image class="preview-image" src="{{item.previewImageUrl}}" mode="aspectFill" />
+        <text class="image-hint">点按查看提交图片</text>
+      </view>
+
+      <view wx:else class="image-empty">
+        <text>本次提交未附带车型图片</text>
+      </view>
+
+      <view class="review-panel" wx:if="{{item.pendingReview}}">
+        <view class="review-panel-head">
+          <text class="review-panel-title">首评内容</text>
+          <text class="review-panel-meta">{{item.pendingReview.reviewerName}} · {{item.pendingReview.submittedAt}}</text>
+        </view>
+        <view class="review-total-score">
+          <text class="review-total-value">{{item.pendingReview.totalScore}}</text>
+          <text class="review-total-unit">分</text>
+        </view>
+        <view class="review-dimensions">
+          <view wx:for="{{item.pendingReview.dimensions}}" wx:key="name" class="review-dimension">
+            <text class="review-dimension-name">{{item.name}}</text>
+            <text class="review-dimension-score">{{item.score}}</text>
+          </view>
+        </view>
+        <text class="review-comment">{{item.pendingReview.comment}}</text>
+      </view>
+
+      <view class="action-row">
+        <button
+          class="action-btn reject"
+          data-id="{{item.id}}"
+          data-name="{{item.brand}} {{item.modelName}}"
+          bindtap="rejectCar"
+        >拒绝</button>
+        <button
+          class="action-btn approve"
+          data-id="{{item.id}}"
+          data-name="{{item.brand}} {{item.modelName}}"
+          bindtap="approveCar"
+        >通过并上榜</button>
+      </view>
+    </view>
+  </view>
+</view>

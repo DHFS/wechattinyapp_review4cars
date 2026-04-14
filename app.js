@@ -1,6 +1,7 @@
 App({
+  pendingCarDraftStorageKey: 'pendingCarDraft',
+
   onLaunch: function () {
-    console.log('App onLaunch 执行')
     // 初始化微信云开发环境
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
@@ -10,10 +11,9 @@ App({
       })
     } else {
       wx.cloud.init({
-        env: '', // 这里可以填写您的云开发环境ID，如果不填则使用默认环境
+        env: 'cloud1-0gk6sd0s2d93d22d',
         traceUser: true // 记录用户访问记录
       })
-      console.log('云开发环境初始化成功')
     }
 
     // 小程序启动时自动获取用户登录信息
@@ -22,24 +22,20 @@ App({
 
   // 自动登录 - 获取用户 openid
   async autoLogin() {
-    console.log('开始自动登录...')
     try {
       const res = await wx.cloud.callFunction({
         name: 'getOpenid'
       })
       
-      console.log('getOpenid 云函数返回:', res)
-      
       // 兼容两种返回格式：res.result.openid 或 res.result.userInfo.openId
       const openid = res.result?.openid || res.result?.userInfo?.openId
       
       if (openid) {
-        console.log('自动登录成功，获取到 openid:', openid)
-        
         // 存储到全局数据
         this.globalData.userInfo = {
           openid: openid,
-          appid: res.result?.appid || res.result?.userInfo?.appId
+          appid: res.result?.appid || res.result?.userInfo?.appId,
+          isAdmin: !!res.result?.isAdmin
         }
         
         // 尝试从本地缓存读取头像昵称
@@ -47,23 +43,25 @@ App({
         if (cachedUserInfo.avatarUrl && cachedUserInfo.nickName) {
           this.globalData.userInfo = {
             ...this.globalData.userInfo,
-            ...cachedUserInfo
+            ...cachedUserInfo,
+            isAdmin: !!res.result?.isAdmin
           }
-          console.log('从缓存读取用户信息:', cachedUserInfo.nickName)
         }
         
         // 通知各页面登录成功
         this.notifyLoginSuccess()
       } else {
-        console.error('自动登录失败：云函数返回中没有 openid, result:', res.result)
+        console.error('自动登录失败：云函数返回中没有 openid')
       }
     } catch (err) {
       console.error('自动登录失败:', err)
       // 云函数调用失败，尝试从缓存读取之前的 openid
       const cachedUserInfo = wx.getStorageSync('userProfile') || {}
       if (cachedUserInfo.openid) {
-        console.log('从缓存恢复 openid:', cachedUserInfo.openid)
-        this.globalData.userInfo = cachedUserInfo
+        this.globalData.userInfo = {
+          ...cachedUserInfo,
+          isAdmin: !!cachedUserInfo.isAdmin
+        }
         this.notifyLoginSuccess()
       }
     }
@@ -74,11 +72,11 @@ App({
     if (profile.avatarUrl && profile.nickName) {
       this.globalData.userInfo = {
         ...this.globalData.userInfo,
-        ...profile
+        ...profile,
+        isAdmin: !!(profile.isAdmin ?? this.globalData.userInfo?.isAdmin)
       }
       // 保存到缓存，包含 openid
       wx.setStorageSync('userProfile', this.globalData.userInfo)
-      console.log('用户信息已保存:', profile.nickName)
     }
   },
 
@@ -91,6 +89,12 @@ App({
   isLoggedIn() {
     const userInfo = this.globalData.userInfo
     return !!(userInfo && userInfo.openid)
+  },
+
+  // 检查当前用户是否为管理员
+  isAdmin() {
+    const userInfo = this.globalData.userInfo || {}
+    return !!userInfo.isAdmin
   },
 
   // 检查是否已完善资料（头像+昵称）
@@ -112,7 +116,40 @@ App({
     this.loginSuccessCallback = callback
   },
 
+  // 保存新增车型草稿，兼容页面切换或小程序短暂回收场景
+  savePendingCarDraft(draft) {
+    const nextDraft = draft || null
+    this.globalData.pendingCarDraft = nextDraft
+
+    if (nextDraft) {
+      wx.setStorageSync(this.pendingCarDraftStorageKey, nextDraft)
+      return
+    }
+
+    wx.removeStorageSync(this.pendingCarDraftStorageKey)
+  },
+
+  // 获取新增车型草稿，优先读内存，其次读本地缓存
+  getPendingCarDraft() {
+    if (this.globalData.pendingCarDraft) {
+      return this.globalData.pendingCarDraft
+    }
+
+    const cachedDraft = wx.getStorageSync(this.pendingCarDraftStorageKey) || null
+    if (cachedDraft) {
+      this.globalData.pendingCarDraft = cachedDraft
+    }
+    return cachedDraft
+  },
+
+  // 清空新增车型草稿
+  clearPendingCarDraft() {
+    this.globalData.pendingCarDraft = null
+    wx.removeStorageSync(this.pendingCarDraftStorageKey)
+  },
+
   globalData: {
-    userInfo: null
+    userInfo: null,
+    pendingCarDraft: null
   }
 })

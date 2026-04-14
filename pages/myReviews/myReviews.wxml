@@ -37,26 +37,13 @@
   <block wx:else>
     <!-- 用户资料头部 - 居中显示 -->
     <view class="user-profile-header">
-      <image class="user-avatar-large" src="{{userAvatar}}" mode="aspectFill" />
+      <image class="user-avatar-large" src="{{displayUserAvatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill" />
       <text class="user-name-large">{{userName}}</text>
-    </view>
-
-    <!-- 头部统计 - 大数字风格 -->
-    <view class="header">
-      <view class="stat-card">
-        <text class="stat-num">{{reviewCount}}</text>
-        <text class="stat-label">已评价车型</text>
-      </view>
-      <view class="stat-divider"></view>
-      <view class="stat-card">
-        <text class="stat-num">{{avgScore}}</text>
-        <text class="stat-label">平均打分</text>
-      </view>
     </view>
 
     <!-- 主体内容区 -->
     <scroll-view class="content-scroll" scroll-y="true">
-      
+
       <!-- 我的评价板块 -->
       <view class="section-block">
         <view class="section-header">
@@ -84,150 +71,104 @@
             wx:key="_id"
             class="review-card-compact"
             data-carid="{{item.carId}}"
+            data-canopen="{{item.canOpenDetail}}"
             bindtap="goCarDetail"
           >
             <view class="compact-left">
-              <text class="compact-car">{{item.brand}} {{item.modelName}}</text>
+              <view class="compact-title-row">
+                <text class="compact-car">{{item.brand}} {{item.modelName}}</text>
+                <text class="review-status-chip {{item.statusType}}">{{item.statusLabel}}</text>
+              </view>
               <text class="compact-score">{{item.myScore}}分 · {{item.time}}</text>
+              <text class="compact-status-desc" wx:if="{{item.statusDesc}}">{{item.statusDesc}}</text>
             </view>
             <view class="compact-actions" catchtap="preventBubble">
-              <text class="compact-btn" data-carid="{{item.carId}}" catchtap="goCarDetail">修改</text>
+              <text
+                class="compact-btn {{!item.canEdit ? 'disabled' : ''}}"
+                data-carid="{{item.carId}}"
+                data-canopen="{{item.canOpenDetail}}"
+                catchtap="goCarDetail"
+              >{{item.canEdit ? '修改' : (item.statusType === 'rejected' ? '未通过' : '审核中')}}</text>
               <text class="compact-btn delete" data-reviewid="{{item._id}}" data-carid="{{item.carId}}" catchtap="deleteReview">删除</text>
             </view>
           </view>
 
-          <!-- 查看更多（当评价超过3条时显示） -->
-          <view wx:if="{{allReviews.length > 3 && !showAllReviews}}" class="view-all-btn" bindtap="viewAllReviews">
-            <text>查看全部 {{allReviews.length}} 条评价</text>
+          <view class="view-all-btn" bindtap="viewAllReviews" wx:if="{{allReviews.length > 0}}">
+            <text>历史评价</text>
             <text class="arrow">›</text>
           </view>
-          
-          <!-- 加载更多 -->
-          <view wx:if="{{hasMore && showAllReviews}}" class="load-more-small" bindtap="loadMore">
-            <text>{{loading ? '加载中...' : '加载更多'}}</text>
-          </view>
-          <view wx:elif="{{reviews.length > 0 && showAllReviews}}" class="load-more-small no-more">
-            <text>已经到底啦 ~</text>
-          </view>
         </view>
       </view>
 
-      <!-- 帮助 -->
       <view class="section-block">
-        <view class="section-header expandable" bindtap="toggleSection" data-section="help">
-          <view class="section-left">
-            <view class="section-icon icon-help"></view>
-            <text class="section-title">使用帮助</text>
-          </view>
-          <view class="expand-icon">
-            <text>{{helpExpanded ? '↑' : '↓'}}</text>
-          </view>
-        </view>
-        <view class="help-content" wx:if="{{helpExpanded}}">
-          <view class="help-item">
-            <view class="help-step">1</view>
-            <view class="help-info">
-              <text class="help-title">浏览榜单</text>
-              <text class="help-desc">在首页查看车型排行榜，了解各车型综合评分和用户口碑</text>
-            </view>
-          </view>
-          <view class="help-item">
-            <view class="help-step">2</view>
-            <view class="help-info">
-              <text class="help-title">查看详情</text>
-              <text class="help-desc">点击车型进入详情页，查看五维雷达图和详细用户评价</text>
-            </view>
-          </view>
-          <view class="help-item">
-            <view class="help-step">3</view>
-            <view class="help-info">
-              <text class="help-title">提交评价</text>
-              <text class="help-desc">为车型打分并撰写评价，分享您的真实用车体验</text>
-            </view>
-          </view>
-          <view class="help-item">
-            <view class="help-step">4</view>
-            <view class="help-info">
-              <text class="help-title">管理评价</text>
-              <text class="help-desc">在"我的"页面查看、修改或删除您的历史评价</text>
-            </view>
-          </view>
-        </view>
-      </view>
-
-      <!-- 关于车评侦探 -->
-      <view class="section-block">
-        <view class="section-header expandable" bindtap="toggleSection" data-section="about">
+        <view class="section-header expandable" bindtap="toggleSection" data-section="aboutUs">
           <view class="section-left">
             <view class="section-icon icon-about"></view>
-            <text class="section-title">关于车评侦探</text>
+            <text class="section-title">关于我们</text>
           </view>
           <view class="expand-icon">
-            <text>{{aboutExpanded ? '↑' : '↓'}}</text>
+            <text>{{aboutUsExpanded ? '↑' : '↓'}}</text>
           </view>
         </view>
-        <view class="about-content" wx:if="{{aboutExpanded}}">
-          <text class="about-text">车评侦探是一款基于真实用户评价的微信小程序，致力于为车友提供客观、全面的车型评分参考。</text>
-          <view class="about-features">
-            <view class="feature-item">
-              <text class="feature-dot">•</text>
-              <text class="feature-text">五维评分系统：动力、操控、空间、辅驾、其他</text>
-            </view>
-            <view class="feature-item">
-              <text class="feature-dot">•</text>
-              <text class="feature-text">实时排行榜：按综合评分排序展示热门车型</text>
-            </view>
-            <view class="feature-item">
-              <text class="feature-dot">•</text>
-              <text class="feature-text">真实评价：基于车主真实用车体验的口碑分享</text>
-            </view>
-          </view>
-        </view>
-      </view>
-
-      <!-- 联系我们 -->
-      <view class="section-block">
-        <view class="section-header expandable" bindtap="toggleSection" data-section="contact">
-          <view class="section-left">
-            <view class="section-icon icon-contact"></view>
-            <text class="section-title">联系我们</text>
-          </view>
-          <view class="expand-icon">
-            <text>{{contactExpanded ? '↑' : '↓'}}</text>
-          </view>
-        </view>
-        <view class="contact-content" wx:if="{{contactExpanded}}">
-          <text class="contact-desc">如有问题或建议，欢迎通过微信联系我们</text>
-          <view class="contact-item">
-            <view class="contact-label">微信号</view>
-            <view class="contact-value">
-              <text class="contact-text">340250808</text>
-            </view>
-          </view>
-        </view>
-      </view>
-
-      <!-- 账号管理 -->
-      <view class="section-block">
-        <view class="section-header expandable" bindtap="toggleSection" data-section="account">
-          <view class="section-left">
-            <view class="section-icon icon-user"></view>
-            <text class="section-title">账号管理</text>
-          </view>
-          <view class="expand-icon">
-            <text>{{accountExpanded ? '↑' : '↓'}}</text>
-          </view>
-        </view>
-        <view class="account-content" wx:if="{{accountExpanded}}">
-          <!-- 已登录状态 -->
-          <view class="account-info">
-            <view class="user-info-row">
-              <image wx:if="{{userAvatar}}" class="user-avatar" src="{{userAvatar}}" mode="aspectFill"/>
-              <view class="user-meta">
-                <text class="user-name">{{userName}}</text>
+        <view class="about-us-content" wx:if="{{aboutUsExpanded}}">
+          <view class="about-us-group">
+            <text class="about-us-group-title">关于车评侦探</text>
+            <view class="about-content merged">
+              <text class="about-text">车评侦探是一款基于真实用户评价的微信小程序，致力于为车友提供客观、全面的车型评分参考。</text>
+              <view class="about-features">
+                <view class="feature-item">
+                  <text class="feature-dot">•</text>
+                  <text class="feature-text">五维评分系统：动力、操控、空间、辅驾、其他</text>
+                </view>
+                <view class="feature-item">
+                  <text class="feature-dot">•</text>
+                  <text class="feature-text">实时排行榜：按综合评分排序展示热门车型</text>
+                </view>
+                <view class="feature-item">
+                  <text class="feature-dot">•</text>
+                  <text class="feature-text">真实评价：基于车主真实用车体验的口碑分享</text>
+                </view>
               </view>
             </view>
-            <button class="logout-btn" bindtap="handleLogout">退出登录</button>
+          </view>
+
+          <view class="about-us-group">
+            <text class="about-us-group-title">联系我们</text>
+            <view class="contact-content merged">
+              <text class="contact-desc">如有问题或建议，欢迎通过微信联系我们</text>
+              <view class="contact-item">
+                <view class="contact-label">微信号</view>
+                <view class="contact-value">
+                  <text class="contact-text">340250808</text>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="about-us-group">
+            <text class="about-us-group-title">账号管理</text>
+            <view class="account-content merged">
+              <view class="account-info">
+                <view class="user-info-row">
+                  <image wx:if="{{displayUserAvatar}}" class="user-avatar" src="{{displayUserAvatar}}" mode="aspectFill"/>
+                  <view class="user-meta">
+                    <text class="user-name">{{userName}}</text>
+                  </view>
+                </view>
+                <button class="logout-btn" bindtap="handleLogout">退出登录</button>
+              </view>
+            </view>
+          </view>
+
+          <view class="about-us-group" wx:if="{{isAdmin}}">
+            <text class="about-us-group-title">管理入口</text>
+            <view class="admin-entry-card admin-entry-card-inline" bindtap="goAdminCars">
+              <view class="admin-entry-copy">
+                <text class="admin-entry-title">车型审核台</text>
+                <text class="admin-entry-desc">查看待审核车型，快速通过或拒绝用户提交内容。</text>
+              </view>
+              <text class="admin-entry-arrow">›</text>
+            </view>
           </view>
         </view>
       </view>

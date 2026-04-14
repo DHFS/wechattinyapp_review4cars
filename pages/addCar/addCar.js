@@ -5,6 +5,8 @@
 
 const app = getApp()
 const carDictionary = require('../../carDictionary.js')
+const db = wx.cloud.database()
+const _ = db.command
 
 const BRAND_ENTRIES = carDictionary.brands || []
 const POWER_TYPE_META = {
@@ -168,9 +170,6 @@ Page({
 
   onLoad() {
     // 检查登录状态，未登录则引导登录
-    const userInfo = app.globalData.userInfo || {}
-    console.log('addCar onLoad 检查登录状态:', app.isLoggedIn(), 'openid:', userInfo.openid)
-    
     if (!app.isLoggedIn()) {
       wx.showModal({
         title: '需要登录',
@@ -618,8 +617,77 @@ Page({
   },
 
   // ============================================
-  // 提交新车型
+  // 新增车型 -> 进入写首评流程
   // ============================================
+
+  // 将审核状态转换成用户更容易理解的文案。
+  getSubmissionStatusLabel(status = '') {
+    if (status === 'approved') return '已通过'
+    if (status === 'rejected') return '已拒绝'
+    return '待审核'
+  },
+
+  // 保存新增车型草稿，供写首评页最终一次性提交“车型 + 首评”审核包。
+  saveDraftAndGoWriteReview(draftData) {
+    const nextDraft = {
+      ...draftData,
+      savedAt: Date.now()
+    }
+
+    if (typeof app.savePendingCarDraft === 'function') {
+      app.savePendingCarDraft(nextDraft)
+    } else {
+      app.globalData.pendingCarDraft = nextDraft
+      wx.setStorageSync('pendingCarDraft', nextDraft)
+    }
+
+    wx.navigateTo({
+      url: `/pages/writeReview/writeReview?draftMode=true&carName=${encodeURIComponent(`${draftData.brand} ${draftData.model}`)}`
+    })
+  },
+
+  async checkDraftContentSecurity({ title = '', content = '' }) {
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'checkContentSecurity',
+        data: {
+          title,
+          content
+        }
+      })
+
+      const result = res.result || {}
+      if (!result.success) {
+        console.error('新增车型内容安全检测未通过:', {
+          errCode: result.errCode,
+          errMsg: result.errMsg
+        })
+
+        const fallbackMessage = result.errCode === -604101
+          ? '内容安全服务配置异常，请稍后重试'
+          : '内容安全检测未通过，请调整后重试'
+
+        return {
+          success: false,
+          errCode: result.errCode || -1,
+          errMsg: result.errMsg || '',
+          debugMessage: result.debugMessage || '',
+          message: result.message || fallbackMessage
+        }
+      }
+
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('新增车型内容安全检测失败:', err)
+      return {
+        success: false,
+        errCode: -1,
+        message: '内容安全检测失败，请稍后重试'
+      }
+    }
+  },
 
   async submitCar() {
     const resolvedFormData = await this.resolveFormDataBeforeSubmit()
@@ -661,74 +729,74 @@ Page({
       'formData.price': priceRange
     })
 
-    const db = wx.cloud.database()
-
     try {
       const checkRes = await db.collection('cars')
         .where({
           brand: brand,
           model_name: modelName,
-          model_year: modelYear
+          model_year: modelYear,
+          status: _.in(['pending', 'approved'])
         })
         .get()
 
       if (checkRes.data.length > 0) {
         const existingCar = checkRes.data[0]
-        wx.showModal({
-          title: '车型已存在',
-          content: `${existingCar.brand} ${existingCar.model_name} ${existingCar.model_year} 已在榜单中，直接去打分吧！`,
-          confirmText: '去打分',
-          cancelText: '取消',
-          success: (res) => {
-            if (res.confirm) {
-              wx.navigateTo({
-                url: `/pages/detail/detail?id=${existingCar._id}`
-              })
+        const statusLabel = this.getSubmissionStatusLabel(existingCar.status)
+
+        if (existingCar.status === 'approved') {
+          wx.showModal({
+            title: '车型已存在',
+            content: `${existingCar.brand} ${existingCar.model_name} ${existingCar.model_year} 已在榜单中，直接去打分吧！`,
+            confirmText: '去打分',
+            cancelText: '取消',
+            success: (res) => {
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: `/pages/detail/detail?id=${existingCar._id}`
+                })
+              }
             }
-          }
+          })
+          this.setData({ submitting: false })
+          return
+        }
+
+        wx.showModal({
+          title: '车型已提交',
+          content: `${existingCar.brand} ${existingCar.model_name} ${existingCar.model_year} 当前状态：${statusLabel}。请勿重复提交，审核通过后会自动公开展示。`,
+          showCancel: false,
+          confirmText: '知道了'
         })
         this.setData({ submitting: false })
         return
       }
 
-      const currentUserInfo = app && typeof app.getUserInfo === 'function'
-        ? app.getUserInfo()
-        : null
+      const securityRes = await this.checkDraftContentSecurity({
+        title: `${brand} ${modelName}`.trim(),
+        content: `${modelYear} ${resolvedFormData.powerType} ${priceRange}`.trim()
+      })
 
-      const carData = {
-        brand: brand,
-        model_name: modelName,
-        model_year: modelYear,
-        power_type: resolvedFormData.powerType,
-        price_range: priceRange,
-        image_url: resolvedFormData.imageUrl || '',
-        avg_score: 0,
-        review_count: 0,
-        score_power: 0,
-        score_handling: 0,
-        score_space: 0,
-        score_adas: 0,
-        score_other: 0,
-        status: 'approved',
-        created_at: db.serverDate(),
-        created_by: currentUserInfo?.openid || ''
+      if (!securityRes.success) {
+        console.error('submitCar 被内容安全拦截:', {
+          errCode: securityRes.errCode,
+          errMsg: securityRes.errMsg
+        })
+        wx.showToast({
+          title: securityRes.message || '内容含有违规词汇，请修改后重试',
+          icon: 'none'
+        })
+        this.setData({ submitting: false })
+        return
       }
 
-      const res = await db.collection('cars').add({
-        data: carData
+      this.saveDraftAndGoWriteReview({
+        brand,
+        model: modelName,
+        year: modelYear,
+        powerType: resolvedFormData.powerType,
+        price: priceRange,
+        imageUrl: resolvedFormData.imageUrl || ''
       })
-
-      wx.showToast({
-        title: '添加成功',
-        icon: 'success',
-        duration: 1500
-      })
-
-      setTimeout(() => {
-        wx.redirectTo({
-          url: `/pages/detail/detail?id=${res._id}`
-        })
-      }, 1500)
     } catch (err) {
       console.error('提交车型失败:', err)
       wx.showToast({ title: '提交失败，请重试', icon: 'none' })

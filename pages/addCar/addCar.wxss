@@ -25,6 +25,29 @@ page {
   color: #777777;
 }
 
+.audit-banner {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 107, 53, 0.08);
+  border: 1px solid rgba(255, 107, 53, 0.16);
+}
+
+.audit-banner-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFB38E;
+  margin-bottom: 6px;
+}
+
+.audit-banner-desc {
+  display: block;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #B8B0AC;
+}
+
 .form-section {
   background: #1A1A1A;
   border-radius: 16px;

@@ -6,6 +6,7 @@ Page({
     // 车型信息
     carId: '',
     carName: '',
+    draftMode: false,
     
     // 评分数据
     ratingItems: [
@@ -38,14 +39,33 @@ Page({
   },
 
   onLoad(options) {
-    const { carId, carName, isEdit, reviewId } = options
-    
+    const { carId, carName, isEdit, reviewId, draftMode } = options
+    const resolvedDraftMode = draftMode === 'true'
+    const pendingCarDraft = typeof app.getPendingCarDraft === 'function'
+      ? app.getPendingCarDraft()
+      : app.globalData.pendingCarDraft
+
     this.setData({ 
       carId,
       carName: decodeURIComponent(carName || ''),
+      draftMode: resolvedDraftMode,
       isEdit: isEdit === 'true',
       reviewId: reviewId || ''
     })
+
+    if (resolvedDraftMode && !pendingCarDraft) {
+      wx.showModal({
+        title: '草稿已失效',
+        content: '新增车型草稿不存在，请重新填写车型信息。',
+        showCancel: false,
+        success: () => {
+          wx.navigateBack({
+            delta: 1
+          })
+        }
+      })
+      return
+    }
     
     // 如果是编辑模式，加载已有数据
     if (isEdit === 'true' && reviewId) {
@@ -148,9 +168,52 @@ Page({
     this.setData({ currentStep: 'rating' })
   },
 
+  async checkReviewContentSecurity({ title = '', content = '' }) {
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'checkContentSecurity',
+        data: {
+          title,
+          content
+        }
+      })
+
+      const result = res.result || {}
+      if (!result.success) {
+        console.error('评价内容安全检测未通过:', {
+          errCode: result.errCode,
+          errMsg: result.errMsg
+        })
+
+        const fallbackMessage = result.errCode === -604101
+          ? '内容安全服务配置异常，请稍后重试'
+          : '内容安全检测未通过，请调整后重试'
+
+        return {
+          success: false,
+          errCode: result.errCode || -1,
+          errMsg: result.errMsg || '',
+          debugMessage: result.debugMessage || '',
+          message: result.message || fallbackMessage
+        }
+      }
+
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('评价内容安全检测失败:', err)
+      return {
+        success: false,
+        errCode: -1,
+        message: '内容安全检测失败，请稍后重试'
+      }
+    }
+  },
+
   // 提交评价
   async submitReview() {
-    const { carId, carName, ratingItems, calculatedScore, comment, isEdit, reviewId, submitting } = this.data
+    const { carId, carName, ratingItems, calculatedScore, comment, isEdit, reviewId, submitting, draftMode } = this.data
     
     if (submitting) return
     
@@ -181,6 +244,23 @@ Page({
     
     try {
       const db = wx.cloud.database()
+      const sanitizedComment = comment.trim()
+      const securityRes = await this.checkReviewContentSecurity({
+        title: carName,
+        content: sanitizedComment
+      })
+
+      if (!securityRes.success) {
+        console.error('submitReview 被内容安全拦截:', {
+          errCode: securityRes.errCode,
+          errMsg: securityRes.errMsg
+        })
+        wx.showToast({
+          title: securityRes.message || '内容安全检测未通过，请调整后重试',
+          icon: 'none'
+        })
+        return
+      }
       
       const reviewData = {
         car_id: carId,
@@ -192,7 +272,7 @@ Page({
         score_adas: ratingItems[3].value,
         score_other: ratingItems[4].value,
         total_score: parseFloat(calculatedScore),
-        comment: comment.trim(),
+        comment: sanitizedComment,
         updated_at: db.serverDate()
       }
       
@@ -203,8 +283,59 @@ Page({
           data: { reviewId, updateData: reviewData }
         })
         wx.showToast({ title: '修改成功', icon: 'success' })
+      } else if (draftMode) {
+        const pendingCarDraft = typeof app.getPendingCarDraft === 'function'
+          ? app.getPendingCarDraft()
+          : app.globalData.pendingCarDraft
+
+        if (!pendingCarDraft) {
+          throw new Error('新增车型草稿不存在，请重新填写')
+        }
+
+        const submitRes = await wx.cloud.callFunction({
+          name: 'submitPendingCarReview',
+          data: {
+            carDraft: pendingCarDraft,
+            reviewDraft: {
+              userAvatar: userInfo.avatarUrl,
+              userNickname: userInfo.nickName,
+              scorePower: ratingItems[0].value,
+              scoreHandling: ratingItems[1].value,
+              scoreSpace: ratingItems[2].value,
+              scoreAdas: ratingItems[3].value,
+              scoreOther: ratingItems[4].value,
+              totalScore: parseFloat(calculatedScore),
+              comment: sanitizedComment
+            }
+          }
+        })
+
+        if (!submitRes.result || !submitRes.result.success) {
+          throw new Error(submitRes.result?.message || '提交审核失败')
+        }
+
+        if (typeof app.clearPendingCarDraft === 'function') {
+          app.clearPendingCarDraft()
+        } else {
+          app.globalData.pendingCarDraft = null
+          wx.removeStorageSync('pendingCarDraft')
+        }
+        wx.showModal({
+          title: '提交成功',
+          content: '你刚才新增的车型、评分和评论都已进入审核。审核结束后会出现在首页，你也可以到“我的评价”里查看或删除这条评论。',
+          showCancel: false,
+          confirmText: '返回首页',
+          success: () => {
+            wx.switchTab({
+              url: '/pages/index/index'
+            })
+          }
+        })
+        return
       } else {
         // 新增评价
+        reviewData.status = 'approved'
+        reviewData.audit_locked = false
         reviewData.created_at = db.serverDate()
         await db.collection('reviews').add({ data: reviewData })
         wx.showToast({ title: '评价成功', icon: 'success' })
@@ -220,7 +351,7 @@ Page({
       
     } catch (err) {
       console.error('提交评价失败:', err)
-      wx.showToast({ title: '提交失败，请重试', icon: 'none' })
+      wx.showToast({ title: err.message || '提交失败，请重试', icon: 'none' })
     } finally {
       this.setData({ submitting: false })
     }

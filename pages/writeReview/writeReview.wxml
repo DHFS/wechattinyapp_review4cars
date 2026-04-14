@@ -20,7 +20,7 @@
           <text class="score-value">{{calculatedScore}}</text>
           <text class="score-label">综合评分</text>
         </view>
-        <view class="score-hint">请为以下5个维度评分</view>
+        <view class="score-hint">{{draftMode ? '请先完成新增车型的首评分数' : '请为以下5个维度评分'}}</view>
       </view>
 
       <!-- 评分列表 -->
@@ -74,7 +74,7 @@
 
         <!-- 底部提示 -->
         <view class="rating-tip">
-          <text class="tip-text">提示：每项 0-100 分，建议结合真实用车体验打分</text>
+          <text class="tip-text">{{draftMode ? '提示：提交后，车型信息、评分和首评会一起进入审核。' : '提示：每项 0-100 分，建议结合真实用车体验打分'}}</text>
         </view>
         <view class="rating-bottom-safe"></view>
       </view>
@@ -95,7 +95,7 @@
       </view>
       <view class="title">撰写评价</view>
       <view class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="submitReview">
-        <text>{{submitting ? '提交中...' : (isEdit ? '保存' : '发布')}}</text>
+        <text>{{submitting ? '提交中...' : (isEdit ? '保存' : (draftMode ? '提交审核' : '发布'))}}</text>
       </view>
     </view>
 
@@ -103,6 +103,7 @@
       <!-- 评分摘要 -->
       <view class="score-summary">
         <view class="summary-title">{{carName}}</view>
+        <view class="summary-note" wx:if="{{draftMode}}">提交后会进入审核，审核中内容仅自己可见，暂不可修改，但可以删除。</view>
         <view class="summary-scores">
           <view class="summary-item">
             <text class="summary-label">综合</text>

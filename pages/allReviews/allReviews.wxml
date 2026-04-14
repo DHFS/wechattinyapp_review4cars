@@ -1,100 +1,143 @@
 <view class="page">
-  <!-- 头部统计 -->
-  <view class="header">
-    <view class="stat-card">
-      <text class="stat-num">{{reviewCount}}</text>
-      <text class="stat-label">已评价车型</text>
+  <view class="page-body">
+    <view class="archive-header">
+      <view class="archive-copy">
+        <text class="archive-kicker">Registry</text>
+        <text class="archive-title">Review Archive</text>
+      </view>
     </view>
-    <view class="stat-divider"></view>
-    <view class="stat-card">
-      <text class="stat-num">{{avgScore}}</text>
-      <text class="stat-label">平均打分</text>
-    </view>
-  </view>
+    <view class="archive-line"></view>
 
-  <!-- 评价列表 -->
-  <view class="content">
-    <!-- 加载中 -->
+    <view class="archive-summary">
+      <view class="summary-card">
+        <text class="summary-label">已评价车型</text>
+        <text class="summary-value">{{reviewCount}}</text>
+      </view>
+      <view class="summary-card">
+        <text class="summary-label">平均打分</text>
+        <text class="summary-value">{{avgScore}}</text>
+      </view>
+    </view>
+
     <view wx:if="{{loading && allReviews.length === 0}}" class="loading-state">
       <view class="loading-spinner"></view>
-      <text class="loading-text">加载中...</text>
+      <text class="loading-text">档案整理中...</text>
     </view>
 
-    <!-- 空状态 -->
     <view wx:elif="{{!loading && allReviews.length === 0}}" class="empty-state">
-      <text class="empty-icon">📝</text>
-      <text class="empty-text">暂无评价记录</text>
-      <text class="empty-hint">快去首页发现心仪车型吧</text>
+      <text class="empty-code">000</text>
+      <text class="empty-title">暂无历史档案</text>
+      <text class="empty-desc">当你提交评价后，所有记录都会在这里归档。</text>
     </view>
 
-    <!-- 全部评价列表 -->
-    <view wx:else class="review-list">
-      <view 
-        wx:for="{{allReviews}}" 
+    <view wx:else class="dossier-list">
+      <view
+        wx:for="{{allReviews}}"
         wx:key="_id"
-        class="review-card"
+        class="dossier-card"
         data-carid="{{item.carId}}"
+        data-canopen="{{item.canOpenDetail}}"
         bindtap="goCarDetail"
       >
-        <!-- 车型信息 -->
-        <view class="car-info">
-          <view class="car-header">
-            <text class="car-name">{{item.brand}} {{item.modelName}}</text>
-            <view class="car-tag" style="background-color: {{item.tagColor}}20; color: {{item.tagColor}};">
-              {{item.powerType}}
+        <view class="dossier-media">
+          <image wx:if="{{item.imageUrl}}" class="dossier-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+          <view wx:else class="dossier-image placeholder"></view>
+          <view class="dossier-overlay">
+            <view class="dossier-badge">{{item.archiveRank}}</view>
+            <view wx:if="{{item.statusType === 'pending'}}" class="overlay-status {{item.statusType}}">{{item.statusLabel}}</view>
+          </view>
+        </view>
+
+        <view class="dossier-content">
+          <view class="dossier-head">
+            <view class="dossier-title-wrap">
+              <text class="dossier-title">{{item.brand}} {{item.modelName}}</text>
+              <text class="dossier-meta">{{item.archiveDate}} · {{item.priceRange || '价格待补充'}}</text>
+            </view>
+            <view class="dossier-score">
+              <text class="dossier-score-value">{{item.scoreText}}</text>
+              <view class="dossier-score-label">
+                <text class="score-letter">s</text>
+                <text class="score-letter">c</text>
+                <text class="score-letter">o</text>
+                <text class="score-letter">r</text>
+                <text class="score-letter">e</text>
+              </view>
             </view>
           </view>
-          <text class="car-year" wx:if="{{item.modelYear}}">{{item.modelYear}}款</text>
-        </view>
 
-        <!-- 评分信息 -->
-        <view class="score-section">
-          <view class="total-score">
-            <text class="score-num">{{item.myScore}}</text>
-            <text class="score-label">分</text>
+          <view class="dossier-tags">
+            <text class="dossier-tag power" style="background-color: {{item.tagColor}}22; color: {{item.tagColor}};">{{item.powerType}}</text>
+            <text class="dossier-tag neutral" wx:if="{{item.modelYear}}">{{item.modelYear}}</text>
+            <text class="dossier-tag inline-status approved" wx:if="{{item.statusType === 'approved'}}">{{item.statusLabel}}</text>
+            <text class="dossier-tag inline-status rejected" wx:if="{{item.statusType === 'rejected'}}">{{item.statusLabel}}</text>
           </view>
-          <view class="score-time">{{item.time}}</view>
-        </view>
 
-        <!-- 五维得分 -->
-        <view class="dimensions-row">
-          <view class="dimension-item" wx:for="{{item.dimensions}}" wx:for-item="dim" wx:key="name">
-            <text class="dim-name">{{dim.name}}</text>
-            <text class="dim-score">{{dim.score}}</text>
-          </view>
-        </view>
+          <text class="status-desc" wx:if="{{item.statusDesc}}">{{item.statusDesc}}</text>
 
-        <!-- 评价内容 -->
-        <view class="comment-section" wx:if="{{item.comment}}">
-          <text class="comment-text">{{item.displayComment}}</text>
-          <view 
-            class="expand-btn" 
-            wx:if="{{item.isLongComment}}"
-            data-index="{{index}}"
-            catchtap="toggleComment"
-          >
-            <text>{{item.isExpanded ? '收起' : '展开'}}</text>
-            <text class="expand-icon">{{item.isExpanded ? '↑' : '↓'}}</text>
+          <view class="quote-box">
+            <text class="quote-text">“{{item.excerpt}}”</text>
           </view>
-        </view>
 
-        <!-- 操作按钮 -->
-        <view class="action-btns" catchtap="preventBubble">
-          <view class="btn-edit" data-carid="{{item.carId}}" catchtap="goCarDetail">
-            <text>修改</text>
+          <view class="dimension-strip">
+            <view class="dimension-chip" wx:for="{{item.dimensions}}" wx:key="name" wx:for-item="dim">
+              <text class="dimension-name">{{dim.name}}</text>
+              <text class="dimension-score">{{dim.score}}</text>
+            </view>
           </view>
-          <view class="btn-delete" data-reviewid="{{item._id}}" data-carid="{{item.carId}}" catchtap="deleteReview">
-            <text>删除</text>
+
+          <view class="dossier-actions" catchtap="preventBubble">
+            <view class="action-group">
+              <view
+                class="text-action {{!item.canEdit ? 'disabled' : ''}}"
+                hover-class="{{item.canEdit ? 'action-hover' : ''}}"
+                data-carid="{{item.carId}}"
+                data-canopen="{{item.canOpenDetail}}"
+                catchtap="goCarDetail"
+              >
+                <text class="action-symbol">✎</text>
+                <text class="action-label">{{item.canEdit ? '编辑' : '审核中'}}</text>
+              </view>
+              <button
+                wx:if="{{item.canShare}}"
+                class="text-action share-button-inline"
+                open-type="share"
+                hover-class="action-hover"
+                data-carid="{{item.carId}}"
+                data-canshare="{{item.canShare}}"
+                data-brand="{{item.brand}}"
+                data-model="{{item.modelName}}"
+                data-score="{{item.scoreText}}"
+                data-imageurl="{{item.imageUrl}}"
+                catchtap="preventBubble"
+              >
+                <text class="action-symbol share-icon">↗</text>
+                <text class="action-label">分享</text>
+              </button>
+              <view
+                class="text-action danger"
+                hover-class="action-danger-hover"
+                data-reviewid="{{item._id}}"
+                data-carid="{{item.carId}}"
+                catchtap="deleteReview"
+              >
+                <text class="action-symbol">⌫</text>
+                <text class="action-label">删除</text>
+              </view>
+            </view>
+            <view class="ghost-action {{!item.canOpenDetail ? 'disabled' : ''}}" data-carid="{{item.carId}}" data-canopen="{{item.canOpenDetail}}" catchtap="goCarDetail">
+              <text>{{item.actionLabel}}</text>
+            </view>
           </view>
         </view>
       </view>
 
-      <!-- 加载更多 -->
-      <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
-        <text>{{loading ? '加载中...' : '加载更多'}}</text>
+      <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMore">
+        <text class="load-more-label">{{loading ? '整理中...' : 'Expand Archives'}}</text>
+        <text class="load-more-icon">⌄</text>
       </view>
-      <view wx:elif="{{allReviews.length > 0}}" class="load-more no-more">
-        <text>已经到底啦 ~</text>
+      <view class="load-more done" wx:elif="{{allReviews.length > 0}}">
+        <text class="load-more-label">档案已全部展开</text>
       </view>
     </view>
   </view>

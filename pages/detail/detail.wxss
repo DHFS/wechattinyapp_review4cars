@@ -63,6 +63,39 @@ page {
   color: rgba(255, 255, 255, 0.8);
 }
 
+.pending-image-tag {
+  position: absolute;
+  top: 18rpx;
+  left: 18rpx;
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 107, 53, 0.9);
+  box-shadow: 0 10rpx 24rpx rgba(0, 0, 0, 0.22);
+}
+
+.pending-image-tag text {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #fff3ed;
+}
+
+.image-review-notice {
+  position: absolute;
+  left: 16rpx;
+  bottom: 16rpx;
+  max-width: calc(100% - 220rpx);
+  background: rgba(12, 12, 12, 0.72);
+  backdrop-filter: blur(10rpx);
+  padding: 10rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.image-review-notice text {
+  font-size: 22rpx;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
+}
+
 /* 页面加载状态 */
 .page-loading {
   display: flex;

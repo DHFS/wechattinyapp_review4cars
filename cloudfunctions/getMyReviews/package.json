@@ -1,0 +1,9 @@
+{
+  "name": "getMyReviews",
+  "version": "1.0.0",
+  "description": "获取当前用户的评价及统计",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

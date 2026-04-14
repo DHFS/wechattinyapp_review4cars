@@ -4,6 +4,11 @@
     <text class="header-subtitle">品牌和车型支持本地联想，提交前会再做一次智能纠错</text>
   </view>
 
+  <view class="audit-banner">
+    <text class="audit-banner-title">新增车型与首评会一起进入审核</text>
+    <text class="audit-banner-desc">先补充车型信息，再完成评分和评论。最终提交后，车型、首评和车型图会作为同一份内容包进入审核。</text>
+  </view>
+
   <view class="form-section">
     <view class="form-item">
       <text class="form-label">品牌厂家 <text class="required">*</text></text>
@@ -109,14 +114,15 @@
   </view>
 
   <button class="submit-btn" bindtap="submitCar" loading="{{submitting}}">
-    {{submitting ? '提交中...' : '提交新车型'}}
+    {{submitting ? '处理中...' : '下一步，写首评'}}
   </button>
 
   <view class="tips-section">
     <text class="tips-title">使用建议：</text>
     <text class="tips-item">1. 先输入品牌，再从联想结果里选择车型，会更准确</text>
     <text class="tips-item">2. 如果输成了别名、英文或错别字，提交前会再尝试纠错</text>
-    <text class="tips-item">3. 这版词典是本地优先，后面再逐步接入混元做更强纠错</text>
+    <text class="tips-item">3. 下一步会继续完成评分和首评，最终统一提交审核</text>
+    <text class="tips-item">4. 这版词典是本地优先，后面再逐步接入混元做更强纠错</text>
   </view>
 
   <view

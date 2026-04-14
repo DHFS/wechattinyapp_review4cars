@@ -1,0 +1,269 @@
+page {
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 16px 16px 36px;
+}
+
+.hero {
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+}
+
+.hero-desc {
+  display: block;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #8C8C8C;
+}
+
+.loading-state,
+.empty-state {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #333333;
+  border-top-color: #FF6B35;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text,
+.empty-desc {
+  font-size: 13px;
+  color: #8C8C8C;
+}
+
+.empty-icon {
+  font-size: 42px;
+  color: #22a568;
+  margin-bottom: 10px;
+}
+
+.empty-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: #1A1A1A;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.card-copy {
+  flex: 1;
+}
+
+.car-title {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+}
+
+.car-meta,
+.car-submitted {
+  display: block;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #A8A3A0;
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 183, 77, 0.16);
+  border: 1px solid rgba(255, 183, 77, 0.24);
+}
+
+.status-badge text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFD27D;
+}
+
+.image-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  background: #252525;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-hint {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 11px;
+  color: #FFFFFF;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.image-empty {
+  border-radius: 14px;
+  padding: 18px 16px;
+  margin-bottom: 14px;
+  background: #232323;
+}
+
+.image-empty text {
+  font-size: 13px;
+  color: #7E7E7E;
+}
+
+.review-panel {
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+  background: #232323;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.review-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.review-panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.review-panel-meta {
+  font-size: 12px;
+  color: #8C8C8C;
+}
+
+.review-total-score {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.review-total-value {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 800;
+  color: #FF6B35;
+}
+
+.review-total-unit {
+  font-size: 13px;
+  color: #FFB38E;
+}
+
+.review-dimensions {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.review-dimension {
+  padding: 10px 8px;
+  border-radius: 12px;
+  text-align: center;
+  background: #1A1A1A;
+}
+
+.review-dimension-name {
+  display: block;
+  font-size: 11px;
+  color: #8C8C8C;
+  margin-bottom: 4px;
+}
+
+.review-dimension-score {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.review-comment {
+  display: block;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #D7D1CE;
+}
+
+.action-row {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+}
+
+.action-btn::after {
+  border: none;
+}
+
+.action-btn.reject {
+  background: #272727;
+  color: #D7D1CE;
+}
+
+.action-btn.approve {
+  background: linear-gradient(135deg, #22a568, #2bcf83);
+  color: #FFFFFF;
+}

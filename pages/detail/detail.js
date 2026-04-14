@@ -48,6 +48,7 @@ Page({
 
     // 当前用户openid（从全局获取）
     currentOpenid: '',
+    isAdmin: false,
 
     // 编辑状态
     editingReview: false,
@@ -75,7 +76,8 @@ Page({
     isEditingReview: false,
 
     // 图片编辑
-    showEditHint: true
+    showEditHint: true,
+    imageReviewNotice: ''
   },
 
   onLoad(options) {
@@ -88,8 +90,6 @@ Page({
       autoEdit: autoEdit
     })
     
-    console.log('详情页加载，车型ID:', carId, '自动进入编辑:', autoEdit)
-    
     // 从全局获取用户信息
     this.loadUserInfoFromApp()
     
@@ -101,7 +101,6 @@ Page({
     // 从撰写评价页面返回时刷新数据
     const carId = this.data.carInfo.id
     if (carId) {
-      console.log('详情页显示，刷新数据')
       this.loadPageData(carId, false)
     }
   },
@@ -116,15 +115,12 @@ Page({
     
     // 如果是从"我的评价"页面跳转过来且已评价，自动进入编辑模式
     if (autoEdit && this.data.hasReviewed) {
-      console.log('自动进入编辑模式')
       this.startEditFromMyReview()
     }
   },
 
   // 从全局 App 获取用户信息
   loadUserInfoFromApp() {
-    console.log('尝试从全局获取用户信息, app:', app)
-    
     // 防御性检查
     if (!app) {
       console.error('app 实例未获取到')
@@ -137,20 +133,23 @@ Page({
     }
     
     const userInfo = app.getUserInfo()
-    console.log('从全局获取的用户信息:', userInfo)
     
     if (userInfo && userInfo.openid) {
-      console.log('从全局获取到 openid:', userInfo.openid)
-      this.setData({ currentOpenid: userInfo.openid })
+      this.setData({
+        currentOpenid: userInfo.openid,
+        isAdmin: !!userInfo.isAdmin
+      })
     } else {
-      console.log('全局用户信息未准备好，等待登录回调')
       // 注册登录成功回调
       if (typeof app.onLoginSuccess === 'function') {
         app.onLoginSuccess((info) => {
-          console.log('登录成功回调:', info.openid)
-          this.setData({ currentOpenid: info.openid })
+          this.setData({
+            currentOpenid: info.openid,
+            isAdmin: !!info.isAdmin
+          })
           // 重新加载评价列表以更新"是否已评价"状态
           if (this.data.carInfo.id) {
+            this.loadCarDetail(this.data.carInfo.id)
             this.loadReviews(this.data.carInfo.id)
           }
         })
@@ -338,20 +337,18 @@ Page({
         { name: '其他体验', score: Math.round(scoreOther), color: this.getScoreColor(scoreOther), weight: '10%' }
       ]
       
-      // 处理图片URL（如果是云存储fileID，需要转换为临时链接）
-      let imageUrl = car.image_url || ''
-      if (imageUrl && imageUrl.startsWith('cloud://')) {
-        try {
-          const tempRes = await wx.cloud.getTempFileURL({
-            fileList: [imageUrl]
-          })
-          if (tempRes.fileList && tempRes.fileList[0] && tempRes.fileList[0].tempFileURL) {
-            imageUrl = tempRes.fileList[0].tempFileURL
-          }
-        } catch (e) {
-          console.error('转换图片URL失败:', e)
-        }
-      }
+      const pendingImageFileId = String(car.pending_image || car.pending_image_url || '').trim()
+      const imageStatus = (car.image_status === 'reviewing' || car.image_status === 'pending' || pendingImageFileId)
+        ? 'reviewing'
+        : 'normal'
+      const [imageUrl, pendingImageUrl] = await Promise.all([
+        this.resolveCloudFileUrl(car.image_url || ''),
+        this.data.isAdmin ? this.resolveCloudFileUrl(pendingImageFileId) : Promise.resolve('')
+      ])
+      const imageReviewNotice = this.buildImageReviewNotice({
+        imageStatus,
+        lastUploaderOpenid: car.last_uploader_openid || ''
+      })
       
       this.setData({
         carInfo: {
@@ -364,9 +361,15 @@ Page({
           price: car.price_range,
           avgScore: car.avg_score ? Math.round(car.avg_score).toString() : '0',
           reviewCount: car.review_count || 0,
-          imageUrl: imageUrl
+          imageUrl: imageUrl,
+          imageStatus,
+          pendingImageUrl,
+          pendingImageFileId,
+          hasPendingImage: !!pendingImageFileId,
+          lastUploaderOpenid: car.last_uploader_openid || ''
         },
         dimensions: avgDimensions,
+        imageReviewNotice,
         pageLoading: false
       }, () => {
         this.drawRadarChart()
@@ -400,6 +403,31 @@ Page({
     return '#F44336' // 红色
   },
 
+  async resolveCloudFileUrl(fileId = '') {
+    const nextFileId = String(fileId || '').trim()
+    if (!nextFileId) return ''
+    if (!nextFileId.startsWith('cloud://')) return nextFileId
+
+    try {
+      const tempRes = await wx.cloud.getTempFileURL({
+        fileList: [nextFileId]
+      })
+      return tempRes.fileList?.[0]?.tempFileURL || ''
+    } catch (err) {
+      console.error('转换图片链接失败:', err)
+      return ''
+    }
+  },
+
+  buildImageReviewNotice({ imageStatus = '', lastUploaderOpenid = '' } = {}) {
+    if (imageStatus !== 'reviewing') return ''
+    if (this.data.isAdmin) return '有新图待审核，点击角标可预览，长按可审核'
+    if (lastUploaderOpenid && lastUploaderOpenid === this.data.currentOpenid) {
+      return '您提交的车型图片正在审核中'
+    }
+    return ''
+  },
+
   async loadReviews(carId) {
     if (!carId) return
     
@@ -414,14 +442,7 @@ Page({
         .limit(50)
         .get()
       
-      console.log('加载评价数据:', res.data.length, '条')
-      console.log('第一条评价数据:', res.data[0] ? {
-        id: res.data[0]._id,
-        avatar: res.data[0].user_avatar,
-        nickname: res.data[0].user_nickname
-      } : '无数据')
-      
-      const reviewData = res.data
+      const reviewData = (res.data || []).filter(item => !item.status || item.status === 'approved')
       
       // 检查当前用户是否已评价
       const userReview = reviewData.find(item => item._openid === currentOpenid)
@@ -438,10 +459,6 @@ Page({
       // 去重
       const avatarFileIDs = [...new Set(cloudFileIDs)]
       
-      console.log('详情页 - 头像列表:', avatarList)
-      console.log('详情页 - 需要转换的cloud://头像:', avatarFileIDs)
-      console.log('详情页 - 普通URL头像:', normalUrls)
-      
       // 批量获取临时链接 - 和首页榜单逻辑一致，一次性转换
       let avatarUrlMap = {}
       if (avatarFileIDs.length > 0) {
@@ -452,16 +469,11 @@ Page({
           tempRes.fileList.forEach(item => {
             if (item.fileID && item.tempFileURL) {
               avatarUrlMap[item.fileID] = item.tempFileURL
-            } else {
-              console.log('头像转换失败:', item.fileID, item.errMsg)
             }
           })
-          console.log('头像URL映射:', avatarUrlMap)
         } catch (e) {
-          console.log('获取头像临时链接失败:', e)
+          console.error('获取头像临时链接失败:', e)
         }
-      } else {
-        console.log('没有需要转换的cloud://头像')
       }
       
       const defaultAvatar = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
@@ -509,21 +521,12 @@ Page({
         }
       })
       
-      // 输出调试信息
-      console.log('第一个评价的头像:', reviews[0]?.userAvatar)
-      console.log('第一个评价的昵称:', reviews[0]?.userNickname)
-      console.log('第一个评价的原始头像:', reviewData[0]?.user_avatar)
-      console.log('所有评价的头像:', reviews.map(r => ({avatar: r.userAvatar, nickname: r.userNickname})))
-      
       this.setData({ 
         reviews,
         hasReviewed,
         userReviewId: hasReviewed ? userReview._id : '',
         userReviewData: hasReviewed ? userReview : null
       })
-      
-      console.log('用户是否已评价:', hasReviewed)
-      console.log('评价数据已设置到页面, 共', reviews.length, '条')
     } catch (err) {
       console.error('加载评价列表失败:', err)
     }
@@ -660,7 +663,6 @@ Page({
   // 选择头像
   onChooseAvatar(e) {
     const { avatarUrl } = e.detail
-    console.log('选择的头像:', avatarUrl)
     this.setData({
       tempAvatarUrl: avatarUrl,
       tempAvatarFile: avatarUrl
@@ -685,7 +687,6 @@ Page({
         cloudPath,
         filePath
       })
-      console.log('头像上传成功:', uploadRes.fileID)
       return uploadRes.fileID
     } catch (err) {
       console.error('头像上传失败:', err)
@@ -699,7 +700,6 @@ Page({
     
     // 防止重复提交
     if (submitting) {
-      console.log('正在提交中，请勿重复点击')
       return
     }
     
@@ -748,9 +748,7 @@ Page({
   // 真正的提交逻辑
   async doSubmitReview(userInfo) {
     const { carInfo, ratingItems, calculatedScore, comment } = this.data
-    
-    console.log('doSubmitReview 接收到的 userInfo:', userInfo)
-    
+
     this.setData({ submitting: true })
     
     try {
@@ -767,13 +765,12 @@ Page({
         score_other: ratingItems.find(i => i.key === 'other').value,
         total_score: parseFloat(calculatedScore),
         comment: comment.trim(),
+        status: 'approved',
+        audit_locked: false,
         created_at: db.serverDate()
       }
       
-      console.log('准备保存的 reviewData:', reviewData)
-      
       const addResult = await db.collection('reviews').add({ data: reviewData })
-      console.log('保存成功，返回结果:', addResult)
       await this.updateCarAverageScore(carInfo.id)
       
       wx.showToast({ title: '评价成功', icon: 'success' })
@@ -798,29 +795,18 @@ Page({
 
   // 更新车型平均分 - 使用云函数（管理员权限）
   async updateCarAverageScore(carId) {
-    console.log('开始更新车型平均分, carId:', carId)
     try {
       const res = await wx.cloud.callFunction({
         name: 'updateCarScore',
         data: { carId }
       })
-      
-      console.log('updateCarScore 云函数返回:', JSON.stringify(res, null, 2))
-      
+
       if (!res.result) {
-        console.error('云函数返回结果为空, res:', res)
+        console.error('云函数返回结果为空')
         return
       }
-      
-      // 检查返回结构
-      console.log('res.result 类型:', typeof res.result)
-      console.log('res.result 内容:', res.result)
-      console.log('res.result.success:', res.result?.success)
-      console.log('res.result.message:', res.result?.message)
-      
-      if (res.result && res.result.success === true) {
-        console.log('车型平均分已更新:', res.result.avg_score, '评价数:', res.result.review_count)
-      } else {
+
+      if (res.result && res.result.success !== true) {
         console.error('更新车型平均分失败:', res.result?.message || '未知错误')
         wx.showToast({ title: '更新分数失败', icon: 'none' })
       }
@@ -855,9 +841,7 @@ Page({
         name: 'deleteReview',
         data: { reviewId }
       })
-      
-      console.log('deleteReview 云函数返回:', res)
-      
+
       if (!res.result || !res.result.success) {
         console.error('删除失败:', res.result?.message)
         wx.showToast({ title: res.result?.message || '删除失败', icon: 'none' })
@@ -888,7 +872,6 @@ Page({
   // 从用户自己的评价数据进入编辑模式
   // 点击"修改我的评价"按钮进入编辑模式
   startEditFromButton() {
-    console.log('用户点击修改评价按钮')
     this.startEditFromMyReview()
   },
 
@@ -958,7 +941,6 @@ Page({
     
     // 防止重复提交
     if (submitting) {
-      console.log('正在提交中，请勿重复点击')
       return
     }
     
@@ -1019,7 +1001,6 @@ Page({
       if (userInfo && userInfo.avatarUrl) {
         updateData.user_avatar = userInfo.avatarUrl
         updateData.user_nickname = userInfo.nickName
-        console.log('更新评价时同步更新用户信息:', updateData.user_avatar, updateData.user_nickname)
       }
       
       // 使用云函数更新（管理员权限）
@@ -1030,8 +1011,6 @@ Page({
           updateData
         }
       })
-      
-      console.log('updateReview 云函数返回:', res)
       
       if (!res.result) {
         console.error('云函数返回结果为空')
@@ -1151,12 +1130,54 @@ Page({
       return
     }
     
+    const { carInfo, isAdmin } = this.data
+    const actions = []
+
+    if (carInfo.imageUrl) {
+      actions.push({ key: 'save', label: '保存图片' })
+    }
+
+    if (isAdmin) {
+      actions.push({ key: 'upload', label: '上传/更换图片' })
+
+      if (carInfo.hasPendingImage) {
+        actions.push({ key: 'approve', label: '审核通过新图' })
+      }
+
+      if (carInfo.imageUrl || carInfo.hasPendingImage) {
+        actions.push({ key: 'delete', label: '删除当前图片' })
+      }
+    } else {
+      actions.push({ key: 'submit', label: '提交纠错/新图' })
+    }
+
     wx.showActionSheet({
-      itemList: ['上传/更换图片', '删除图片'],
+      itemList: actions.map(item => item.label),
       success: (res) => {
-        if (res.tapIndex === 0) {
-          this.chooseCarImage()
-        } else if (res.tapIndex === 1) {
+        const action = actions[res.tapIndex]
+        if (!action) return
+
+        if (action.key === 'save') {
+          this.saveCurrentImage()
+          return
+        }
+
+        if (action.key === 'upload') {
+          this.chooseCarImage('direct_upload')
+          return
+        }
+
+        if (action.key === 'submit') {
+          this.chooseCarImage('submit')
+          return
+        }
+
+        if (action.key === 'approve') {
+          this.approvePendingCarImage()
+          return
+        }
+
+        if (action.key === 'delete') {
           this.deleteCarImage()
         }
       }
@@ -1164,7 +1185,7 @@ Page({
   },
 
   // 选择并上传车型图片
-  chooseCarImage() {
+  chooseCarImage(action = 'submit') {
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -1184,18 +1205,17 @@ Page({
           return
         }
         
-        this.uploadCarImage(tempFile.tempFilePath)
+        this.uploadCarImage(tempFile.tempFilePath, action)
       }
     })
   },
 
   // 上传图片到云存储并更新数据库
-  async uploadCarImage(filePath) {
+  async uploadCarImage(filePath, action = 'submit') {
     wx.showLoading({ title: '上传中...' })
 
     try {
       const carId = this.data.carInfo.id
-      console.log('开始上传图片，车型ID:', carId)
       
       const cloudPath = `car-images/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`
       
@@ -1204,18 +1224,16 @@ Page({
         cloudPath: cloudPath,
         filePath: filePath
       })
-      console.log('图片上传成功，fileID:', uploadRes.fileID)
 
       // 2. 使用云函数更新数据库（管理员权限，绕过前端权限限制）
-      console.log('调用云函数更新车型图片...')
       const updateRes = await wx.cloud.callFunction({
         name: 'updateCarImage',
         data: {
           carId: carId,
-          imageUrl: uploadRes.fileID
+          imageUrl: uploadRes.fileID,
+          action
         }
       })
-      console.log('云函数返回:', updateRes)
 
       if (!updateRes.result || !updateRes.result.success) {
         // 处理每日上传次数限制
@@ -1231,19 +1249,10 @@ Page({
         throw new Error(updateRes.result?.message || '更新数据库失败')
       }
 
-      // 3. 更新本地显示
-      // 获取临时URL用于显示
-      const tempRes = await wx.cloud.getTempFileURL({
-        fileList: [uploadRes.fileID]
-      })
-      const tempUrl = tempRes.fileList[0]?.tempFileURL || uploadRes.fileID
-      
-      this.setData({
-        'carInfo.imageUrl': tempUrl
-      })
+      await this.loadCarDetail(carId)
 
       wx.showToast({
-        title: '上传成功，返回首页刷新查看',
+        title: action === 'submit' ? '已提交审核' : '上传成功',
         icon: 'success',
         duration: 2000
       })
@@ -1259,6 +1268,91 @@ Page({
     }
   },
 
+  async saveCurrentImage() {
+    const imageUrl = this.data.carInfo.imageUrl
+    if (!imageUrl) {
+      wx.showToast({ title: '暂无可保存图片', icon: 'none' })
+      return
+    }
+
+    try {
+      wx.showLoading({ title: '保存中...' })
+      const downloadRes = await wx.downloadFile({ url: imageUrl })
+
+      if (downloadRes.statusCode !== 200) {
+        throw new Error('下载失败')
+      }
+
+      await wx.saveImageToPhotosAlbum({
+        filePath: downloadRes.tempFilePath
+      })
+
+      wx.showToast({ title: '已保存到相册', icon: 'success' })
+    } catch (err) {
+      console.error('保存图片失败:', err)
+      wx.showToast({
+        title: '保存失败，请检查相册权限',
+        icon: 'none'
+      })
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
+  previewPendingImage() {
+    const { isAdmin, carInfo } = this.data
+    if (!isAdmin || !carInfo.pendingImageUrl) return
+
+    wx.previewImage({
+      urls: [carInfo.pendingImageUrl],
+      current: carInfo.pendingImageUrl
+    })
+  },
+
+  async approvePendingCarImage() {
+    if (!this.data.isAdmin) {
+      wx.showToast({ title: '仅管理员可操作', icon: 'none' })
+      return
+    }
+
+    if (!this.data.carInfo.hasPendingImage) {
+      wx.showToast({ title: '当前没有待审核图片', icon: 'none' })
+      return
+    }
+
+    wx.showModal({
+      title: '审核通过新图',
+      content: '确认将待审核图片替换为正式展示图吗？',
+      confirmColor: '#ff6b35',
+      success: async (res) => {
+        if (!res.confirm) return
+
+        try {
+          wx.showLoading({ title: '审核中...' })
+          const approveRes = await wx.cloud.callFunction({
+            name: 'updateCarImage',
+            data: {
+              carId: this.data.carInfo.id,
+              action: 'approve'
+            }
+          })
+
+          if (!approveRes.result || !approveRes.result.success) {
+            throw new Error(approveRes.result?.message || approveRes.result?.msg || '审核失败')
+          }
+
+          await this.loadCarDetail(this.data.carInfo.id)
+          wx.showToast({ title: '已通过审核', icon: 'success' })
+        } catch (err) {
+          console.error('审核通过新图失败:', err)
+          wx.showToast({ title: err.message || '审核失败', icon: 'none' })
+        } finally {
+          wx.hideLoading()
+        }
+      }
+    })
+  },
+
   // 删除车型图片
   async deleteCarImage() {
     wx.showModal({
@@ -1270,18 +1364,19 @@ Page({
 
         try {
           const carId = this.data.carInfo.id
-          const db = wx.cloud.database()
-          
-          await db.collection('cars').doc(carId).update({
+          const deleteRes = await wx.cloud.callFunction({
+            name: 'updateCarImage',
             data: {
-              image_url: '',
-              updated_at: db.serverDate()
+              carId,
+              action: 'delete'
             }
           })
 
-          this.setData({
-            'carInfo.imageUrl': ''
-          })
+          if (!deleteRes.result || !deleteRes.result.success) {
+            throw new Error(deleteRes.result?.message || deleteRes.result?.msg || '删除失败')
+          }
+
+          await this.loadCarDetail(carId)
 
           wx.showToast({ title: '删除成功', icon: 'success' })
         } catch (err) {

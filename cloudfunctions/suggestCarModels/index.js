@@ -1,5 +1,36 @@
+const fs = require('fs')
+const path = require('path')
 const cloud = require('wx-server-sdk')
-const carDictionary = require('./carDictionary.json')
+
+function loadCarDictionary() {
+  const candidatePaths = [
+    path.join(__dirname, 'carDictionary.json'),
+    path.join(__dirname, 'carDictionary.js')
+  ]
+
+  for (const filePath of candidatePaths) {
+    try {
+      if (!fs.existsSync(filePath)) {
+        continue
+      }
+
+      if (filePath.endsWith('.json')) {
+        return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+      }
+
+      // 兼容后续如果把词典改成 JS 导出文件的情况。
+      // eslint-disable-next-line global-require, import/no-dynamic-require
+      return require(filePath)
+    } catch (err) {
+      console.warn('加载车型词典失败，尝试下一个候选文件:', filePath, err.message)
+    }
+  }
+
+  console.warn('未找到车型词典文件，suggestCarModels 将退化为无纠错建议模式')
+  return { brands: [] }
+}
+
+const carDictionary = loadCarDictionary()
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV

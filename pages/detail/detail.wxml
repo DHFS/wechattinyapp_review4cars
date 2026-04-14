@@ -19,8 +19,18 @@
       <text class="placeholder-icon">🚗</text>
       <text class="placeholder-text">暂无官方图片</text>
     </view>
+    <view
+      class="pending-image-tag"
+      wx:if="{{isAdmin && carInfo.hasPendingImage}}"
+      bindtap="previewPendingImage"
+    >
+      <text>有新图待审核</text>
+    </view>
     <view class="image-edit-hint" wx:if="{{showEditHint}}">
       <text>长按可编辑图片</text>
+    </view>
+    <view class="image-review-notice" wx:if="{{imageReviewNotice}}">
+      <text>{{imageReviewNotice}}</text>
     </view>
   </view>
 
