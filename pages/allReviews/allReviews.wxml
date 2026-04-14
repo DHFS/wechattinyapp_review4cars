@@ -44,7 +44,6 @@
           <view wx:else class="dossier-image placeholder"></view>
           <view class="dossier-overlay">
             <view class="dossier-badge">{{item.archiveRank}}</view>
-            <view wx:if="{{item.statusType === 'pending'}}" class="overlay-status {{item.statusType}}">{{item.statusLabel}}</view>
           </view>
         </view>
 
@@ -69,6 +68,7 @@
           <view class="dossier-tags">
             <text class="dossier-tag power" style="background-color: {{item.tagColor}}22; color: {{item.tagColor}};">{{item.powerType}}</text>
             <text class="dossier-tag neutral" wx:if="{{item.modelYear}}">{{item.modelYear}}</text>
+            <text class="dossier-tag inline-status pending" wx:if="{{item.statusType === 'pending'}}">{{item.statusLabel}}</text>
             <text class="dossier-tag inline-status approved" wx:if="{{item.statusType === 'approved'}}">{{item.statusLabel}}</text>
             <text class="dossier-tag inline-status rejected" wx:if="{{item.statusType === 'rejected'}}">{{item.statusLabel}}</text>
           </view>

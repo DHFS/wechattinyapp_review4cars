@@ -42,12 +42,38 @@ function computeRankScore(avgScore, reviewCount, globalAverageScore) {
 }
 
 // 待审核/已拒绝评价不能进入公开榜单，因此这里只统计公开生效的评价。
-async function getCurrentCarReviewStats(carId) {
+async function getCurrentCarReviewStats(carId, forceApprovedReviewId = '', forceApprovedReview = null) {
   const res = await db.collection('reviews')
     .where({ car_id: carId })
     .get()
 
-  const effectiveReviews = (res.data || []).filter(item => !item.status || item.status === 'approved')
+  const reviews = [...(res.data || [])]
+
+  // 某些审核通过后的跨云函数读取存在短暂延迟，可能导致最新首评暂时还查不到。
+  // 这里允许调用方把“刚通过的那条评价完整数据”直接带进来，确保首页分数能立即生效。
+  if (forceApprovedReview && forceApprovedReview._id) {
+    const exists = reviews.some(item => item._id === forceApprovedReview._id)
+    if (!exists) {
+      reviews.push({
+        ...forceApprovedReview,
+        status: 'approved'
+      })
+    }
+  }
+
+  const effectiveReviews = reviews.filter(item => {
+    if (!item.status || item.status === 'approved') {
+      return true
+    }
+
+    // 管理员刚审核通过首评时，数据库状态可能还没完全反映到后续读取。
+    // 这里允许调用方显式指定一条“本次应计入”的评价，避免新车型首页分数仍为 0。
+    if (forceApprovedReviewId && item._id === forceApprovedReviewId) {
+      return true
+    }
+
+    return false
+  })
 
   if (effectiveReviews.length === 0) {
     return null
@@ -69,13 +95,13 @@ async function getCurrentCarReviewStats(carId) {
 
 async function getGlobalAverageScore(carId, currentAvgScore, currentReviewCount) {
   const aggregateRes = await db.collection('cars')
-    .where({
+    .aggregate()
+    .match({
       _id: _.neq(carId),
       review_count: _.gt(0),
       avg_score: _.gt(0),
       status: 'approved'
     })
-    .aggregate()
     .group({
       _id: null,
       carCount: $.sum(1),
@@ -103,14 +129,14 @@ async function getGlobalAverageScore(carId, currentAvgScore, currentReviewCount)
 }
 
 exports.main = async (event) => {
-  const { carId } = event
+  const { carId, forceApprovedReviewId = '', forceApprovedReview = null } = event
 
   if (!carId) {
     return { success: false, message: 'carId不能为空' }
   }
 
   try {
-    const reviewStats = await getCurrentCarReviewStats(carId)
+    const reviewStats = await getCurrentCarReviewStats(carId, forceApprovedReviewId, forceApprovedReview)
     const reviewCount = Number(reviewStats?.reviewCount) || 0
     const avgScore = roundToOneDecimal(reviewStats?.avgTotal || 0)
     const avgPower = roundToOneDecimal(reviewStats?.avgPower || 0)

@@ -192,32 +192,6 @@ page {
   text-transform: uppercase;
 }
 
-.overlay-status {
-  padding: 8rpx 18rpx;
-  border-radius: 14rpx;
-  font-size: 22rpx;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(229, 226, 225, 0.82);
-}
-
-.overlay-status.approved {
-  background: rgba(255, 155, 155, 0.16);
-  color: #ff9b9b;
-}
-
-.overlay-status.pending {
-  background: rgba(255, 183, 77, 0.18);
-  color: #ffd27d;
-}
-
-.overlay-status.rejected {
-  background: rgba(255, 82, 82, 0.16);
-  color: #ff9b9b;
-}
-
 .dossier-content {
   padding: 28rpx;
 }
@@ -322,6 +296,11 @@ page {
 .dossier-tag.inline-status.approved {
   background: rgba(255, 155, 155, 0.16);
   color: #ff9b9b;
+}
+
+.dossier-tag.inline-status.pending {
+  background: rgba(255, 183, 77, 0.28);
+  color: #ffcf6d;
 }
 
 .dossier-tag.inline-status.rejected {

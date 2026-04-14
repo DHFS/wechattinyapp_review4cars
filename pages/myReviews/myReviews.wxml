@@ -164,8 +164,8 @@
             <text class="about-us-group-title">管理入口</text>
             <view class="admin-entry-card admin-entry-card-inline" bindtap="goAdminCars">
               <view class="admin-entry-copy">
-                <text class="admin-entry-title">车型审核台</text>
-                <text class="admin-entry-desc">查看待审核车型，快速通过或拒绝用户提交内容。</text>
+                <text class="admin-entry-title">审核中心</text>
+                <text class="admin-entry-desc">统一处理新车型整包提交和榜单车型图片补充审核。</text>
               </view>
               <text class="admin-entry-arrow">›</text>
             </view>

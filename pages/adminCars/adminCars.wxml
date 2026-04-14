@@ -1,18 +1,18 @@
 <view class="page">
   <view class="hero">
-    <text class="hero-title">车型审核台</text>
-    <text class="hero-desc">用户新增车型后，会继续完成首评并整包提交。管理员通过后，车型、评分和首评才会对所有用户公开。</text>
+    <text class="hero-title">审核中心</text>
+    <text class="hero-desc">这里统一处理两类审核任务：新增车型整包提交，以及用户为已上榜车型补充的新封面图。</text>
   </view>
 
   <view wx:if="{{loading}}" class="loading-state">
     <view class="loading-spinner"></view>
-    <text class="loading-text">加载待审核车型中...</text>
+    <text class="loading-text">加载待审核任务中...</text>
   </view>
 
   <view wx:elif="{{pendingCars.length === 0}}" class="empty-state">
     <text class="empty-icon">✓</text>
-    <text class="empty-title">当前没有待审核车型</text>
-    <text class="empty-desc">新的车型提交会自动出现在这里。</text>
+    <text class="empty-title">当前没有待审核任务</text>
+    <text class="empty-desc">新的车型提交或图片补充会自动出现在这里。</text>
   </view>
 
   <view wx:else class="list">
@@ -22,19 +22,27 @@
           <text class="car-title">{{item.brand}} {{item.modelName}}</text>
           <text class="car-meta">{{item.modelYear}} · {{item.powerType}} · {{item.priceRange}}</text>
           <text class="car-submitted">提交时间：{{item.submittedAt}}</text>
+          <text class="task-desc">{{item.taskDesc}}</text>
         </view>
-        <view class="status-badge">
-          <text>待审核</text>
+        <view class="status-badge {{item.taskType}}">
+          <text>{{item.taskBadge}}</text>
         </view>
       </view>
 
       <view wx:if="{{item.previewImageUrl}}" class="image-wrap" data-url="{{item.previewImageUrl}}" bindtap="previewImage">
-        <image class="preview-image" src="{{item.previewImageUrl}}" mode="aspectFill" />
-        <text class="image-hint">点按查看提交图片</text>
+        <image class="preview-image" src="{{item.previewImageUrl}}" mode="aspectFit" />
+        <text class="image-hint">{{item.taskType === 'image_submission' ? '点按查看待审核新图' : '点按查看提交图片'}}</text>
       </view>
 
       <view wx:else class="image-empty">
         <text>本次提交未附带车型图片</text>
+      </view>
+
+      <view wx:if="{{item.taskType === 'image_submission' && item.currentPreviewImageUrl}}" class="current-image-panel">
+        <text class="current-image-label">当前正式图</text>
+        <view class="current-image-wrap" data-url="{{item.currentPreviewImageUrl}}" bindtap="previewImage">
+          <image class="current-image" src="{{item.currentPreviewImageUrl}}" mode="aspectFit" />
+        </view>
       </view>
 
       <view class="review-panel" wx:if="{{item.pendingReview}}">
@@ -60,14 +68,16 @@
           class="action-btn reject"
           data-id="{{item.id}}"
           data-name="{{item.brand}} {{item.modelName}}"
+          data-type="{{item.taskType}}"
           bindtap="rejectCar"
-        >拒绝</button>
+        >{{item.taskRejectLabel}}</button>
         <button
           class="action-btn approve"
           data-id="{{item.id}}"
           data-name="{{item.brand}} {{item.modelName}}"
+          data-type="{{item.taskType}}"
           bindtap="approveCar"
-        >通过并上榜</button>
+        >{{item.taskActionLabel}}</button>
       </view>
     </view>
   </view>

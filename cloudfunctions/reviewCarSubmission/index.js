@@ -9,6 +9,38 @@ cloud.init({
 })
 
 const db = cloud.database()
+const _ = db.command
+const $ = db.command.aggregate
+
+const DEFAULT_GLOBAL_AVERAGE_SCORE = 75
+const PRIOR_SAMPLE_SIZE = 10
+
+function roundToOneDecimal(value) {
+  const numericValue = Number(value) || 0
+  return Math.round(numericValue * 10) / 10
+}
+
+function getRankStatus(reviewCount) {
+  const count = Number(reviewCount) || 0
+
+  if (count >= 10) return 'official'
+  if (count >= 3) return 'pending'
+  return 'observation'
+}
+
+function computeRankScore(avgScore, reviewCount, globalAverageScore) {
+  const R = Number(avgScore) || 0
+  const v = Number(reviewCount) || 0
+  const m = PRIOR_SAMPLE_SIZE
+  const C = Number(globalAverageScore) || DEFAULT_GLOBAL_AVERAGE_SCORE
+  const denominator = v + m
+
+  if (denominator <= 0) {
+    return roundToOneDecimal(C)
+  }
+
+  return roundToOneDecimal((v / denominator) * R + (m / denominator) * C)
+}
 
 async function isAdmin(openid = '') {
   if (!openid) return false
@@ -27,6 +59,87 @@ async function isAdmin(openid = '') {
     console.warn('读取 admin_users 失败，按无权限处理:', err.message)
     return false
   }
+}
+
+async function findLinkedReview(carId = '', submissionId = '') {
+  if (submissionId) {
+    const reviewRes = await db.collection('reviews')
+      .where({ submission_id: submissionId })
+      .limit(1)
+      .get()
+
+    const bySubmissionId = (reviewRes.data || [])[0] || null
+    if (bySubmissionId) return bySubmissionId
+  }
+
+  if (!carId) return null
+
+  const fallbackRes = await db.collection('reviews')
+    .where({ car_id: carId })
+    .orderBy('created_at', 'desc')
+    .limit(1)
+    .get()
+
+  return (fallbackRes.data || [])[0] || null
+}
+
+async function getGlobalAverageScore(carId, currentAvgScore, currentReviewCount) {
+  const aggregateRes = await db.collection('cars')
+    .aggregate()
+    .match({
+      _id: _.neq(carId),
+      review_count: _.gt(0),
+      avg_score: _.gt(0),
+      status: 'approved'
+    })
+    .group({
+      _id: null,
+      carCount: $.sum(1),
+      averageScore: $.avg('$avg_score')
+    })
+    .end()
+
+  const stats = aggregateRes.list[0]
+  const otherCarsCount = Number(stats?.carCount) || 0
+  const otherCarsAverage = Number(stats?.averageScore) || 0
+
+  if ((Number(currentReviewCount) || 0) > 0) {
+    if (otherCarsCount > 0) {
+      return roundToOneDecimal(((otherCarsAverage * otherCarsCount) + currentAvgScore) / (otherCarsCount + 1))
+    }
+    return roundToOneDecimal(currentAvgScore || DEFAULT_GLOBAL_AVERAGE_SCORE)
+  }
+
+  if (otherCarsCount > 0) {
+    return roundToOneDecimal(otherCarsAverage)
+  }
+
+  return DEFAULT_GLOBAL_AVERAGE_SCORE
+}
+
+async function applyFallbackScoreFromReview(carId = '', review = null) {
+  if (!carId || !review) return
+
+  const avgScore = roundToOneDecimal(review.total_score || 0)
+  const reviewCount = avgScore > 0 ? 1 : 0
+  const globalAverageScore = await getGlobalAverageScore(carId, avgScore, reviewCount)
+  const rankScore = computeRankScore(avgScore, reviewCount, globalAverageScore)
+  const rankStatus = getRankStatus(reviewCount)
+
+  await db.collection('cars').doc(carId).update({
+    data: {
+      avg_score: avgScore,
+      review_count: reviewCount,
+      rank_score: rankScore,
+      rank_status: rankStatus,
+      score_power: roundToOneDecimal(review.score_power || 0),
+      score_handling: roundToOneDecimal(review.score_handling || 0),
+      score_space: roundToOneDecimal(review.score_space || 0),
+      score_adas: roundToOneDecimal(review.score_adas || 0),
+      score_other: roundToOneDecimal(review.score_other || 0),
+      updated_at: db.serverDate()
+    }
+  })
 }
 
 exports.main = async (event) => {
@@ -87,13 +200,7 @@ exports.main = async (event) => {
 
       const carRes = await db.collection('cars').doc(carId).get()
       const car = carRes.data || {}
-      const linkedReviewRes = await db.collection('reviews')
-        .where({
-          submission_id: car.submission_id || '__no_submission_id__'
-        })
-        .limit(1)
-        .get()
-      const linkedReview = (linkedReviewRes.data || [])[0] || null
+      const linkedReview = await findLinkedReview(carId, car.submission_id || '')
       const nextStatus = decision === 'approve' ? 'approved' : 'rejected'
       const updateData = {
         status: nextStatus,
@@ -133,10 +240,33 @@ exports.main = async (event) => {
       }
 
       if (decision === 'approve') {
-        await cloud.callFunction({
+        const scoreRes = await cloud.callFunction({
           name: 'updateCarScore',
-          data: { carId }
+          data: {
+            carId,
+            forceApprovedReviewId: linkedReview?._id || '',
+            forceApprovedReview: linkedReview
+              ? {
+                  _id: linkedReview._id,
+                  car_id: linkedReview.car_id,
+                  status: 'approved',
+                  total_score: linkedReview.total_score,
+                  score_power: linkedReview.score_power,
+                  score_handling: linkedReview.score_handling,
+                  score_space: linkedReview.score_space,
+                  score_adas: linkedReview.score_adas,
+                  score_other: linkedReview.score_other
+                }
+              : null
+          }
         })
+
+        const updateScoreResult = scoreRes.result || {}
+        if (!updateScoreResult.success || Number(updateScoreResult.review_count) === 0) {
+          if (linkedReview) {
+            await applyFallbackScoreFromReview(carId, linkedReview)
+          }
+        }
       }
 
       return {

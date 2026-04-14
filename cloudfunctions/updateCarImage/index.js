@@ -1,7 +1,7 @@
 // 云函数：车型图片更新与审核
 // 目标：
-// 1. 普通用户上传图片时只写入待审核图，不影响正式图
-// 2. 管理员可直接上传正式图、审核通过待审核图、删除图片
+// 1. 普通用户上传图片时进入独立待审核队列，不再覆盖上一张待审核图
+// 2. 管理员在统一审核中心逐条通过/拒绝，只有通过的图片才会成为正式图
 // 3. 所有敏感动作都在云端做管理员白名单校验
 const cloud = require('wx-server-sdk')
 
@@ -13,6 +13,15 @@ const db = cloud.database()
 const _ = db.command
 
 const DAILY_UPLOAD_LIMIT = 10
+const IMAGE_SUBMISSIONS_COLLECTION = 'image_submissions'
+
+function getCarsCollection() {
+  return db.collection('cars')
+}
+
+function getImageSubmissionsCollection() {
+  return db.collection(IMAGE_SUBMISSIONS_COLLECTION)
+}
 
 async function isAdminOpenid(openid = '') {
   if (!openid) return false
@@ -31,10 +40,6 @@ async function isAdminOpenid(openid = '') {
     console.warn('读取 admin_users 失败，按非管理员处理:', err.message)
     return false
   }
-}
-
-function pickPendingImage(car = {}) {
-  return String(car.pending_image || car.pending_image_url || '').trim()
 }
 
 async function countTodayUploads(openid = '') {
@@ -66,7 +71,10 @@ async function recordUploadLog({ openid, carId, imageUrl, mode }) {
 }
 
 async function deleteCloudFiles(fileIds = []) {
-  const safeFileIds = [...new Set(fileIds.filter(fileId => typeof fileId === 'string' && fileId.startsWith('cloud://')))]
+  const safeFileIds = [...new Set(
+    fileIds.filter(fileId => typeof fileId === 'string' && fileId.startsWith('cloud://'))
+  )]
+
   if (safeFileIds.length === 0) return
 
   try {
@@ -74,13 +82,94 @@ async function deleteCloudFiles(fileIds = []) {
       fileList: safeFileIds
     })
   } catch (err) {
-    console.warn('删除云存储旧图片失败:', err.message)
+    console.warn('删除云存储图片失败:', err.message)
   }
+}
+
+async function getPendingSummary(carId = '') {
+  if (!carId) {
+    return {
+      pendingCount: 0,
+      latestPending: null
+    }
+  }
+
+  const imageSubmissions = getImageSubmissionsCollection()
+  const [countRes, latestRes] = await Promise.all([
+    imageSubmissions.where({
+      car_id: carId,
+      status: 'pending'
+    }).count(),
+    imageSubmissions.where({
+      car_id: carId,
+      status: 'pending'
+    }).orderBy('created_at', 'desc').limit(1).get()
+  ])
+
+  return {
+    pendingCount: countRes.total || 0,
+    latestPending: (latestRes.data || [])[0] || null
+  }
+}
+
+async function syncCarPendingState(carId = '', baseCar = null) {
+  if (!carId) {
+    return {
+      pendingCount: 0,
+      latestPending: null
+    }
+  }
+
+  const cars = getCarsCollection()
+  const car = baseCar || (await cars.doc(carId).get()).data
+  const { pendingCount, latestPending } = await getPendingSummary(carId)
+
+  const updateData = {
+    pending_image_count: pendingCount,
+    pending_image: latestPending ? latestPending.image_url : '',
+    pending_image_url: latestPending ? latestPending.image_url : '',
+    image_status: pendingCount > 0 ? 'reviewing' : 'normal',
+    updated_at: db.serverDate()
+  }
+
+  if (latestPending && latestPending.submitted_by) {
+    updateData.last_uploader_openid = latestPending.submitted_by
+  } else if (!pendingCount && car && !car.image_url) {
+    updateData.last_uploader_openid = ''
+  }
+
+  await cars.doc(carId).update({
+    data: updateData
+  })
+
+  return {
+    pendingCount,
+    latestPending
+  }
+}
+
+async function getPendingSubmissionByIdOrCar(submissionId = '', carId = '') {
+  const imageSubmissions = getImageSubmissionsCollection()
+
+  if (submissionId) {
+    const submissionRes = await imageSubmissions.doc(submissionId).get()
+    return submissionRes.data || null
+  }
+
+  if (!carId) return null
+
+  const latestRes = await imageSubmissions.where({
+    car_id: carId,
+    status: 'pending'
+  }).orderBy('created_at', 'desc').limit(1).get()
+
+  return (latestRes.data || [])[0] || null
 }
 
 exports.main = async (event) => {
   const {
     carId = '',
+    submissionId = '',
     imageUrl = '',
     action = 'submit'
   } = event
@@ -96,7 +185,87 @@ exports.main = async (event) => {
     }
   }
 
-  if (!carId) {
+  const cars = getCarsCollection()
+  const imageSubmissions = getImageSubmissionsCollection()
+
+  if (action === 'listPending') {
+    const isAdmin = await isAdminOpenid(OPENID)
+    if (!isAdmin) {
+      return {
+        success: false,
+        code: 403,
+        msg: '仅管理员可操作',
+        message: '仅管理员可操作'
+      }
+    }
+
+    try {
+      const pendingRes = await imageSubmissions.where({
+        status: 'pending'
+      }).orderBy('created_at', 'desc').limit(100).get()
+
+      const submissions = pendingRes.data || []
+      const carIds = [...new Set(submissions.map(item => item.car_id).filter(Boolean))]
+
+      if (carIds.length === 0) {
+        return {
+          success: true,
+          code: 0,
+          data: []
+        }
+      }
+
+      const carRes = await cars.where({
+        _id: _.in(carIds),
+        status: 'approved'
+      }).get()
+
+      const carMap = {}
+      ;(carRes.data || []).forEach(item => {
+        carMap[item._id] = item
+      })
+
+      const data = submissions
+        .map(item => {
+          const car = carMap[item.car_id]
+          if (!car) return null
+
+          return {
+            _id: item._id,
+            car_id: item.car_id,
+            brand: car.brand,
+            model_name: car.model_name,
+            model_year: car.model_year,
+            power_type: car.power_type,
+            price_range: car.price_range,
+            image_url: item.image_url || '',
+            pending_image_url: item.image_url || '',
+            current_image_url: car.image_url || '',
+            submitted_by: item.submitted_by || '',
+            submitted_at: item.submitted_at || item.created_at || '',
+            created_at: item.created_at || '',
+            updated_at: item.updated_at || item.created_at || ''
+          }
+        })
+        .filter(Boolean)
+
+      return {
+        success: true,
+        code: 0,
+        data
+      }
+    } catch (err) {
+      console.error('获取待审核图片列表失败:', err)
+      return {
+        success: false,
+        code: 500,
+        msg: err.message || '获取待审核图片失败',
+        message: err.message || '获取待审核图片失败'
+      }
+    }
+  }
+
+  if (!carId && action !== 'approve' && action !== 'reject') {
     return {
       success: false,
       code: 400,
@@ -107,7 +276,111 @@ exports.main = async (event) => {
 
   try {
     const isAdmin = await isAdminOpenid(OPENID)
-    const carRes = await db.collection('cars').doc(carId).get()
+
+    if (action === 'approve' || action === 'reject') {
+      if (!isAdmin) {
+        return {
+          success: false,
+          code: 403,
+          msg: '仅管理员可操作',
+          message: '仅管理员可操作'
+        }
+      }
+
+      const submission = await getPendingSubmissionByIdOrCar(submissionId, carId)
+      if (!submission || submission.status !== 'pending') {
+        return {
+          success: false,
+          code: 400,
+          msg: '当前没有待审核图片',
+          message: '当前没有待审核图片'
+        }
+      }
+
+      const targetCarId = submission.car_id
+      const carRes = await cars.doc(targetCarId).get()
+      const car = carRes.data || null
+
+      if (!car) {
+        return {
+          success: false,
+          code: 404,
+          msg: '车型不存在',
+          message: '车型不存在'
+        }
+      }
+
+      const currentImageUrl = String(car.image_url || '').trim()
+
+      if (action === 'reject') {
+        const rejectMsg = String(event.rejectReason || '').trim()
+
+        await imageSubmissions.doc(submission._id).update({
+          data: {
+            status: 'rejected',
+            reject_reason: rejectMsg,
+            reviewed_at: db.serverDate(),
+            reviewed_by: OPENID,
+            updated_at: db.serverDate()
+          }
+        })
+
+        await deleteCloudFiles([submission.image_url])
+        const { pendingCount } = await syncCarPendingState(targetCarId, car)
+
+        return {
+          success: true,
+          code: 0,
+          msg: '已拒绝',
+          message: '已拒绝待审核图片',
+          data: {
+            image_status: pendingCount > 0 ? 'reviewing' : 'normal',
+            image_url: currentImageUrl,
+            pending_count: pendingCount
+          }
+        }
+      }
+
+      await imageSubmissions.doc(submission._id).update({
+        data: {
+          status: 'approved',
+          reviewed_at: db.serverDate(),
+          reviewed_by: OPENID,
+          updated_at: db.serverDate()
+        }
+      })
+
+      await cars.doc(targetCarId).update({
+        data: {
+          image_url: submission.image_url,
+          image_rejected_reason: '',
+          image_reviewed_at: db.serverDate(),
+          image_reviewed_by: OPENID,
+          last_uploader_openid: submission.submitted_by || OPENID,
+          updated_at: db.serverDate()
+        }
+      })
+
+      if (currentImageUrl && currentImageUrl !== submission.image_url) {
+        await deleteCloudFiles([currentImageUrl])
+      }
+
+      const { pendingCount } = await syncCarPendingState(targetCarId)
+
+      return {
+        success: true,
+        code: 0,
+        msg: '审核通过',
+        message: '审核通过，正式图片已更新',
+        data: {
+          image_status: pendingCount > 0 ? 'reviewing' : 'normal',
+          image_url: submission.image_url,
+          pending_count: pendingCount
+        }
+      }
+    }
+
+    const carRes = await cars.doc(carId).get()
     const car = carRes.data || null
 
     if (!car) {
@@ -120,7 +393,6 @@ exports.main = async (event) => {
     }
 
     const currentImageUrl = String(car.image_url || '').trim()
-    const pendingImage = pickPendingImage(car)
 
     if (action === 'delete') {
       if (!isAdmin) {
@@ -132,17 +404,17 @@ exports.main = async (event) => {
         }
       }
 
-      await db.collection('cars').doc(carId).update({
+      await cars.doc(carId).update({
         data: {
           image_url: '',
-          pending_image: '',
-          pending_image_url: '',
-          image_status: 'normal',
+          image_reviewed_at: db.serverDate(),
+          image_reviewed_by: OPENID,
           updated_at: db.serverDate()
         }
       })
 
-      await deleteCloudFiles([currentImageUrl, pendingImage])
+      await deleteCloudFiles([currentImageUrl])
+      const { pendingCount } = await syncCarPendingState(carId)
 
       return {
         success: true,
@@ -150,57 +422,9 @@ exports.main = async (event) => {
         msg: '删除成功',
         message: '删除成功',
         data: {
-          image_status: 'normal',
+          image_status: pendingCount > 0 ? 'reviewing' : 'normal',
           image_url: '',
-          pending_image: ''
-        }
-      }
-    }
-
-    if (action === 'approve') {
-      if (!isAdmin) {
-        return {
-          success: false,
-          code: 403,
-          msg: '仅管理员可操作',
-          message: '仅管理员可操作'
-        }
-      }
-
-      if (!pendingImage) {
-        return {
-          success: false,
-          code: 400,
-          msg: '当前没有待审核图片',
-          message: '当前没有待审核图片'
-        }
-      }
-
-      await db.collection('cars').doc(carId).update({
-        data: {
-          image_url: pendingImage,
-          pending_image: '',
-          pending_image_url: '',
-          image_status: 'normal',
-          last_uploader_openid: car.last_uploader_openid || OPENID,
-          updated_at: db.serverDate()
-        }
-      })
-
-      // 审核通过后删除旧正式图，节省云存储空间。
-      if (currentImageUrl && currentImageUrl !== pendingImage) {
-        await deleteCloudFiles([currentImageUrl])
-      }
-
-      return {
-        success: true,
-        code: 0,
-        msg: '审核通过',
-        message: '审核通过，正式图片已更新',
-        data: {
-          image_status: 'normal',
-          image_url: pendingImage,
-          pending_image: ''
+          pending_count: pendingCount
         }
       }
     }
@@ -214,8 +438,7 @@ exports.main = async (event) => {
       }
     }
 
-    // 普通上传与管理员直传都记录上传日志；普通用户保留每日限制。
-    if (!isAdmin) {
+    if (action === 'submit') {
       const todayUploadCount = await countTodayUploads(OPENID)
       if (todayUploadCount >= DAILY_UPLOAD_LIMIT) {
         return {
@@ -227,20 +450,19 @@ exports.main = async (event) => {
         }
       }
 
-      await db.collection('cars').doc(carId).update({
+      await imageSubmissions.add({
         data: {
-          pending_image: imageUrl,
-          pending_image_url: imageUrl,
-          image_status: 'reviewing',
-          last_uploader_openid: OPENID,
+          car_id: carId,
+          image_url: imageUrl,
+          status: 'pending',
+          submitted_by: OPENID,
+          submitted_at: db.serverDate(),
+          created_at: db.serverDate(),
           updated_at: db.serverDate()
         }
       })
 
-      // 如果有旧待审核图且被新图替换，删除旧待审核文件，避免堆积。
-      if (pendingImage && pendingImage !== imageUrl) {
-        await deleteCloudFiles([pendingImage])
-      }
+      const { pendingCount } = await syncCarPendingState(carId, car)
 
       await recordUploadLog({
         openid: OPENID,
@@ -253,33 +475,41 @@ exports.main = async (event) => {
         success: true,
         code: 0,
         msg: '提交成功',
-        message: '图片已提交审核，审核通过后将替换正式展示图',
+        message: '图片已加入审核队列，审核通过后将替换正式展示图',
         data: {
           image_status: 'reviewing',
           image_url: currentImageUrl,
-          pending_image: imageUrl,
+          pending_count: pendingCount,
           isAdmin: false
         }
       }
     }
 
-    // 管理员直传正式图。
-    await db.collection('cars').doc(carId).update({
+    if (!isAdmin) {
+      return {
+        success: false,
+        code: 403,
+        msg: '仅管理员可操作',
+        message: '仅管理员可操作'
+      }
+    }
+
+    await cars.doc(carId).update({
       data: {
         image_url: imageUrl,
-        pending_image: '',
-        pending_image_url: '',
-        image_status: 'normal',
+        image_rejected_reason: '',
+        image_reviewed_at: db.serverDate(),
+        image_reviewed_by: OPENID,
         last_uploader_openid: OPENID,
         updated_at: db.serverDate()
       }
     })
 
-    // 直传成功后清理旧图和旧待审核图。
-    await deleteCloudFiles([
-      currentImageUrl && currentImageUrl !== imageUrl ? currentImageUrl : '',
-      pendingImage && pendingImage !== imageUrl ? pendingImage : ''
-    ])
+    if (currentImageUrl && currentImageUrl !== imageUrl) {
+      await deleteCloudFiles([currentImageUrl])
+    }
+
+    const { pendingCount } = await syncCarPendingState(carId)
 
     await recordUploadLog({
       openid: OPENID,
@@ -294,9 +524,9 @@ exports.main = async (event) => {
       msg: '更新成功',
       message: '正式图片已更新',
       data: {
-        image_status: 'normal',
+        image_status: pendingCount > 0 ? 'reviewing' : 'normal',
         image_url: imageUrl,
-        pending_image: '',
+        pending_count: pendingCount,
         isAdmin: true
       }
     }

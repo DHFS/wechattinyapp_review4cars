@@ -337,8 +337,10 @@ Page({
         { name: '其他体验', score: Math.round(scoreOther), color: this.getScoreColor(scoreOther), weight: '10%' }
       ]
       
+      const pendingImageCount = Number(car.pending_image_count) || 0
       const pendingImageFileId = String(car.pending_image || car.pending_image_url || '').trim()
-      const imageStatus = (car.image_status === 'reviewing' || car.image_status === 'pending' || pendingImageFileId)
+      const hasPendingImage = pendingImageCount > 0 || !!pendingImageFileId
+      const imageStatus = (car.image_status === 'reviewing' || car.image_status === 'pending' || hasPendingImage)
         ? 'reviewing'
         : 'normal'
       const [imageUrl, pendingImageUrl] = await Promise.all([
@@ -365,7 +367,8 @@ Page({
           imageStatus,
           pendingImageUrl,
           pendingImageFileId,
-          hasPendingImage: !!pendingImageFileId,
+          hasPendingImage,
+          pendingImageCount,
           lastUploaderOpenid: car.last_uploader_openid || ''
         },
         dimensions: avgDimensions,
@@ -421,7 +424,7 @@ Page({
 
   buildImageReviewNotice({ imageStatus = '', lastUploaderOpenid = '' } = {}) {
     if (imageStatus !== 'reviewing') return ''
-    if (this.data.isAdmin) return '有新图待审核，点击角标可预览，长按可审核'
+    if (this.data.isAdmin) return ''
     if (lastUploaderOpenid && lastUploaderOpenid === this.data.currentOpenid) {
       return '您提交的车型图片正在审核中'
     }
@@ -1130,55 +1133,11 @@ Page({
       return
     }
     
-    const { carInfo, isAdmin } = this.data
-    const actions = []
-
-    if (carInfo.imageUrl) {
-      actions.push({ key: 'save', label: '保存图片' })
-    }
-
-    if (isAdmin) {
-      actions.push({ key: 'upload', label: '上传/更换图片' })
-
-      if (carInfo.hasPendingImage) {
-        actions.push({ key: 'approve', label: '审核通过新图' })
-      }
-
-      if (carInfo.imageUrl || carInfo.hasPendingImage) {
-        actions.push({ key: 'delete', label: '删除当前图片' })
-      }
-    } else {
-      actions.push({ key: 'submit', label: '提交纠错/新图' })
-    }
-
     wx.showActionSheet({
-      itemList: actions.map(item => item.label),
+      itemList: ['提交纠错/新图'],
       success: (res) => {
-        const action = actions[res.tapIndex]
-        if (!action) return
-
-        if (action.key === 'save') {
-          this.saveCurrentImage()
-          return
-        }
-
-        if (action.key === 'upload') {
-          this.chooseCarImage('direct_upload')
-          return
-        }
-
-        if (action.key === 'submit') {
+        if (res.tapIndex === 0) {
           this.chooseCarImage('submit')
-          return
-        }
-
-        if (action.key === 'approve') {
-          this.approvePendingCarImage()
-          return
-        }
-
-        if (action.key === 'delete') {
-          this.deleteCarImage()
         }
       }
     })
@@ -1252,7 +1211,7 @@ Page({
       await this.loadCarDetail(carId)
 
       wx.showToast({
-        title: action === 'submit' ? '已提交审核' : '上传成功',
+        title: action === 'submit' ? '已加入审核队列' : '上传成功',
         icon: 'success',
         duration: 2000
       })
@@ -1266,124 +1225,5 @@ Page({
     } finally {
       wx.hideLoading()
     }
-  },
-
-  async saveCurrentImage() {
-    const imageUrl = this.data.carInfo.imageUrl
-    if (!imageUrl) {
-      wx.showToast({ title: '暂无可保存图片', icon: 'none' })
-      return
-    }
-
-    try {
-      wx.showLoading({ title: '保存中...' })
-      const downloadRes = await wx.downloadFile({ url: imageUrl })
-
-      if (downloadRes.statusCode !== 200) {
-        throw new Error('下载失败')
-      }
-
-      await wx.saveImageToPhotosAlbum({
-        filePath: downloadRes.tempFilePath
-      })
-
-      wx.showToast({ title: '已保存到相册', icon: 'success' })
-    } catch (err) {
-      console.error('保存图片失败:', err)
-      wx.showToast({
-        title: '保存失败，请检查相册权限',
-        icon: 'none'
-      })
-    } finally {
-      wx.hideLoading()
-    }
-  },
-
-  previewPendingImage() {
-    const { isAdmin, carInfo } = this.data
-    if (!isAdmin || !carInfo.pendingImageUrl) return
-
-    wx.previewImage({
-      urls: [carInfo.pendingImageUrl],
-      current: carInfo.pendingImageUrl
-    })
-  },
-
-  async approvePendingCarImage() {
-    if (!this.data.isAdmin) {
-      wx.showToast({ title: '仅管理员可操作', icon: 'none' })
-      return
-    }
-
-    if (!this.data.carInfo.hasPendingImage) {
-      wx.showToast({ title: '当前没有待审核图片', icon: 'none' })
-      return
-    }
-
-    wx.showModal({
-      title: '审核通过新图',
-      content: '确认将待审核图片替换为正式展示图吗？',
-      confirmColor: '#ff6b35',
-      success: async (res) => {
-        if (!res.confirm) return
-
-        try {
-          wx.showLoading({ title: '审核中...' })
-          const approveRes = await wx.cloud.callFunction({
-            name: 'updateCarImage',
-            data: {
-              carId: this.data.carInfo.id,
-              action: 'approve'
-            }
-          })
-
-          if (!approveRes.result || !approveRes.result.success) {
-            throw new Error(approveRes.result?.message || approveRes.result?.msg || '审核失败')
-          }
-
-          await this.loadCarDetail(this.data.carInfo.id)
-          wx.showToast({ title: '已通过审核', icon: 'success' })
-        } catch (err) {
-          console.error('审核通过新图失败:', err)
-          wx.showToast({ title: err.message || '审核失败', icon: 'none' })
-        } finally {
-          wx.hideLoading()
-        }
-      }
-    })
-  },
-
-  // 删除车型图片
-  async deleteCarImage() {
-    wx.showModal({
-      title: '确认删除',
-      content: '确定要删除这张图片吗？',
-      confirmColor: '#ff6b35',
-      success: async (res) => {
-        if (!res.confirm) return
-
-        try {
-          const carId = this.data.carInfo.id
-          const deleteRes = await wx.cloud.callFunction({
-            name: 'updateCarImage',
-            data: {
-              carId,
-              action: 'delete'
-            }
-          })
-
-          if (!deleteRes.result || !deleteRes.result.success) {
-            throw new Error(deleteRes.result?.message || deleteRes.result?.msg || '删除失败')
-          }
-
-          await this.loadCarDetail(carId)
-
-          wx.showToast({ title: '删除成功', icon: 'success' })
-        } catch (err) {
-          console.error('删除图片失败:', err)
-          wx.showToast({ title: '删除失败', icon: 'none' })
-        }
-      }
-    })
   }
 })

@@ -10,7 +10,7 @@ Page({
     if (!app.isAdmin || !app.isAdmin()) {
       wx.showModal({
         title: '无权限访问',
-        content: '当前账号不是管理员，无法打开车型审核台。',
+        content: '当前账号不是管理员，无法打开审核中心。',
         showCancel: false,
         success: () => {
           wx.switchTab({
@@ -48,9 +48,11 @@ Page({
   },
 
   async processImageUrls(cars) {
-    const cloudFileIDs = cars
-      .map(item => item.pendingImageUrl)
-      .filter(url => url && url.startsWith('cloud://'))
+    const cloudFileIDs = [...new Set(
+      cars
+        .flatMap(item => [item.pendingImageUrl, item.currentImageUrl])
+        .filter(url => url && url.startsWith('cloud://'))
+    )]
 
     if (cloudFileIDs.length === 0) {
       return cars
@@ -72,7 +74,10 @@ Page({
         ...car,
         previewImageUrl: car.pendingImageUrl && car.pendingImageUrl.startsWith('cloud://')
           ? (urlMap[car.pendingImageUrl] || '')
-          : (car.pendingImageUrl || '')
+          : (car.pendingImageUrl || ''),
+        currentPreviewImageUrl: car.currentImageUrl && car.currentImageUrl.startsWith('cloud://')
+          ? (urlMap[car.currentImageUrl] || '')
+          : (car.currentImageUrl || '')
       }))
     } catch (err) {
       console.error('审核页转换图片失败:', err)
@@ -80,30 +85,54 @@ Page({
     }
   },
 
+  getTaskTimestamp(item = {}) {
+    const source = item.updated_at || item.submitted_at || item.created_at || Date.now()
+    return new Date(source).getTime()
+  },
+
   async loadPendingCars() {
     this.setData({ loading: true })
 
     try {
-      const res = await wx.cloud.callFunction({
-        name: 'reviewCarSubmission',
-        data: {
-          action: 'listPending'
-        }
-      })
+      const [submissionRes, imageRes] = await Promise.all([
+        wx.cloud.callFunction({
+          name: 'reviewCarSubmission',
+          data: {
+            action: 'listPending'
+          }
+        }),
+        wx.cloud.callFunction({
+          name: 'updateCarImage',
+          data: {
+            action: 'listPending'
+          }
+        })
+      ])
 
-      if (!res.result || !res.result.success) {
-        throw new Error(res.result?.message || '获取待审核车型失败')
+      if (!submissionRes.result || !submissionRes.result.success) {
+        throw new Error(submissionRes.result?.message || '获取待审核车型失败')
       }
 
-      const cars = (res.result.data || []).map(item => ({
+      if (!imageRes.result || !imageRes.result.success) {
+        throw new Error(imageRes.result?.message || '获取待审核图片失败')
+      }
+
+      const carTasks = (submissionRes.result.data || []).map(item => ({
         id: item._id,
+        taskType: 'car_submission',
+        taskBadge: '整包审核',
+        taskActionLabel: '通过并上榜',
+        taskRejectLabel: '拒绝整包',
+        taskDesc: '审核通过后，车型、评分、首评与提交图片会一起公开展示。',
         brand: item.brand,
         modelName: item.model_name,
         modelYear: item.model_year,
         powerType: item.power_type,
         priceRange: item.price_range,
         submittedAt: this.formatTime(item.submitted_at || item.created_at),
+        timestamp: this.getTaskTimestamp(item),
         submittedBy: item.submitted_by || item.created_by || '',
+        currentImageUrl: '',
         pendingImageUrl: item.pending_image_url || '',
         hasPendingImage: !!item.pending_image_url,
         pendingReview: item.pending_review ? {
@@ -121,6 +150,31 @@ Page({
         } : null
       }))
 
+      const imageTasks = (imageRes.result.data || []).map(item => ({
+        id: item._id,
+        taskType: 'image_submission',
+        taskBadge: '图片审核',
+        taskActionLabel: '通过图片',
+        taskRejectLabel: '拒绝图片',
+        taskDesc: '该车型已在榜单展示中，本次只审核这一张用户补充图片，队列中的每张图都会单独处理。',
+        carId: item.car_id,
+        brand: item.brand,
+        modelName: item.model_name,
+        modelYear: item.model_year,
+        powerType: item.power_type,
+        priceRange: item.price_range,
+        submittedAt: this.formatTime(item.submitted_at || item.created_at),
+        timestamp: this.getTaskTimestamp(item),
+        submittedBy: item.submitted_by || '',
+        currentImageUrl: item.current_image_url || '',
+        pendingImageUrl: item.pending_image_url || item.image_url || '',
+        hasPendingImage: !!(item.pending_image_url || item.image_url),
+        pendingReview: null
+      }))
+
+      const cars = [...carTasks, ...imageTasks]
+        .sort((a, b) => b.timestamp - a.timestamp)
+
       const processedCars = await this.processImageUrls(cars)
 
       this.setData({
@@ -128,7 +182,7 @@ Page({
         pendingCars: processedCars
       })
     } catch (err) {
-      console.error('加载待审核车型失败:', err)
+      console.error('加载待审核任务失败:', err)
       this.setData({ loading: false })
       wx.showToast({
         title: err.message || '加载失败',
@@ -148,51 +202,74 @@ Page({
   },
 
   approveCar(e) {
-    const { id, name } = e.currentTarget.dataset
+    const { id, name, type } = e.currentTarget.dataset
+    const isImageTask = type === 'image_submission'
 
     wx.showModal({
       title: '确认通过',
-      content: `确认通过 ${name} 的整包提交吗？通过后，车型和首评都会公开展示。`,
+      content: isImageTask
+        ? `确认通过 ${name} 的待审核图片吗？通过后会替换当前正式封面图。`
+        : `确认通过 ${name} 的整包提交吗？通过后，车型和首评都会公开展示。`,
       confirmColor: '#22a568',
       success: (res) => {
         if (res.confirm) {
-          this.reviewCar(id, 'approve')
+          this.reviewCar(id, type, 'approve')
         }
       }
     })
   },
 
   rejectCar(e) {
-    const { id, name } = e.currentTarget.dataset
+    const { id, name, type } = e.currentTarget.dataset
+    const isImageTask = type === 'image_submission'
 
     wx.showModal({
-      title: '拒绝提交',
+      title: isImageTask ? '拒绝图片' : '拒绝提交',
       content: `请输入拒绝 ${name} 的原因`,
       editable: true,
-      placeholderText: '例如：车型命名不规范、缺少关键信息',
+      placeholderText: isImageTask
+        ? '例如：图片模糊、构图不清晰、与车型不符'
+        : '例如：车型命名不规范、缺少关键信息',
       confirmColor: '#ff6b35',
       success: (res) => {
         if (!res.confirm) return
-        this.reviewCar(id, 'reject', res.content || '信息不完整，请补充后重新提交')
+        this.reviewCar(
+          id,
+          type,
+          'reject',
+          res.content || (isImageTask ? '图片不符合展示要求，请重新提交' : '信息不完整，请补充后重新提交')
+        )
       }
     })
   },
 
-  async reviewCar(carId, decision, rejectReason = '') {
+  async reviewCar(taskId, taskType, decision, rejectReason = '') {
     wx.showLoading({
       title: decision === 'approve' ? '通过中...' : '拒绝中...'
     })
 
     try {
-      const res = await wx.cloud.callFunction({
-        name: 'reviewCarSubmission',
-        data: {
-          action: 'review',
-          carId,
-          decision,
-          rejectReason
-        }
-      })
+      const isImageTask = taskType === 'image_submission'
+      const res = await wx.cloud.callFunction(
+        isImageTask
+          ? {
+              name: 'updateCarImage',
+              data: {
+                submissionId: taskId,
+                action: decision === 'approve' ? 'approve' : 'reject',
+                rejectReason
+              }
+            }
+          : {
+              name: 'reviewCarSubmission',
+              data: {
+                action: 'review',
+                carId: taskId,
+                decision,
+                rejectReason
+              }
+            }
+      )
 
       if (!res.result || !res.result.success) {
         throw new Error(res.result?.message || '审核操作失败')
@@ -205,7 +282,7 @@ Page({
 
       this.loadPendingCars()
     } catch (err) {
-      console.error('审核车型失败:', err)
+      console.error('审核任务失败:', err)
       wx.showToast({
         title: err.message || '审核失败',
         icon: 'none'
